@@ -12,9 +12,9 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#import <OsiriXAPI/BrowserController.h>
-#import <OsiriXAPI/Notifications.h>
-#import <OsiriXAPI/NSPanel+N2.h>
+#import <OsiriX/BrowserController.h>
+#import <OsiriX/Notifications.h>
+#import <OsiriX/NSPanel+N2.h>
 #pragma clang diagnostic pop
 
 #import <objc/runtime.h>

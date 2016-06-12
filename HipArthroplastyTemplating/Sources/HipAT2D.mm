@@ -9,7 +9,7 @@
 #import "HipAT2D.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#import <OsiriXAPI/DCMPix.h>
+#import <OsiriX/DCMPix.h>
 #pragma clang diagnostic pop
 #include <cmath>
 
