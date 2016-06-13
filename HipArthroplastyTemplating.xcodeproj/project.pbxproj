@@ -267,6 +267,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE6A9A9008AC841300D0C1EE /* Build configuration list for PBXNativeTarget "HipArthroplastyTemplating" */;
 			buildPhases = (
+				71194E591D0E9F5E00332C03 /* Check for OsiriX.framework */,
 				8D5B49AD048680CD000E48DA /* Headers */,
 				8D5B49AF048680CD000E48DA /* Resources */,
 				597B7075111B0BC900933C30 /* Copy Templates from Home */,
@@ -382,6 +383,20 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/bash;
 			shellScript = "product=\"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\"\npinfo=\"$product/Contents/Info.plist\"\n\nversion=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" \"$pinfo\")\nversion=\"${version/ /-}\"\n\nzip=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME-$version.zip\"\n\necho \"Zipping $product to $zip\"\n\nrm -Rf \"$zip\"\ncd \"$TARGET_BUILD_DIR\"\nfind \"$FULL_PRODUCT_NAME\" -path '*/.*' -prune -o -type f -print | zip \"$zip\" -@\n\nopen \"$BUILT_PRODUCTS_DIR\"";
+		};
+		71194E591D0E9F5E00332C03 /* Check for OsiriX.framework */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check for OsiriX.framework";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ ! -d \"OsiriX-API/OsiriX.framework\" ]; then\n    echo \"warning: submodule OsiriX-API requires init/update, please wait...\"\n    cd \"OsiriX-API\"\n    git submodule init\n    git submodule update\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
