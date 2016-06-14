@@ -7,7 +7,7 @@
 
 #import "ArthroplastyTemplatingStepsController.h"
 #import "ArthroplastyTemplatingWindowController+Templates.h"
-#import "ArthroplastyTemplatingPlugin.h"
+#import "HipArthroplastyTemplating.h"
 #import "ArthroplastyTemplatingUserDefaults.h"
 
 #pragma clang diagnostic push
@@ -56,7 +56,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 
 #pragma mark Initialization
 
--(id)initWithPlugin:(ArthroplastyTemplatingPlugin*)plugin viewerController:(ViewerController*)viewerController {
+-(id)initWithPlugin:(HipArthroplastyTemplating*)plugin viewerController:(ViewerController*)viewerController {
 	self = [self initWithWindowNibName:@"HipArthroplastyTemplatingSteps"];
 	_plugin = [plugin retain];
 	_viewerController = [viewerController retain];
@@ -143,8 +143,11 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	_appliedMagnification = magnificationValue;
 	
-	for (ROI* r in [_viewerController roiList])
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:r];
+	for (NSArray *rois in [_viewerController roiList])
+        for (ROI *r in rois)
+            [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:r];
+    
+//    [_viewerController.imageView setNeedsDisplay:YES];
 }
 
 - (void)dealloc {
@@ -177,11 +180,11 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 #pragma mark Windows
 
 - (void)windowWillClose:(NSNotification *)aNotification { // this window is closing
-	//[self autorelease];
+    [self autorelease];
 }
 
 - (void)viewerWillClose:(NSNotification*)notification {
-//	[self close];
+	[self close];
 }
 
 -(void)viewerDidChangeKeyStatus:(NSNotification*)notif {
@@ -246,7 +249,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 		}
 	
 	if (newAxis) {
-		[*axis setPoints:[NSArray arrayWithObjects:[MyPoint point:axisP0], [MyPoint point:axisP1], NULL]];
+		[*axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:axisP0], [MyPoint point:axisP1], NULL]];
 		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:*axis userInfo:NULL];
 //		[_viewerController bringToFrontROI:landmark]; // TODO: this makes the landmark disappear!
 	}
@@ -287,7 +290,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	NSPoint pointFrom = lineFrom*inequalityLine, pointTo = lineTo*inequalityLine;
 	
 	if ([[*axis points] count]) [[*axis points] removeAllObjects];
-	[*axis setPoints:[NSArray arrayWithObjects:[MyPoint point:pointFrom], [MyPoint point:pointTo], NULL]];
+	[*axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:pointFrom], [MyPoint point:pointTo], NULL]];
 	*value = [*axis MesureLength:NULL]*NSSign((pointTo-pointFrom).y)*(-1);
 	
 	[*axis setName:name];
@@ -472,7 +475,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
                 }
                 
                 if ([thread isExecuting])
-                    [thread startModalForWindow:nil];
+                    [thread startModalForWindow:_viewerController.window];
             }
         }
 	}

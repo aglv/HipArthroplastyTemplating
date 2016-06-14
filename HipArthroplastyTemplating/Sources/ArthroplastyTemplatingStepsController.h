@@ -8,10 +8,10 @@
 #import <Cocoa/Cocoa.h>
 
 @class N2Step, N2Steps, N2StepsView, ROI, ArthroplastyTemplate, ViewerController;
-@class ArthroplastyTemplatingPlugin;
+@class HipArthroplastyTemplating;
 
 @interface ArthroplastyTemplatingStepsController : NSWindowController {
-	ArthroplastyTemplatingPlugin* _plugin;
+	HipArthroplastyTemplating* _plugin;
 	ViewerController* _viewerController;
 	
 	IBOutlet N2Steps* _steps;
@@ -68,7 +68,7 @@
 @property(readonly) ViewerController* viewerController;
 //@property(readonly) CGFloat magnification;
 
--(id)initWithPlugin:(ArthroplastyTemplatingPlugin*)plugin viewerController:(ViewerController*)viewerController;
+- (id)initWithPlugin:(HipArthroplastyTemplating *)plugin viewerController:(ViewerController *)viewerController;
 
 #pragma mark Templates
 

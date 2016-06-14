@@ -14,7 +14,7 @@
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
-	<key>CFBundleShortVersionString</key>
+	<key>CFBundleVersion</key>
 	<string>2.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
@@ -23,9 +23,9 @@
 		<string>Hip Templating</string>
 	</array>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2004-2015 OsiriX Team</string>
+	<string>© 2004-2016 OsiriX Team &amp; volz.io</string>
 	<key>NSPrincipalClass</key>
-	<string>ArthroplastyTemplatingPlugin</string>
+	<string>HipArthroplastyTemplating</string>
 	<key>ToolbarIcon</key>
 	<string>HipArthroplastyTemplating</string>
 	<key>allowToolbarIcon</key>

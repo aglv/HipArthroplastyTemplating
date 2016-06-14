@@ -1,6 +1,6 @@
 //
-//  ArthroplastyTemplatingPlugin.h
-//  Arthroplasty Templating II
+//  HipArthroplastyTemplating.h
+//  Hip Arthroplasty Templating
 //  Created by Joris Heuberger on 04/04/07.
 //  Modified by Alessandro Volz since 07/2009
 //  Copyright (c) 2007-2009 OsiriX Team. All rights reserved.
@@ -15,7 +15,7 @@
 
 @class ArthroplastyTemplatingWindowController, ArthroplastyTemplatingStepsController;
 
-@interface ArthroplastyTemplatingPlugin : PluginFilter {
+@interface HipArthroplastyTemplating : PluginFilter {
 	ArthroplastyTemplatingWindowController *_templatesWindowController;
 	NSMutableArray* _windows;
 	BOOL _initialized;

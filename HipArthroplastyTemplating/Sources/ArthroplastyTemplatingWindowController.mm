@@ -20,7 +20,7 @@
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
-#import "ArthroplastyTemplatingPlugin.h"
+#import "HipArthroplastyTemplating.h"
 #include <cmath>
 #include <algorithm>
 #import "ArthroplastyTemplatingWindowController+Color.h"
@@ -34,7 +34,7 @@
 @synthesize templateDirection = _viewDirection;
 @synthesize familiesArrayController = _familiesArrayController;
 
--(id)initWithPlugin:(ArthroplastyTemplatingPlugin*)plugin {
+-(id)initWithPlugin:(HipArthroplastyTemplating*)plugin {
 	self = [self initWithWindowNibName:@"HipArthroplastyTemplatingWindow"];
 	_plugin = plugin;
 

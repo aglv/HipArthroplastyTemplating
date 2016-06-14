@@ -10,13 +10,13 @@
 #import "ArthroplastyTemplate.h"
 
 @class ArthroplastyTemplatingTableView, N2Image, ROI, ViewerController;
-@class ArthroplastyTemplateFamily, ArthroplastyTemplatingPlugin;
+@class ArthroplastyTemplateFamily, HipArthroplastyTemplating;
 #import "ArthroplastyTemplatingUserDefaults.h"
 
 
 @interface ArthroplastyTemplatingWindowController : NSWindowController {
 	NSMutableArray* _templates;
-	ArthroplastyTemplatingPlugin* _plugin;
+	HipArthroplastyTemplating* _plugin;
 
 	NSArrayController* _familiesArrayController;
 	IBOutlet ArthroplastyTemplatingTableView* _familiesTableView;
@@ -36,12 +36,12 @@
 
 @property(readonly) BOOL mustFlipHorizontally;
 @property(readonly) ArthroplastyTemplatingUserDefaults* userDefaults;
-@property(readonly) ArthroplastyTemplatingPlugin* plugin;
+@property(readonly) HipArthroplastyTemplating* plugin;
 @property(readonly) ArthroplastyTemplateViewDirection templateDirection;
 
 @property(assign) IBOutlet NSArrayController* familiesArrayController;
 
--(id)initWithPlugin:(ArthroplastyTemplatingPlugin*)plugin;
+-(id)initWithPlugin:(HipArthroplastyTemplating*)plugin;
 
 -(BOOL)mustFlipHorizontally:(ArthroplastyTemplate*)t;
 

@@ -42,8 +42,8 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
         method = class_getInstanceMethod(c, @selector(acceptsFirstMouse:));
         if (!method) [NSException raise:NSGenericException format:@"bad OsiriX version"];
         imp = method_getImplementation(method);
-        class_addMethod(c, @selector(_ArthroplastyTemplatingPlugin_PDFDocumentView_acceptsFirstMouse:), imp, method_getTypeEncoding(method));
-        method_setImplementation(method, class_getMethodImplementation([self class], @selector(_ArthroplastyTemplatingPlugin_PDFDocumentView_acceptsFirstMouse:)));
+        class_addMethod(c, @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:), imp, method_getTypeEncoding(method));
+        method_setImplementation(method, class_getMethodImplementation([self class], @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:)));
     }
     
 }
@@ -163,7 +163,7 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
     return YES;
 }
 
--(BOOL)_ArthroplastyTemplatingPlugin_PDFDocumentView_acceptsFirstMouse:(NSEvent*)e {
+- (BOOL)HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:(NSEvent*)e {
     if ([self.window.windowController isKindOfClass:[ArthroplastyTemplatingWindowController class]])
         return YES;
     return [super acceptsFirstMouse:e];

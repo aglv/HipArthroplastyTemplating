@@ -1,12 +1,12 @@
 //
-//  ArthroplastyTemplatingPlugin.m
-//  Arthroplasty Templating II
+//  HipArthroplastyTemplating.mm
+//  Hip Arthroplasty Templating
 //  Created by Joris Heuberger on 04/04/07.
 //  Modified by Alessandro Volz since 07/2009
 //  Copyright (c) 2007-2009 OsiriX Team. All rights reserved.
 //
 
-#import "ArthroplastyTemplatingPlugin.h"
+#import "HipArthroplastyTemplating.h"
 #import "ArthroplastyTemplatingStepsController.h"
 #import "ArthroplastyTemplatingWindowController.h"
 
@@ -20,7 +20,8 @@
 #import <objc/runtime.h>
 
 
-@implementation ArthroplastyTemplatingPlugin
+@implementation HipArthroplastyTemplating
+
 @synthesize templatesWindowController = _templatesWindowController;
 
 -(void)initialize {
@@ -44,14 +45,8 @@
     Method method;
     IMP imp;
 
-    Class DCMViewClass = [DCMView class];
-    
-    // this is an instance method: -[N2ManagedObjectContext save:]
-    method = class_getInstanceMethod(DCMViewClass, @selector(acceptsFirstMouse:));
-    if (!method) [NSException raise:NSGenericException format:@"bad OsiriX version"];
-    imp = method_getImplementation(method);
-    class_addMethod(DCMViewClass, @selector(_ArthroplastyTemplatingPlugin_DCMView_acceptsFirstMouse:), imp, method_getTypeEncoding(method));
-    method_setImplementation(method, class_getMethodImplementation([self class], @selector(_ArthroplastyTemplatingPlugin_DCMView_acceptsFirstMouse:)));
+    Class c = [DCMView class];
+    method_exchangeImplementations(class_getInstanceMethod(c, @selector(acceptsFirstMouse:)), class_getInstanceMethod(c, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
 }
 
 - (long)filterImage:(NSString*)menuName {
@@ -139,13 +134,17 @@
 //	}
 //}
 
--(BOOL)_ArthroplastyTemplatingPlugin_DCMView_acceptsFirstMouse:(NSEvent*)event {
+@end
+
+@implementation DCMView (HipArthroplastyTemplating)
+
+- (BOOL)HipArthroplastyTemplating_acceptsFirstMouse:(NSEvent *)event {
     for (NSWindow* window in [NSApplication.sharedApplication windows])
         if ([window.windowController isKindOfClass:[ArthroplastyTemplatingStepsController class]]) {
-            if ([[(DCMView*)self window] windowController] == [window.windowController viewerController])
+            if ([[self window] windowController] == [window.windowController viewerController])
                 return YES;
         }
-    return [self _ArthroplastyTemplatingPlugin_DCMView_acceptsFirstMouse:event];
+    return [self HipArthroplastyTemplating_acceptsFirstMouse:event];
 }
 
 @end
