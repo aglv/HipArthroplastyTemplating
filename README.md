@@ -17,3 +17,7 @@ If you change anything in the project, please specify a new version number by cr
 `git tag `*`v1.2.3.4`*
 
 Please do not distribute untagged builds, or builds obtained through the *build* command: only distribute *archive* builds!
+
+You are free to push the changes you make on the *distribution* branch, and please also share your tags:
+
+`git push; git push --tags`
