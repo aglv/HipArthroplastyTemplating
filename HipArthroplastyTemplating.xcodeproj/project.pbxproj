@@ -46,6 +46,7 @@
 		71194E581D0DE0EC00332C03 /* OsiriX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71194E571D0DE0EC00332C03 /* OsiriX.framework */; };
 		718D0AEA159C8E9A00F27CE9 /* HipAT2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 718D0AE8159C8E9A00F27CE9 /* HipAT2D.h */; };
 		718D0AEB159C8E9A00F27CE9 /* HipAT2D.mm in Sources */ = {isa = PBXBuildFile; fileRef = 718D0AE9159C8E9A00F27CE9 /* HipAT2D.mm */; };
+		71EADCC21D1195D2007B583A /* Mathys Templates in Resources */ = {isa = PBXBuildFile; fileRef = 71EADCC11D1195D2007B583A /* Mathys Templates */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		A9F8BEED0B9DD21E00FDB71F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9F8BEEC0B9DD21E00FDB71F /* Quartz.framework */; };
 /* End PBXBuildFile section */
@@ -108,6 +109,7 @@
 		7121CF681D0EFE2200D7D743 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		718D0AE8159C8E9A00F27CE9 /* HipAT2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HipAT2D.h; sourceTree = "<group>"; };
 		718D0AE9159C8E9A00F27CE9 /* HipAT2D.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HipAT2D.mm; sourceTree = "<group>"; };
+		71EADCC11D1195D2007B583A /* Mathys Templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Mathys Templates"; sourceTree = "<group>"; };
 		A9F8BEEC0B9DD21E00FDB71F /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
 		AB5D36050680E57E00F4007A /* HipArthroplastyTemplating.osirixplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HipArthroplastyTemplating.osirixplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -210,6 +212,7 @@
 				5912DF4D118F26B7007F7D40 /* io.volz.osirix.hiparthroplastytemplating.plist */,
 				5912DF47118F26AB007F7D40 /* HipArthroplastyTemplatingSteps.xib */,
 				5912DF48118F26AB007F7D40 /* HipArthroplastyTemplatingWindow.xib */,
+				71EADCC11D1195D2007B583A /* Mathys Templates */,
 				59F523CD1055235F009B6D89 /* MEDACTA Templates */,
 			);
 			name = Resources;
@@ -264,7 +267,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE6A9A9008AC841300D0C1EE /* Build configuration list for PBXNativeTarget "HipArthroplastyTemplating" */;
 			buildPhases = (
-				71194E591D0E9F5E00332C03 /* Check for OsiriX.framework */,
+				71194E591D0E9F5E00332C03 /* Check for submodules */,
 				8D5B49AD048680CD000E48DA /* Headers */,
 				8D5B49AF048680CD000E48DA /* Resources */,
 				597B7075111B0BC900933C30 /* Copy Templates from Home */,
@@ -323,6 +326,7 @@
 				5912DF4A118F26AB007F7D40 /* HipArthroplastyTemplatingWindow.xib in Resources */,
 				5912DF4C118F26B0007F7D40 /* HipArthroplastyTemplating.tiff in Resources */,
 				5912DF4E118F26B7007F7D40 /* io.volz.osirix.hiparthroplastytemplating.plist in Resources */,
+				71EADCC21D1195D2007B583A /* Mathys Templates in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,19 +386,19 @@
 			shellPath = /bin/bash;
 			shellScript = "cd \"$PROJECT_DIR\"\n\noinfo=\"$PROJECT_DIR/$INFOPLIST_FILE\"\npinfo=\"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/Info.plist\"\n\nversion=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" \"$oinfo\")\nsversion=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" \"$oinfo\")\nif [ -z \"$version\" ]; then\necho \"warning: CFBundleVersion is not set\"\nversion=\"$sversion\"\nfi\n\ntagversion=$(/usr/bin/git describe --tags --dirty)\ngitversion=$(/usr/bin/git describe --tags --dirty --always)\n\nif [ -n \"$tagversion\" ]; then\nif [[ ${tagversion:0:1} == \"v\" ]]; then\ntagversion=${tagversion:1}\nfi\nversion=\"$tagversion\"\nelse\necho \"warning: no Git tags were found, using version $version from Info.plist\"\nversion=\"$version-$gitversion\"\nfi\n\nif [[ $gitversion == *\"dirty\"* ]]; then\ndate=$(date +%Y%m%d)\nversion=\"$version-$date\"\nfi\n\nif [ \"$DEBUGGING_SYMBOLS\" = \"YES\" ] && [ \"$COPY_PHASE_STRIP\" != \"YES\" ]; then\nversion=\"$version-debug\"\nfi\n\n/usr/libexec/PlistBuddy -c \"Delete :GitVersion\" \"$pinfo\"\n/usr/libexec/PlistBuddy -c \"Add :GitVersion string '$gitversion'\" \"$pinfo\"\n\n/usr/libexec/PlistBuddy -c \"Delete :CFBundleShortVersionString\" \"$pinfo\"\n/usr/libexec/PlistBuddy -c \"Add :CFBundleShortVersionString string '$version'\" \"$pinfo\"\n\n/usr/libexec/PlistBuddy -c \"Delete :CFBundleVersion\" \"$pinfo\"\n/usr/libexec/PlistBuddy -c \"Add :CFBundleVersion string '$version'\" \"$pinfo\"\n\necho \"Done\"\n\nexit 0";
 		};
-		71194E591D0E9F5E00332C03 /* Check for OsiriX.framework */ = {
+		71194E591D0E9F5E00332C03 /* Check for submodules */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check for OsiriX.framework";
+			name = "Check for submodules";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ ! -d \"OsiriX-API/OsiriX.framework\" ]; then\n    echo \"warning: submodule OsiriX-API requires init/update, please wait...\"\n    cd \"OsiriX-API\"\n    git submodule init\n    git submodule update\nfi";
+			shellScript = "git submodule foreach --recursive \"git submodule init\"\n\n#if [ ! -d \"OsiriX-API/OsiriX.framework\" ]; then\n#    echo \"warning: submodule OsiriX-API requires init/update, please wait...\"\n#    cd \"OsiriX-API\"\n#    git submodule init\n#    git submodule update\n#fi";
 		};
 		7121CF691D0FF15600D7D743 /* ZIP */ = {
 			isa = PBXShellScriptBuildPhase;
