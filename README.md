@@ -20,4 +20,4 @@ Please do not distribute untagged builds, or builds obtained through the *build*
 
 You are free to commit and push the changes you make on the *distribution* branch, and please also share your tags:
 
-`git push --follow-tags`
+`git push; git push --tags`
