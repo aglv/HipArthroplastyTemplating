@@ -18,6 +18,6 @@ If you change anything in the project, please specify a new version number by cr
 
 Please do not distribute untagged builds, or builds obtained through the *build* command: only distribute *archive* builds!
 
-You are free to push the changes you make on the *distribution* branch, and please also share your tags:
+You are free to commit and push the changes you make on the *distribution* branch, and please also share your tags:
 
-`git push; git push --tags`
+`git push --follow-tags`
