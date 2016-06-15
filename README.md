@@ -2,7 +2,11 @@ To build the *release* version of the *HipArthroplastyTemplating* plugin for dis
 
 `git clone --recursive -b distribution git@gitlab.com:volz.io/HipArthroplastyTemplating.git`
 
-Change into the *HipArthroplastyTemplating* directory and build (actually *archive*) the project by executing the following commands:
+If you already have cloned the *HipArthroplastyTemplating* repository, update it with this command:
+
+`git pull --recurse-submodules`
+
+Anyway, change into the *HipArthroplastyTemplating* directory and build (actually *archive*) the project by executing the following commands:
 
 `cd HipArthroplastyTemplating`
 `xcodebuild -project HipArthroplastyTemplating.xcodeproj -scheme 'HipArthroplastyTemplating' -configuration Release archive`
