@@ -1,6 +1,6 @@
 For *release* builds by Pixmeo, please clone the *pixmeo* branch using the following command:
 
-`git clone --recursive -b pixmeo git@gitlab.com:volz.io/HipArthroplastyTemplating.git`
+`git clone --recursive -b distribution git@gitlab.com:volz.io/HipArthroplastyTemplating.git`
 
 Open the HipArthroplastyTemplating Xcode project, and use the *Product > Archive* menu item to build the plugin and generate a ZIP file.
 
