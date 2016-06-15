@@ -1,4 +1,4 @@
-For RELEASE compilation by Pixmeo, please clone the *pixmeo* branch using the following command:
+For *release* builds by Pixmeo, please clone the *pixmeo* branch using the following command:
 
 `git clone --recursive -b pixmeo git@gitlab.com:volz.io/HipArthroplastyTemplating.git`
 
