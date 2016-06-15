@@ -105,7 +105,7 @@
 		59F6A17410564159008585F5 /* ArthroplastyTemplatingWindowController+Templates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatingWindowController+Templates.h"; sourceTree = "<group>"; };
 		59F6A17510564159008585F5 /* ArthroplastyTemplatingWindowController+Templates.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "ArthroplastyTemplatingWindowController+Templates.mm"; sourceTree = "<group>"; };
 		71194E571D0DE0EC00332C03 /* OsiriX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OsiriX.framework; path = "OsiriX-API/OsiriX.framework"; sourceTree = "<group>"; };
-		7121CF681D0EFE2200D7D743 /* CHANGELOG */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
+		7121CF681D0EFE2200D7D743 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		718D0AE8159C8E9A00F27CE9 /* HipAT2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HipAT2D.h; sourceTree = "<group>"; };
 		718D0AE9159C8E9A00F27CE9 /* HipAT2D.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HipAT2D.mm; sourceTree = "<group>"; };
 		A9F8BEEC0B9DD21E00FDB71F /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
@@ -131,7 +131,7 @@
 		089C166AFE841209C02AAC07 /* XRayTemplatesPlugin */ = {
 			isa = PBXGroup;
 			children = (
-				7121CF681D0EFE2200D7D743 /* CHANGELOG */,
+				7121CF681D0EFE2200D7D743 /* CHANGELOG.md */,
 				59D951DA0FCE826400509EEC /* Info.plist */,
 				5912DF3B118F24F1007F7D40 /* Prefix.pch */,
 				59D94E580FCE807D00509EEC /* Sources */,
@@ -520,6 +520,7 @@
 				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
 			};

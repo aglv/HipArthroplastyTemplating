@@ -1,9 +1,9 @@
 //
 //  HipArthroplastyTemplating.mm
-//  Hip Arthroplasty Templating
+//  HipArthroplastyTemplating
 //  Created by Joris Heuberger on 04/04/07.
-//  Modified by Alessandro Volz since 07/2009
-//  Copyright (c) 2007-2009 OsiriX Team. All rights reserved.
+//  Copyright 2007-2016 OsiriX Team
+//  Copyright 2016 volz.io
 //
 
 #import "HipArthroplastyTemplating.h"
@@ -32,7 +32,31 @@
 	[_templatesWindowController window]; // force nib loading
 }
 
+#if DEBUG != 1
+- (void)validateOsiriX {
+    SecRequirementRef requirement = 0;
+    SecStaticCodeRef code = 0;
+    
+    OSStatus status = SecRequirementCreateWithString((CFStringRef)@"anchor trusted and certificate leaf [subject.OU] = \"66HE7FMBC4\"", kSecCSDefaultFlags, &requirement);
+    if (status == noErr)
+        status = SecStaticCodeCreateWithPath((CFURLRef)[[NSBundle mainBundle] bundleURL], kSecCSDefaultFlags, &code);
+    
+    if (status == noErr) {
+        if (code && requirement)
+            status = SecStaticCodeCheckValidityWithErrors(code, kSecCSDefaultFlags, requirement, NULL);
+        else status = -1;
+    }
+    
+    if(status != noErr)
+        [NSException raise:NSGenericException format:@"Couldn't validate certified OsiriX environment"];
+}
+#endif
+
 - (void)initPlugin {
+#if DEBUG != 1
+    [self validateOsiriX];
+#endif
+    
 	_windows = [[NSMutableArray alloc] initWithCapacity:4];
 	
 	//[self initialize];

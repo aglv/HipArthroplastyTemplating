@@ -1,9 +1,9 @@
 //
 //  ZimmerTemplate.h
-//  Arthroplasty Templating II
+//  HipArthroplastyTemplating
 //  Created by Joris Heuberger on 19/03/07.
-//  Modified by Alessandro Volz since 07/2009
-//  Copyright (c) 2007-2009 OsiriX Team. All rights reserved.
+//  Copyright 2007-2016 OsiriX Team
+//  Copyright 2016 volz.io
 //
 
 #import <Cocoa/Cocoa.h>

@@ -1,9 +1,9 @@
 //
 //  ArthroplastyTemplatingSplitView.h
-//  Arthroplasty Templating II
-//
+//  HipArthroplastyTemplating
 //  Created by Alessandro Volz on 6/10/09.
-//  Copyright 2009 OsiriX Team. All rights reserved.
+//  Copyright 2007-2016 OsiriX Team
+//  Copyright 2016 volz.io
 //
 
 #import <Cocoa/Cocoa.h>

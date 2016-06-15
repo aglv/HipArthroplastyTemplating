@@ -1,9 +1,9 @@
 //
 //  NSBitmapImageRep+ArthroplastyTemplating.h
-//  Arthroplasty Templating II
-//
+//  HipArthroplastyTemplating
 //  Created by Alessandro Volz on 2/1/10.
-//  Copyright 2010 OsiriX Team. All rights reserved.
+//  Copyright 2007-2016 OsiriX Team
+//  Copyright 2016 volz.io
 //
 
 #import <Cocoa/Cocoa.h>

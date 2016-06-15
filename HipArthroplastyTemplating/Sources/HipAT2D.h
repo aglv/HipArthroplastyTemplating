@@ -1,9 +1,9 @@
 //
 //  HipAT2D.h
 //  HipArthroplastyTemplating
-//
 //  Created by Alessandro Volz on 28.06.12.
-//  Copyright (c) 2012 OsiriX Team. All rights reserved.
+//  Copyright 2007-2016 OsiriX Team
+//  Copyright 2016 volz.io
 //
 
 #import <Foundation/Foundation.h>

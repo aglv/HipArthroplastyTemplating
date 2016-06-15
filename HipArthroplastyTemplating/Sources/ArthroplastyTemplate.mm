@@ -1,8 +1,9 @@
 //
 //  ArthroplastyTemplate.m
-//  Arthroplasty Templating II
+//  HipArthroplastyTemplating
 //  Created by Joris Heuberger on 04/04/07.
-//  Copyright (c) 2007-2009 OsiriX Team. All rights reserved.
+//  Copyright 2007-2016 OsiriX Team
+//  Copyright 2016 volz.io
 //
 
 #import "ArthroplastyTemplate.h"

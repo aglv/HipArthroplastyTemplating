@@ -1,7 +1,8 @@
 //
 //  ArthroplastyTemplatingTableView.h
-//  Arthroplasty Templating II
-//  Copyright (c) 2007-2009 OsiriX Team. All rights reserved.
+//  HipArthroplastyTemplating
+//  Copyright 2007-2016 OsiriX Team
+//  Copyright 2016 volz.io
 //
 
 #import <Cocoa/Cocoa.h>
