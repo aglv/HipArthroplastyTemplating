@@ -1,3 +1,9 @@
+v2.7
+    - fixed some warnings
+    - changed threshold calculation for assisted calibration
+    - fixed Medacta Mpact & AMIStem H Collared templates
+    - fixed wizard release bug
+
 v2.6
 	- autorelease some objects instead of releasing them later, cast ROI_mode
 
