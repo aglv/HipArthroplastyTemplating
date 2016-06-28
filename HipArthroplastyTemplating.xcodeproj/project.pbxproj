@@ -267,7 +267,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE6A9A9008AC841300D0C1EE /* Build configuration list for PBXNativeTarget "HipArthroplastyTemplating" */;
 			buildPhases = (
-				71EADCC31D119FDE007B583A /* Clear */,
 				71194E591D0E9F5E00332C03 /* Check for submodules */,
 				8D5B49AD048680CD000E48DA /* Headers */,
 				8D5B49AF048680CD000E48DA /* Resources */,
@@ -278,7 +277,6 @@
 				8D5B49B3048680CD000E48DA /* Frameworks */,
 				8D5B49B5048680CD000E48DA /* Rez */,
 				711481F31AC5676000DB7108 /* Version */,
-				7121CF691D0FF15600D7D743 /* ZIP */,
 			);
 			buildRules = (
 			);
@@ -401,34 +399,6 @@
 			shellPath = /bin/sh;
 			shellScript = "git submodule foreach --recursive \"git submodule init\"\n\n#if [ ! -d \"OsiriX-API/OsiriX.framework\" ]; then\n#    echo \"warning: submodule OsiriX-API requires init/update, please wait...\"\n#    cd \"OsiriX-API\"\n#    git submodule init\n#    git submodule update\n#fi";
 		};
-		7121CF691D0FF15600D7D743 /* ZIP */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = ZIP;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "# first, the compiled plugin\n\nproduct=\"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\"\npinfo=\"$product/Contents/Info.plist\"\n\nversion=$(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" \"$pinfo\")\nversion=$(echo \"$version\" | sed 's/ /-/g')\n\nzip=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME-$version.zip\"\n\necho \"Zipping $product to $zip\"\n\nrm -Rf \"$zip\"\ncd \"$TARGET_BUILD_DIR\"\nfind \"$FULL_PRODUCT_NAME\" -path '*/.*' -prune -o -print | zip --symlinks \"$zip\" -@\n\nopen \"$BUILT_PRODUCTS_DIR\"\n\n# next, the code for this project and, if git-archive-all is available, all submodules\n\ncd \"$PROJECT_DIR\"\nzip=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME-Code-$version.zip\"\n\necho \"Zipping $product code to $zip\"\n\ncommand_exists () {\n    type \"$1\" >/dev/null 2>&1 ;\n}\n\nif command_exists git-archive-all ; then\ngit-archive-all \"$zip\"\nelse\ngit archive --format zip --output \"$zip\" master\nif [ -e \".gitmodules\" ] && [ $(grep path .gitmodules -c) != \"0\" ] ; then\necho \"warning: I need git-archive-all to produce a project code archive complete with all submodules. The currently produced archive only contains the code for $PROJECT_NAME, not its submodules!\"\nfi\nfi";
-		};
-		71EADCC31D119FDE007B583A /* Clear */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = Clear;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "echo \"warning: ciao\"\nrm -Rf \"$TARGET_BUILD_DIR\"\nrm -Rf \"$BUILT_PRODUCTS_DIR\"";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -465,6 +435,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -542,6 +513,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 			};
 			name = Development;
 		};

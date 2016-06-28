@@ -1,7 +1,7 @@
 ## v2.7.1
 - fixed Medacta Mpact & AMIStem H Collared templates
-
-## v2.7
+- added Mathys templates
+## v2.7 (private release)
 - fixed some warnings
 - changed threshold calculation for assisted calibration
 - fixed wizard release bug
