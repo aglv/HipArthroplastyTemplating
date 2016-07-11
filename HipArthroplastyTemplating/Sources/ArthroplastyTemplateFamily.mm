@@ -144,20 +144,17 @@
 }
 
 -(NSString*)templatesValueForKey:(NSString*)key {
-    NSArray* values = [_templates valueForKey:key];
+    NSArray* distinctValues = [_templates valueForKeyPath:[@"@distinctUnionOfObjects" stringByAppendingPathExtension:key]];
     
-    NSMutableArray* usedValues = [NSMutableArray array];
-    NSMutableString* str = [NSMutableString string];
+    NSMutableArray* values = [NSMutableArray array];
     
-    for (NSString* value in values)
-        if ([value isKindOfClass:[NSString class]] && ![usedValues containsObject:value]) {
-            [usedValues addObject:value];
-            if (!str.length)
-                [str appendString:value];
-            else [str appendFormat:@"| %@", value];
-        }
+    for (NSString* distinctValue in distinctValues)
+        if ([distinctValue isKindOfClass:[NSString class]])
+            for (NSString *value in [distinctValue componentsSeparatedByString:@"|"])
+                if (![values containsObject:value])
+                    [values addObject:value];
     
-    return str;
+    return [values componentsJoinedByString:@"|"];
 }
 
 @end
