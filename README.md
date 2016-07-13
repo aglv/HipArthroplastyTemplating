@@ -5,11 +5,13 @@ To build the *release* version of the *HipArthroplastyTemplating* plugin for dis
 If you already have cloned the *HipArthroplastyTemplating* repository, update it with this command:
 
 `git pull --recurse-submodules`
+
 `git submodule update --recursive`
 
 Anyway, change into the *HipArthroplastyTemplating* directory and build (actually *archive*) the project by executing the following commands:
 
 `cd HipArthroplastyTemplating`
+
 `xcodebuild -project HipArthroplastyTemplating.xcodeproj -scheme 'HipArthroplastyTemplating' -configuration Release archive`
 
 The project's build mechanism will open a new *Finder* window, in which you'll will find a ZIP file ready for distribution. Actually, there will be two ZIP files and a dSYM file: make sure not to distribute the wrong file (specifically, don't distribute the *Code* ZIP file).
