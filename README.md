@@ -5,6 +5,7 @@ To build the *release* version of the *HipArthroplastyTemplating* plugin for dis
 If you already have cloned the *HipArthroplastyTemplating* repository, update it with this command:
 
 `git pull --recurse-submodules`
+`git submodule update --recursive`
 
 Anyway, change into the *HipArthroplastyTemplating* directory and build (actually *archive*) the project by executing the following commands:
 
