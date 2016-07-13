@@ -10,8 +10,8 @@
 #import "ArthroplastyTemplateFamily.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#import <OsiriX/NSString+N2.h>
-#import <OsiriX/N2Operators.h>
+#import <OsiriXAPI/NSString+N2.h>
+#import <OsiriXAPI/N2Operators.h>
 #pragma clang diagnostic pop
 
 @implementation InfoTxtTemplate

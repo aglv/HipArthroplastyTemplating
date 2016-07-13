@@ -11,13 +11,13 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#import <OsiriX/BrowserController.h>
-#import <OsiriX/ViewerController.h>
-#import <OsiriX/ROI.h>
-#import <OsiriX/DCMView.h>
-#import <OsiriX/NSImage+N2.h>
-#import <OsiriX/N2Operators.h>
-#import <OsiriX/Notifications.h>
+#import <OsiriXAPI/BrowserController.h>
+#import <OsiriXAPI/ViewerController.h>
+#import <OsiriXAPI/ROI.h>
+#import <OsiriXAPI/DCMView.h>
+#import <OsiriXAPI/NSImage+N2.h>
+#import <OsiriXAPI/N2Operators.h>
+#import <OsiriXAPI/Notifications.h>
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"

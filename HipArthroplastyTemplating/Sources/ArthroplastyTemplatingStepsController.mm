@@ -13,21 +13,21 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#import <OsiriX/SendController.h>
-#import <OsiriX/BrowserController.h>
-#import <OsiriX/ViewerController.h>
-#import <OsiriX/ROI.h>
-#import <OsiriX/DCMPix.h>
-#import <OsiriX/DCMView.h>
-#import <OsiriX/N2Step.h>
-#import <OsiriX/N2Steps.h>
-#import <OsiriX/N2StepsView.h>
-#import <OsiriX/N2Panel.h>
-#import <OsiriX/NSBitmapImageRep+N2.h>
-#import <OsiriX/N2Operators.h>
-#import <OsiriX/NSThread+N2.h>
-#import <OsiriX/ThreadModalForWindowController.h>
-#import <OsiriX/Notifications.h>
+#import <OsiriXAPI/SendController.h>
+#import <OsiriXAPI/BrowserController.h>
+#import <OsiriXAPI/ViewerController.h>
+#import <OsiriXAPI/ROI.h>
+#import <OsiriXAPI/DCMPix.h>
+#import <OsiriXAPI/DCMView.h>
+#import <OsiriXAPI/N2Step.h>
+#import <OsiriXAPI/N2Steps.h>
+#import <OsiriXAPI/N2StepsView.h>
+#import <OsiriXAPI/N2Panel.h>
+#import <OsiriXAPI/NSBitmapImageRep+N2.h>
+#import <OsiriXAPI/N2Operators.h>
+#import <OsiriXAPI/NSThread+N2.h>
+#import <OsiriXAPI/ThreadModalForWindowController.h>
+#import <OsiriXAPI/Notifications.h>
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"

@@ -9,8 +9,8 @@
 #import "SelectablePDFView.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#import <OsiriX/N2Operators.h>
-#import <OsiriX/NSImage+N2.h>
+#import <OsiriXAPI/N2Operators.h>
+#import <OsiriXAPI/NSImage+N2.h>
 #pragma clang diagnostic pop
 #import "ArthroplastyTemplatingWindowController+Templates.h"
 #include <algorithm>
