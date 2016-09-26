@@ -33,17 +33,22 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
         
         // swizzle PDFView documentView methods
         
-        Method method;
-        IMP imp;
-        
-        Class c = [self.documentView class];
-        
-        // this is an instance method: -[N2ManagedObjectContext save:]
-        method = class_getInstanceMethod(c, @selector(acceptsFirstMouse:));
-        if (!method) [NSException raise:NSGenericException format:@"bad OsiriX version"];
-        imp = method_getImplementation(method);
-        class_addMethod(c, @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:), imp, method_getTypeEncoding(method));
-        method_setImplementation(method, class_getMethodImplementation([self class], @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:)));
+        @try {
+            Method method;
+            IMP imp;
+            
+            Class c = [self.documentView class];
+            
+            // this is an instance method: -[N2ManagedObjectContext save:]
+            method = class_getInstanceMethod(c, @selector(acceptsFirstMouse:));
+            if (!method) [NSException raise:NSGenericException format:@"bad OsiriX version"];
+            imp = method_getImplementation(method);
+            class_addMethod(c, @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:), imp, method_getTypeEncoding(method));
+            method_setImplementation(method, class_getMethodImplementation([self class], @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:)));
+            
+        } @catch (NSException *exception) {
+            NSLog( @"***** %@", exception);
+        }
     }
     
 }

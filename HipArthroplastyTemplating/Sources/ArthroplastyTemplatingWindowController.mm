@@ -450,15 +450,15 @@
 
 	if (![[operation draggingPasteboard] dataForType:@"ArthroplastyTemplate*"])
 		return; // no ArthroplastyTemplate pointer available
-	if ([operation draggingSource] != _pdfView && [operation draggingSource] != _familiesTableView)
-		return;
 	
 	ViewerController* destination = [notification object];
 	
-	ArthroplastyTemplate* templat; [[[operation draggingPasteboard] dataForType:@"ArthroplastyTemplate*"] getBytes:&templat length:sizeof(ArthroplastyTemplate*)];
+	ArthroplastyTemplate* templat = nil;
+    
+    [[[operation draggingPasteboard] dataForType:@"ArthroplastyTemplate*"] getBytes:&templat length:sizeof(ArthroplastyTemplate*)];
 
 	// find the location of the mouse in the OpenGL view
-	NSPoint openGLLocation = [[destination imageView] ConvertFromNSView2GL:[[destination imageView] convertPoint:[operation draggingLocation] fromView:NULL]];
+	NSPoint openGLLocation = [[destination imageView] ConvertFromNSView2GL:[[destination imageView] convertPoint: [destination.imageView convertPoint: [NSEvent mouseLocation] fromView: nil] fromView:NULL]];
 	
 	[self createROIFromTemplate:templat inViewer:destination centeredAt:openGLLocation];
 	
