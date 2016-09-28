@@ -10,7 +10,7 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#import <OsiriX/PluginFilter.h>
+#import <OsiriXAPI/PluginFilter.h>
 #pragma clang diagnostic pop
 
 @class ArthroplastyTemplatingWindowController, ArthroplastyTemplatingStepsController;

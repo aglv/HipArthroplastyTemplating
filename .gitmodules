@@ -1,6 +1,7 @@
 [submodule "OsiriX-API"]
 	path = OsiriX-API
 	url = git@github.com:aglv/OsiriX-API.git
+	branch = OsiriXAPI
 [submodule "HipArthroplastyTemplating/Resources/Mathys Templates"]
 	path = HipArthroplastyTemplating/Resources/Mathys Templates
 	url = git@gitlab.com:volz.io/Mathys-Hip.git
