@@ -48,7 +48,7 @@
 		71EADCC21D1195D2007B583A /* Mathys Templates in Resources */ = {isa = PBXBuildFile; fileRef = 71EADCC11D1195D2007B583A /* Mathys Templates */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		A9F8BEED0B9DD21E00FDB71F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9F8BEEC0B9DD21E00FDB71F /* Quartz.framework */; };
-		CEE107521D361E08000B77AF /* OsiriXAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE107511D361E08000B77AF /* OsiriXAPI.framework */; };
+		CEE107521D361E08000B77AF /* OsiriXAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE107511D361E08000B77AF /* OsiriXAPI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
