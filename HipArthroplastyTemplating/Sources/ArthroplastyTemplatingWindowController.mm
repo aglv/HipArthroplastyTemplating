@@ -86,7 +86,7 @@
 
 #pragma mark PDF preview
 
--(NSString*)pdfPathForFamilyAtIndex:(int)index {
+-(NSString*)pdfPathForFamilyAtIndex:(NSInteger)index {
 	return index != -1? [[[self familyAtIndex:index] templateMatchingSize:[_sizes titleOfSelectedItem] side:self.side] pdfPathForDirection:_viewDirection] : NULL;//[[NSBundle bundleForClass:[self class]] pathForResource:@"empty" ofType:@"pdf"];
 }
 
@@ -205,8 +205,8 @@
     size_t spp = [bitmap samplesPerPixel];
     NSUInteger samples[spp];
     CGFloat fsamples[spp];
-	for (int y = bitmap.pixelsHigh-1; y >= 0; --y)
-		for (int x = bitmap.pixelsWide-1; x >= 0; --x) {
+	for (NSInteger y = bitmap.pixelsHigh-1; y >= 0; --y)
+		for (NSInteger x = bitmap.pixelsWide-1; x >= 0; --x) {
 			[bitmap getPixel:samples atX:x y:y];
             for (int i = 0; i < spp; ++i)
                 fsamples[i] = samples[i]*1.0/255;

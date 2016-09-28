@@ -49,7 +49,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 @end
 
 @interface ArthroplastyTemplatingStepsController (Private)
--(void)adjustStemToCup:(unsigned)index;
+-(void)adjustStemToCup:(NSInteger)index;
 @end
 @implementation ArthroplastyTemplatingStepsController
 @synthesize viewerController = _viewerController;
@@ -828,10 +828,10 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 		NSSize size = [[_femurLayer layerImage] size];
 		NSBitmapImageRep* bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:size.width*4 bitsPerPixel:32];
 		unsigned char* bitmapData = [bitmap bitmapData];
-		int bytesPerRow = [bitmap bytesPerRow], bitsPerPixel = [bitmap bitsPerPixel];
-		for (int y = 0; y < size.height; ++y)
-			for (int x = 0; x < size.width; ++x) {
-				int base = bytesPerRow*y+bitsPerPixel/8*x;
+		NSInteger bytesPerRow = [bitmap bytesPerRow], bitsPerPixel = [bitmap bitsPerPixel];
+		for (NSInteger y = 0; y < size.height; ++y)
+			for (NSInteger x = 0; x < size.width; ++x) {
+				NSInteger base = bytesPerRow*y+bitsPerPixel/8*x;
 				bitmapData[base+0] = 0;
 				bitmapData[base+1] = 0;
 				bitmapData[base+2] = 0;
@@ -1049,7 +1049,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	[self adjustStemToCup:indexOfClosestMagnet];
 }
 
--(void)adjustStemToCup:(unsigned)index {
+-(void)adjustStemToCup:(NSInteger)index {
 	if (!_cupLayer || !_stemLayer)
 		return;
 	
@@ -1059,7 +1059,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	NSPoint cupCenter = [[[_cupLayer points] objectAtIndex:4] point];
 	
-	unsigned magnetsCount = [[_stemLayer points] count]-6;
+	NSUInteger magnetsCount = [[_stemLayer points] count]-6;
 	NSPoint magnets[magnetsCount];
 	for (unsigned i = 0; i < magnetsCount; ++i)
 		magnets[i] = [[[_stemLayer points] objectAtIndex:i+6] point];

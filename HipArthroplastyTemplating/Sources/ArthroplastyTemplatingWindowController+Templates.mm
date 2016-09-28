@@ -95,7 +95,7 @@
 //	return [[_templatesArrayController arrangedObjects] objectAtIndex:index];	
 //}
 
--(ArthroplastyTemplateFamily*)familyAtIndex:(int)index {
+-(ArthroplastyTemplateFamily*)familyAtIndex:(NSInteger)index {
 	return (index >= 0 && index < (int)[[_familiesArrayController content] count])? [[_familiesArrayController arrangedObjects] objectAtIndex:index] : NULL;	
 }
 

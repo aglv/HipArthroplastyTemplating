@@ -51,7 +51,7 @@
 	IBOutlet NSPopUpButton* _neckSizePopUpButton;
 	IBOutlet NSTextField* _verticalOffsetTextField;
 	IBOutlet NSTextField* _horizontalOffsetTextField;
-	unsigned _stemNeckSizeIndex;
+	NSUInteger _stemNeckSizeIndex;
 
 	IBOutlet NSTextField* _plannersNameTextField;
 	

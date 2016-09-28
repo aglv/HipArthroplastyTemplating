@@ -106,8 +106,9 @@
 
 -(ArthroplastyTemplate*)templateBefore:(ArthroplastyTemplate*)t {
     NSArray* ts = [self.templates filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"patientSide = %@", t.patientSide]];
-    int index = [ts indexOfObject:t]-1;
-	if (index < 0) index = [ts count]-1;
+    NSUInteger index = [ts indexOfObject:t];
+	if (index == 0) index = [ts count]-1;
+    else --index;
 	return [ts objectAtIndex:index];
 }
 

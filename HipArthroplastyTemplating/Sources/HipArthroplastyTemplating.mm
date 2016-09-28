@@ -19,6 +19,11 @@
 
 #import <objc/runtime.h>
 
+@interface DCMView (HipArthroplastyTemplating)
+
+- (BOOL)HipArthroplastyTemplating_acceptsFirstMouse:(NSEvent *)event;
+    
+@end
 
 @implementation HipArthroplastyTemplating
 
@@ -66,8 +71,6 @@
     
     // swizzle OsiriX methods
     
-    Method method;
-    IMP imp;
 
     Class c = [DCMView class];
     method_exchangeImplementations(class_getInstanceMethod(c, @selector(acceptsFirstMouse:)), class_getInstanceMethod(c, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));

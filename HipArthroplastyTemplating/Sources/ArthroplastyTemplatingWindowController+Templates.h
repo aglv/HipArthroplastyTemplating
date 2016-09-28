@@ -13,7 +13,7 @@
 -(void)awakeTemplates;
 -(ArthroplastyTemplate*)templateAtPath:(NSString*)path;
 -(ArthroplastyTemplate*)currentTemplate;
--(ArthroplastyTemplateFamily*)familyAtIndex:(int)index;
+-(ArthroplastyTemplateFamily*)familyAtIndex:(NSInteger)index;
 -(ArthroplastyTemplateFamily*)selectedFamily;
 -(IBAction)searchFilterChanged:(id)sender;
 -(BOOL)setFilter:(NSString*)string;

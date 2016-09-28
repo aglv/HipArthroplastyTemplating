@@ -46,7 +46,7 @@
 
 -(BOOL)mustFlipHorizontally:(ArthroplastyTemplate*)t;
 
--(NSString*)pdfPathForFamilyAtIndex:(int)index;
+-(NSString*)pdfPathForFamilyAtIndex:(NSInteger)index;
 -(N2Image*)dragImageForTemplate:(ArthroplastyTemplate*)templat;
 
 -(void)setFamily:(id)sender;

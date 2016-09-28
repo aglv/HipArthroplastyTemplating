@@ -17,8 +17,9 @@
 		[self setFamily:_sizes];
 	} else
 		if ([[event characters] isEqualToString:@"-"]) {
-			int index = [_sizes indexOfSelectedItem]-1;
-			if (index < 0) index = [_sizes numberOfItems]-1;
+			NSUInteger index = [_sizes indexOfSelectedItem];
+			if (index == 0) index = [_sizes numberOfItems]-1;
+            else --index;
 			[_sizes selectItemAtIndex:index];
 			[_sizes setNeedsDisplay:YES];
 			[self setFamily:_sizes];
