@@ -12,14 +12,11 @@
 
 extern NSString* SelectablePDFViewDocumentDidChangeNotification;
 
-
 @interface SelectablePDFView : PDFView {
 	BOOL _selected, _selectionInitiated;
 	NSRect _selectedRect;
 	NSPoint _mouseDownLocation;
 	IBOutlet ArthroplastyTemplatingWindowController* _controller;
 }
-
-
 
 @end

@@ -24,33 +24,26 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 
 @implementation SelectablePDFView
 
--(void)awakeFromNib {
-	[self setMenu:NULL];
-    
-    static BOOL justOnce = YES;
-    if (justOnce) {
-        justOnce = NO;
-        
-        // swizzle PDFView documentView methods
-        
++ (void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         @try {
-            Method method;
-            IMP imp;
+            Class c = NSClassFromString(@"PDFDocumentView");
             
-            Class c = [self.documentView class];
-            
-            // this is an instance method: -[N2ManagedObjectContext save:]
-            method = class_getInstanceMethod(c, @selector(acceptsFirstMouse:));
+            Method method = class_getInstanceMethod(c, @selector(acceptsFirstMouse:));
             if (!method) [NSException raise:NSGenericException format:@"bad OsiriX version"];
-            imp = method_getImplementation(method);
+            IMP imp = method_getImplementation(method);
             class_addMethod(c, @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:), imp, method_getTypeEncoding(method));
             method_setImplementation(method, class_getMethodImplementation([self class], @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:)));
             
         } @catch (NSException *exception) {
-            NSLog( @"***** %@", exception);
+            NSLog(@"***** %@", exception);
         }
-    }
-    
+    });
+}
+
+-(void)awakeFromNib {
+	[self setMenu:NULL];
 }
 
 -(NSPoint)convertPointTo01:(NSPoint)point forPage:(PDFPage*)page {
@@ -133,13 +126,18 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 
 -(void)setDocument:(PDFDocument*)document {
 	[super setDocument:document];
+
+    [self.documentView scrollPoint:NSZeroPoint]; // fix a bug that first appeared with macOS 10.12 (PDFView didn't properly center the page until interacted with)
+    
 	_selected = [_controller selectionForCurrentTemplate:&_selectedRect];
-	[[NSNotificationCenter defaultCenter] postNotificationName:SelectablePDFViewDocumentDidChangeNotification object:self];
+	
+    [[NSNotificationCenter defaultCenter] postNotificationName:SelectablePDFViewDocumentDidChangeNotification object:self];
 }
 
+// this is for macOS versions up to 10.11, now deprecated in PDFView
 -(void)drawPage:(PDFPage*)page {
-	NSGraphicsContext* context = [NSGraphicsContext currentContext];
-	[context saveGraphicsState];
+	[NSGraphicsContext saveGraphicsState];
+    
 	NSRect box = [page boundsForBox:kPDFDisplayBoxMediaBox];
 
 	if ([_controller mustFlipHorizontally]) {
@@ -161,7 +159,37 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 		[path fill];
 	}
 	
-	[context restoreGraphicsState];
+	[NSGraphicsContext restoreGraphicsState];
+}
+
+// this is for macOS versions since 10.12
+- (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context {
+    [NSGraphicsContext saveGraphicsState];
+
+    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:YES]];
+    
+    NSRect box = [page boundsForBox:kPDFDisplayBoxMediaBox];
+    
+    if ([_controller mustFlipHorizontally]) {
+        NSAffineTransform* transform = [NSAffineTransform transform];
+        [transform translateXBy:box.size.width yBy:0];
+        [transform scaleXBy:-1 yBy:1];
+        [transform concat];
+    }
+    
+    [super drawPage:page toContext:context];
+    
+    if (_selected && _selectedRect != NSMakeRect(0,0,1,1)) {
+        NSRect selection = [self convertRectFrom01:_selectedRect forPage:[self currentPage]];
+        NSBezierPath* path = [NSBezierPath bezierPath];
+        [path appendBezierPathWithRect:box];
+        [path setWindingRule:NSEvenOddWindingRule];
+        [path appendBezierPathWithRect:selection];
+        [[[NSColor grayColor] colorWithAlphaComponent:.75] setFill];
+        [path fill];
+    }
+    
+    [NSGraphicsContext restoreGraphicsState];
 }
 
 -(BOOL)acceptsFirstMouse:(NSEvent*)theEvent {
@@ -171,7 +199,7 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 - (BOOL)HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:(NSEvent*)e {
     if ([self.window.windowController isKindOfClass:[ArthroplastyTemplatingWindowController class]])
         return YES;
-    return [super acceptsFirstMouse:e];
+    return [self HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:e];
 }
 
 @end
