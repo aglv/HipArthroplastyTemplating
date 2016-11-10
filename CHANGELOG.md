@@ -1,3 +1,14 @@
+## v2.8.2
+- added Medacta Versafitcup CC TRIO, updated Versafitcup DM (was VersafitCup System)
+- adjusted calibration region growing thresholds
+- fixed ROI update notification for calibration
+
+## v2.8.1
+- fixing PDF view for Sierra
+
+## v2.8
+- macOS 10.12 compatibility
+
 ## v2.7.1
 - fixed Medacta Mpact & AMIStem H Collared templates
 - added Mathys templates
