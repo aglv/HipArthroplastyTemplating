@@ -28,6 +28,7 @@
 #import <OsiriXAPI/NSThread+N2.h>
 #import <OsiriXAPI/ThreadModalForWindowController.h>
 #import <OsiriXAPI/Notifications.h>
+#import <OsiriXAPI/DicomStudy.h>
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
@@ -144,11 +145,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	_appliedMagnification = magnificationValue;
 	
-	for (NSArray *rois in [_viewerController roiList])
-        for (ROI *r in rois)
-            [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:r];
-    
-//    [_viewerController.imageView setNeedsDisplay:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:OsirixRecomputeROINotification object:_viewerController userInfo:nil];
 }
 
 - (void)dealloc {
@@ -1106,10 +1103,10 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 		[_sendToPACSButton setState:NSOffState];
 		
 //		NSLog(@"send to PACS");
-		NSManagedObject *study = [[[_viewerController fileList:0] objectAtIndex:[[_viewerController imageView] curImage]] valueForKeyPath:@"series.study"];
-		NSArray	*seriesArray = [[study valueForKey:@"series"] allObjects];
+		DicomStudy *study = _viewerController.imageView.studyObj;
+		NSArray	*seriesArray = [study.series allObjects];
 //		NSLog(@"[seriesArray count] : %d", [seriesArray count]);
-		NSString *pathOfImageToSend;
+//		NSString *pathOfImageToSend;
 		
 		NSManagedObject* imageToSend = NULL;
 		
@@ -1122,17 +1119,18 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 				NSArray *images = [[[seriesArray objectAtIndex:i] valueForKey:@"images"] allObjects];
 //				NSLog(@"[images count] : %d", [images count]);
 //				NSLog(@"images : %@", images);
-				imageToSend = [images objectAtIndex:0];
-				pathOfImageToSend = [[images objectAtIndex:0] valueForKey:@"path"];
+				imageToSend = images.firstObject;
+//				pathOfImageToSend = [[images objectAtIndex:0] valueForKey:@"path"];
 				//pathOfImageToSend = [images valueForKey:@"path"];
 //				NSLog(@"pathOfImageToSend : %@", pathOfImageToSend);
 			}
 		}
 		
-		NSMutableArray *file2Send = [NSMutableArray arrayWithCapacity:1];
+//		NSMutableArray *file2Send = [NSMutableArray arrayWithCapacity:1];
 		//[file2Send addObject:pathOfImageToSend];
-		[file2Send addObject:imageToSend];
-		[SendController sendFiles:file2Send];
+//		[file2Send addObject:imageToSend];
+        if (imageToSend)
+            [SendController sendFiles:@[imageToSend]];
 	}
 }
 

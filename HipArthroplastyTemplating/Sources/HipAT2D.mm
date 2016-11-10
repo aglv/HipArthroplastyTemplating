@@ -87,7 +87,7 @@
 #define data(p) data[p.x+p.y*w]
 #define mask(p) mask[p.x+p.y*w]
 
-    float threshold = mean - fabs(max-min)/20;
+    float threshold = (data(p0)+mean)/2 - fabs(max-min)/20;
     
     uint8* mask = (uint8 *)[[NSMutableData dataWithLength:sizeof(uint8)*w*h] mutableBytes];
     NSMutableArray* toBeVisited = [NSMutableArray arrayWithObject:p0];
