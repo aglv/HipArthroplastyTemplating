@@ -18,9 +18,16 @@
 
 #import <objc/runtime.h>
 
-
 NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDocumentDidChangeNotification";
 
+@interface PDFDocumentView : NSView // PDFDocumentView is a private class, but to define a category on it we need its interface - but we're not going to provide an @implementation
+@end
+
+@interface PDFDocumentView (HipArthroplastyTemplating)
+
+- (BOOL)HipArthroplastyTemplating_acceptsFirstMouse:(NSEvent *)event;
+
+@end
 
 @implementation SelectablePDFView
 
@@ -28,14 +35,8 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         @try {
-            Class c = NSClassFromString(@"PDFDocumentView");
-            
-            Method method = class_getInstanceMethod(c, @selector(acceptsFirstMouse:));
-            if (!method) [NSException raise:NSGenericException format:@"bad OsiriX version"];
-            IMP imp = method_getImplementation(method);
-            class_addMethod(c, @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:), imp, method_getTypeEncoding(method));
-            method_setImplementation(method, class_getMethodImplementation([self class], @selector(HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:)));
-            
+            Class c = PDFDocumentView.class;
+            method_exchangeImplementations(class_getInstanceMethod(c, @selector(acceptsFirstMouse:)), class_getInstanceMethod(c, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
         } @catch (NSException *exception) {
             NSLog(@"***** %@", exception);
         }
@@ -192,14 +193,19 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
     [NSGraphicsContext restoreGraphicsState];
 }
 
--(BOOL)acceptsFirstMouse:(NSEvent*)theEvent {
+-(BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
     return YES;
 }
 
-- (BOOL)HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:(NSEvent*)e {
-    if ([self.window.windowController isKindOfClass:[ArthroplastyTemplatingWindowController class]])
+@end
+
+@implementation PDFDocumentView (HipArthroplastyTemplating)
+
+- (BOOL)HipArthroplastyTemplating_acceptsFirstMouse:(NSEvent*)e {
+    if ([self.window.windowController isKindOfClass:ArthroplastyTemplatingWindowController.class])
         return YES;
-    return [self HipArthroplastyTemplating_PDFDocumentView_acceptsFirstMouse:e];
+    
+    return [self HipArthroplastyTemplating_acceptsFirstMouse:e];
 }
 
 @end
