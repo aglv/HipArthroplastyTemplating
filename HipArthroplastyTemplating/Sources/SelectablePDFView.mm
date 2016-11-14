@@ -205,7 +205,10 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
     if ([self.window.windowController isKindOfClass:ArthroplastyTemplatingWindowController.class])
         return YES;
     
-    return [self HipArthroplastyTemplating_acceptsFirstMouse:e];
+    if ([self respondsToSelector:@selector(HipArthroplastyTemplating_acceptsFirstMouse:)])
+        return [self HipArthroplastyTemplating_acceptsFirstMouse:e];
+    
+    return [super acceptsFirstMouse:e];
 }
 
 @end
