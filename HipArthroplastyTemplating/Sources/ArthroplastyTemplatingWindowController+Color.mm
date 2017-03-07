@@ -3,7 +3,7 @@
 //  HipArthroplastyTemplating
 //  Created by Alessandro Volz on 08.09.09.
 //  Copyright 2007-2016 OsiriX Team
-//  Copyright 2016 volz.io
+//  Copyright 2017 volz.io
 //
 
 #import "ArthroplastyTemplatingWindowController+Color.h"

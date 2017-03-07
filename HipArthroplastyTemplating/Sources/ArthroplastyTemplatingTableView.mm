@@ -2,7 +2,7 @@
 //  ArthroplastyTemplatingTableView.m
 //  HipArthroplastyTemplating
 //  Copyright 2007-2016 OsiriX Team
-//  Copyright 2016 volz.io
+//  Copyright 2017 volz.io
 //
 
 #import "ArthroplastyTemplatingTableView.h"
