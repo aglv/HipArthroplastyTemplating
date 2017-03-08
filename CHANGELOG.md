@@ -1,3 +1,8 @@
+## v2.8.3
+- added Medacta MasterLoc
+- fixed double horizontal flip PDF view bug
+- fixed ``acceptsFirstMouse:`` problem
+
 ## v2.8.2
 - added Medacta Versafitcup CC TRIO, updated Versafitcup DM (was VersafitCup System)
 - adjusted calibration region growing thresholds
