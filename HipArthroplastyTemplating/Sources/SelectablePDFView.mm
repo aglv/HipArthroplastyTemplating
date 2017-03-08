@@ -23,7 +23,7 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 @interface PDFDocumentView : NSView // PDFDocumentView is a private class, but to define a category on it we need its interface - but we're not going to provide an @implementation
 @end
 
-@interface PDFDocumentView (HipArthroplastyTemplating)
+@interface NSView (HipArthroplastyTemplating)
 
 - (BOOL)HipArthroplastyTemplating_acceptsFirstMouse:(NSEvent *)event;
 
@@ -31,12 +31,13 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 
 @implementation SelectablePDFView
 
+static BOOL PDFDocumentViewHasAcceptsFirstMouse = NO;
+
 + (void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         @try {
-            Class c = PDFDocumentView.class;
-            method_exchangeImplementations(class_getInstanceMethod(c, @selector(acceptsFirstMouse:)), class_getInstanceMethod(c, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
+            method_exchangeImplementations(class_getInstanceMethod(NSView.class, @selector(acceptsFirstMouse:)), class_getInstanceMethod(NSView.class, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
         } @catch (NSException *exception) {
             NSLog(@"***** %@", exception);
         }
@@ -137,6 +138,11 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 
 // this is for macOS versions up to 10.11, now deprecated in PDFView
 -(void)drawPage:(PDFPage*)page {
+    if (_drawing)
+        return [super drawPage:page];
+    
+    _drawing = YES;
+
 	[NSGraphicsContext saveGraphicsState];
     
 	NSRect box = [page boundsForBox:kPDFDisplayBoxMediaBox];
@@ -161,10 +167,17 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 	}
 	
 	[NSGraphicsContext restoreGraphicsState];
+    
+    _drawing = NO;
 }
 
 // this is for macOS versions since 10.12
 - (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context {
+    if (_drawing)
+        return [super drawPage:page toContext:context];
+    
+    _drawing = YES;
+    
     [NSGraphicsContext saveGraphicsState];
 
     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithCGContext:context flipped:YES]];
@@ -191,24 +204,23 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
     }
     
     [NSGraphicsContext restoreGraphicsState];
-}
-
--(BOOL)acceptsFirstMouse:(NSEvent *)theEvent {
-    return YES;
+    
+    _drawing = NO;
 }
 
 @end
 
-@implementation PDFDocumentView (HipArthroplastyTemplating)
+@implementation NSView (HipArthroplastyTemplating)
 
-- (BOOL)HipArthroplastyTemplating_acceptsFirstMouse:(NSEvent*)e {
-    if ([self.window.windowController isKindOfClass:ArthroplastyTemplatingWindowController.class])
-        return YES;
-    
-    if ([self respondsToSelector:@selector(HipArthroplastyTemplating_acceptsFirstMouse:)])
+- (BOOL)HipArthroplastyTemplating_acceptsFirstMouse:(NSEvent *)e {
+    if (![self.window.windowController isKindOfClass:ArthroplastyTemplatingWindowController.class])
         return [self HipArthroplastyTemplating_acceptsFirstMouse:e];
     
-    return [super acceptsFirstMouse:e];
+    for (NSView *view = self; view; view = view.superview)
+        if ([view isKindOfClass:SelectablePDFView.class])
+            return YES;
+    
+    return [self HipArthroplastyTemplating_acceptsFirstMouse:e];
 }
 
 @end

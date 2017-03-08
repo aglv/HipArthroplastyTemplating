@@ -294,7 +294,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 			};
 			buildConfigurationList = CE6A9A9408AC841300D0C1EE /* Build configuration list for PBXProject "HipArthroplastyTemplating" */;
 			compatibilityVersion = "Xcode 6.3";
@@ -430,7 +430,6 @@
 		711481F41AC5680100DB7108 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -489,7 +488,7 @@
 			};
 			name = Release;
 		};
-		CE6A9A9108AC841300D0C1EE /* Development */ = {
+		CE6A9A9108AC841300D0C1EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
@@ -521,12 +520,11 @@
 				WARNING_CFLAGS = "";
 				WRAPPER_EXTENSION = osirixplugin;
 			};
-			name = Development;
+			name = Debug;
 		};
-		CE6A9A9508AC841300D0C1EE /* Development */ = {
+		CE6A9A9508AC841300D0C1EE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -551,10 +549,11 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
-			name = Development;
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
@@ -562,7 +561,7 @@
 		CE6A9A9008AC841300D0C1EE /* Build configuration list for PBXNativeTarget "HipArthroplastyTemplating" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CE6A9A9108AC841300D0C1EE /* Development */,
+				CE6A9A9108AC841300D0C1EE /* Debug */,
 				711481F51AC5680100DB7108 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -571,7 +570,7 @@
 		CE6A9A9408AC841300D0C1EE /* Build configuration list for PBXProject "HipArthroplastyTemplating" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CE6A9A9508AC841300D0C1EE /* Development */,
+				CE6A9A9508AC841300D0C1EE /* Debug */,
 				711481F41AC5680100DB7108 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

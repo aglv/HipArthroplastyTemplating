@@ -13,7 +13,7 @@
 extern NSString* SelectablePDFViewDocumentDidChangeNotification;
 
 @interface SelectablePDFView : PDFView {
-	BOOL _selected, _selectionInitiated;
+	BOOL _selected, _selectionInitiated, _drawing;
 	NSRect _selectedRect;
 	NSPoint _mouseDownLocation;
 	IBOutlet ArthroplastyTemplatingWindowController* _controller;
