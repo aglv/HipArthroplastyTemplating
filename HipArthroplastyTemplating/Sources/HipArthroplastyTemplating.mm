@@ -17,6 +17,10 @@
 #import <OsiriXAPI/NSPanel+N2.h>
 #pragma clang diagnostic pop
 
+#if HOROS == 1
+#import "HipArthroplastyTemplating+Versions.h"
+#endif
+
 #import <objc/runtime.h>
 
 @interface DCMView (HipArthroplastyTemplating)
@@ -74,6 +78,10 @@
 
     Class c = [DCMView class];
     method_exchangeImplementations(class_getInstanceMethod(c, @selector(acceptsFirstMouse:)), class_getInstanceMethod(c, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
+    
+#if HOROS == 1
+    [self checkVersion];
+#endif
 }
 
 - (long)filterImage:(NSString*)menuName {
