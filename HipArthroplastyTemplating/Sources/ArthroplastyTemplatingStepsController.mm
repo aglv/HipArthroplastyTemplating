@@ -669,7 +669,14 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	else if (step == _stepSave)
 		selfKey = YES;
 	
-	[_viewerController setROIToolTag: (ToolMode) tool];
+    @try {
+        if ([_viewerController respondsToSelector:@selector(setToolTag:)])
+            [_viewerController setToolTag:(ToolMode)tool];
+        else [_viewerController setROIToolTag:(ToolMode)tool];
+    } @catch (...) {
+        NSLog(@"Warning: HipArthroplastyTemplating toolTag problem...");
+    }
+    
 	if (showTemplates)
 		[self showTemplatesPanel:self];
 	else if (!_userOpenedTemplates) [self hideTemplatesPanel];
@@ -701,7 +708,16 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 -(void)advanceAfterInput:(id)sender {
 	if (sender == _magnificationRadio) {
 		BOOL calibrate = [_magnificationRadio selectedTag] == 1;
-		[_viewerController setROIToolTag: calibrate? tMesure : tROISelector];
+        
+        @try {
+            ToolMode tool = (calibrate? tMesure : tROISelector);
+            if ([_viewerController respondsToSelector:@selector(setToolTag:)] && ![DCMView isToolforROIs:tool])
+                [_viewerController setToolTag:tool];
+            else [_viewerController setROIToolTag:tool];
+        } @catch (...) {
+            NSLog(@"Warning: HipArthroplastyTemplating toolTag problem...");
+        }
+
 		[[self window] makeKeyWindow];
 		if (calibrate)
 			[_magnificationCalibrateLength performClick:self];

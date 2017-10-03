@@ -439,7 +439,7 @@
 	if([lines objectAtIndex:3]) [newLayer setTextualBoxLine4:[lines objectAtIndex:3]];
 	if([lines objectAtIndex:4]) [newLayer setTextualBoxLine5:[lines objectAtIndex:4]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName: OsirixROIChangeNotification object:newLayer userInfo: nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:newLayer userInfo: nil];
 	
 	return newLayer;
 }

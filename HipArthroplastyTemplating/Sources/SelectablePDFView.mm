@@ -31,7 +31,7 @@ NSString* SelectablePDFViewDocumentDidChangeNotification = @"SelectablePDFViewDo
 
 @implementation SelectablePDFView
 
-static BOOL PDFDocumentViewHasAcceptsFirstMouse = NO;
+//static BOOL PDFDocumentViewHasAcceptsFirstMouse = NO;
 
 + (void)initialize {
     static dispatch_once_t onceToken;
