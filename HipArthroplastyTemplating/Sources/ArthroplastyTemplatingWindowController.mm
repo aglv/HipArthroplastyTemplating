@@ -57,6 +57,9 @@
 }
 
 -(void)awakeFromNib {
+//    [_pdfView setDisplayMode:kPDFDisplaySinglePage];
+    _pdfView.autoScales = YES;
+//    _pdfView.scaleFactor = _pdfView.scaleFactorForSizeToFit;
 	[self awakeColor];
 	[_familiesArrayController setSortDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfViewDocumentDidChange:) name:SelectablePDFViewDocumentDidChangeNotification object:_pdfView];
