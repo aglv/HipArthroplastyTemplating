@@ -1,3 +1,6 @@
+## v2.8.6
+- fixed missing OsiriX 10.0.3 API findSystemFolderOfType:forDomain:
+
 ## v2.8.3
 - added Medacta MasterLoc
 - fixed double horizontal flip PDF view bug
