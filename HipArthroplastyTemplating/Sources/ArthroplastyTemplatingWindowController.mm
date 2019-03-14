@@ -316,7 +316,7 @@
 }
 
 -(ATSide)side {
-	return [_sideControl selectedSegment]+1;
+	return (ATSide)[_sideControl selectedSegment]+1;
 }
 
 -(void)setSide:(ATSide)side {

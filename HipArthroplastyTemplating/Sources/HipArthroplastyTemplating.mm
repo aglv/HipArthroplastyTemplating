@@ -14,7 +14,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #import <OsiriXAPI/BrowserController.h>
 #import <OsiriXAPI/Notifications.h>
-#import <OsiriXAPI/NSPanel+N2.h>
+//#import <OsiriXAPI/NSPanel+N2.h>
 #pragma clang diagnostic pop
 
 #if HOROS == 1
@@ -32,6 +32,18 @@
 @implementation HipArthroplastyTemplating
 
 @synthesize templatesWindowController = _templatesWindowController;
+
++ (NSString *)findSystemFolderOfType:(OSType)folderType forDomain:(FSVolumeRefNum)domain {
+    FSRef folder;
+    if (FSFindFolder(domain, folderType, kCreateFolder, &folder) == noErr) {
+        CFURLRef url = CFURLCreateFromFSRef(kCFAllocatorDefault, &folder);
+        NSString *result = [(NSURL *)url path];
+        CFRelease(url);
+        return result;
+    }
+    
+    return nil;
+}
 
 -(void)initialize {
 	if (_initialized) return;

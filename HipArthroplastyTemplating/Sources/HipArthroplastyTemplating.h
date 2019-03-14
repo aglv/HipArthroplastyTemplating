@@ -23,6 +23,8 @@
 
 @property(readonly) ArthroplastyTemplatingWindowController* templatesWindowController;
 
++ (NSString *)findSystemFolderOfType:(OSType)folderType forDomain:(FSVolumeRefNum)domain;
+
 -(ArthroplastyTemplatingStepsController*)windowControllerForViewer:(ViewerController*)viewer;
 
 @end

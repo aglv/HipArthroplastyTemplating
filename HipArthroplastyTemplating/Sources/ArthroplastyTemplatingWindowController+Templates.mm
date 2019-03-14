@@ -9,6 +9,7 @@
 #import "ArthroplastyTemplatingWindowController+Templates.h"
 #import "ArthroplastyTemplateFamily.h"
 #import "InfoTxtTemplate.h"
+#import "HipArthroplastyTemplating.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -41,14 +42,15 @@
 	return templates;
 }
 
--(void)awakeTemplates {
+- (void)awakeTemplates {
 	[_templates removeAllObjects];
     
-    NSArray* paths = [NSArray arrayWithObjects:
-                      [[NSBundle bundleForClass:[self class]] resourcePath],
-                      [[[NSFileManager defaultManager] findSystemFolderOfType:kApplicationSupportFolderType forDomain:kUserDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"],
-                      [[[NSFileManager defaultManager] findSystemFolderOfType:kApplicationSupportFolderType forDomain:kLocalDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"],
-                      nil];
+    NSMutableArray<NSString *> *paths = [NSMutableArray array];
+    NSString *temp;
+    if ((temp = [[NSBundle bundleForClass:self.class] resourcePath])) [paths addObject:temp];
+    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kUserDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"])) [paths addObject:temp];
+    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kLocalDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"])) [paths addObject:temp];
+
 	for (NSString* path in paths) {
         for (NSString* sub in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL])
             if ([sub hasSuffix:@"Templates"]) {
