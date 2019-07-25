@@ -17,15 +17,15 @@
 
 @synthesize x = _x, y = _y;
 
-+(id)pointWith:(NSInteger)x :(NSInteger)y {
++ (id)pointWith:(NSInteger)x :(NSInteger)y {
     return [[[[self class] alloc] initWithX:x y:y] autorelease];
 }
 
-+(id)pointWithX:(NSInteger)x y:(NSInteger)y {
++ (id)pointWithX:(NSInteger)x y:(NSInteger)y {
     return [[[[self class] alloc] initWithX:x y:y] autorelease];
 }
 
--(id)initWithX:(NSInteger)x y:(NSInteger)y {
+- (id)initWithX:(NSInteger)x y:(NSInteger)y {
     if ((self = [super init])) {
         _x = x; 
         _y = y;
@@ -34,11 +34,11 @@
     return self;
 }
 
--(BOOL)isEqual:(HipAT2DIntegerPoint*)other {
+- (BOOL)isEqual:(HipAT2DIntegerPoint *)other {
     return [other isKindOfClass:[HipAT2DIntegerPoint class]] && _x == other.x && _y == other.y;
 }
 
--(NSArray*)neighbors {
+- (NSArray *)neighbors {
     return [NSArray arrayWithObjects:
             [HipAT2DIntegerPoint pointWith:_x:_y-1],
             [HipAT2DIntegerPoint pointWith:_x+1:_y],
@@ -47,19 +47,19 @@
             nil];
 }
 
-/*-(CGFloat)distanceTo:(HipAT2DIntegerPoint*)p {
+/*-(CGFloat)distanceTo:(HipAT2DIntegerPoint *)p {
     return std::sqrt(std::pow((CGFloat)_x-p.x, 2)+std::pow((CGFloat)_y-p.y, 2));
 }*/
 
--(CGFloat)distanceToNoSqrt:(HipAT2DIntegerPoint*)p {
+- (CGFloat)distanceToNoSqrt:(HipAT2DIntegerPoint *)p {
     return std::pow((CGFloat)_x-p.x, 2)+std::pow((CGFloat)_y-p.y, 2);
 }
 
--(NSString*)description {
+- (NSString *)description {
     return [NSString stringWithFormat:@"[%d,%d]", (int)_x, (int)_y];
 }
 
--(NSPoint)nsPoint {
+- (NSPoint)nsPoint {
     return NSMakePoint(_x, _y);
 }
 
@@ -67,11 +67,11 @@
 
 @implementation HipAT2D
 
-+ (BOOL)growRegionFromPoint:(HipAT2DIntegerPoint*)p0 onDCMPix:(DCMPix*)pix outputPoints:(NSMutableArray*)points outputContour:(NSMutableArray*)contour {
-    NSThread* thread = [NSThread currentThread];
++ (BOOL)growRegionFromPoint:(HipAT2DIntegerPoint *)p0 onDCMPix:(DCMPix *)pix outputPoints:(NSMutableArray *)points outputContour:(NSMutableArray *)contour {
+    NSThread *thread = [NSThread currentThread];
     
     const NSInteger w = pix.pwidth, h = pix.pheight, wh = w*h;
-    float* data = pix.fImage;
+    float *data = pix.fImage;
     
     float min = FLT_MAX, max = -FLT_MAX, mean = 0;
     for (size_t i = 0; i < wh; ++i) {
@@ -89,15 +89,15 @@
 
     float threshold = (data(p0)+mean)/2 - fabs(max-min)/20;
     
-    uint8* mask = (uint8 *)[[NSMutableData dataWithLength:sizeof(uint8)*w*h] mutableBytes];
-    NSMutableArray* toBeVisited = [NSMutableArray arrayWithObject:p0];
+    uint8 *mask = (uint8 *)[[NSMutableData dataWithLength:sizeof(uint8)*w*h] mutableBytes];
+    NSMutableArray *toBeVisited = [NSMutableArray arrayWithObject:p0];
     mask(p0) = 1;
     
     while (toBeVisited.count && !thread.isCancelled) {
-        HipAT2DIntegerPoint* p = [toBeVisited lastObject];
+        HipAT2DIntegerPoint *p = [toBeVisited lastObject];
         [toBeVisited removeLastObject];
         [points addObject:p];
-        for (HipAT2DIntegerPoint* t in p.neighbors)
+        for (HipAT2DIntegerPoint *t in p.neighbors)
             if (t.x >= 0 && t.y >= 0 && t.x < w && t.y < h && !mask(t)) {
                 mask(t) = 1;
                 if (data(t) >= threshold)
@@ -115,11 +115,11 @@
 #undef data
 #undef mask
 
-+ (NSArray*)mostDistantPairOfPointsInArray:(NSArray*)points {
++ (NSArray *)mostDistantPairOfPointsInArray:(NSArray *)points {
     if (points.count < 2)
         return nil;
 
-    NSThread* thread = [NSThread currentThread];
+    NSThread *thread = [NSThread currentThread];
 
     NSUInteger p1i = 0, p2i = 0;
     CGFloat rd = 0;

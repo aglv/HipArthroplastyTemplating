@@ -17,10 +17,10 @@ struct IntegerPoint {
 	IntegerPoint(NSInteger x, NSInteger y) : x(x), y(y) {}
 };
 
--(void)detectAndApplyBorderTransparency:(uint8)alphaThreshold {
+- (void)detectAndApplyBorderTransparency:(uint8)alphaThreshold {
 	NSSize size = [self size]; // TODO: pixelsHigh, pixelsWide
 	NSInteger width = size.width, height = size.height;
-	uint8* data = [self bitmapData];
+	uint8 *data = [self bitmapData];
 	
 	const size_t rowBytes = [self bytesPerRow], pixelBytes = [self bitsPerPixel]/8;
 #define P(x,y) (y*rowBytes+x*pixelBytes)
@@ -67,10 +67,10 @@ struct IntegerPoint {
 #undef P
 }
 
--(void)setColor:(NSColor*)color {
+- (void)setColor:(NSColor *)color {
 	NSSize size = [self size];
 	NSInteger width = size.width, height = size.height;
-	uint8* data = [self bitmapData];
+	uint8 *data = [self bitmapData];
 	
 	const size_t rowBytes = [self bytesPerRow], pixelBytes = [self bitsPerPixel]/8;
 #define P(x,y) (y*rowBytes+x*pixelBytes)

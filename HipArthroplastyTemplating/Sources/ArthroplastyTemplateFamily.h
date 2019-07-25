@@ -11,20 +11,20 @@
 
 
 @interface ArthroplastyTemplateFamily : NSObject {
-	NSMutableArray* _templates;
+	NSMutableArray *_templates;
 }
 
-@property(readonly) NSArray* templates;
-@property(readonly) NSString *fixation, *group, *manufacturer, *modularity, *name, *patientSide, *surgery, *type;
+@property (readonly) NSArray *templates;
+@property (readonly) NSString *fixation, *group, *manufacturer, *modularity, *name, *patientSide, *surgery, *type;
 
--(id)initWithTemplate:(ArthroplastyTemplate*)templat;
--(BOOL)matches:(ArthroplastyTemplate*)templat;
--(void)add:(ArthroplastyTemplate*)templat;
--(ArthroplastyTemplate*)templateMatchingSize:(NSString*)size side:(ATSide)side;
+- (id)initWithTemplate:(ArthroplastyTemplate *)templat;
+- (BOOL)matches:(ArthroplastyTemplate *)templat;
+- (void)add:(ArthroplastyTemplate *)templat;
+- (ArthroplastyTemplate *)templateMatchingOffset:(NSString *)offset size:(NSString *)size side:(ArthroplastyTemplateSide)side;
 
--(ArthroplastyTemplate*)templateAfter:(ArthroplastyTemplate*)t;
--(ArthroplastyTemplate*)templateBefore:(ArthroplastyTemplate*)t;
+- (ArthroplastyTemplate *)templateAfter:(ArthroplastyTemplate *)t;
+- (ArthroplastyTemplate *)templateBefore:(ArthroplastyTemplate *)t;
 
-+(CGFloat)numberForSize:(NSString*)size;
++ (CGFloat)numberForString:(NSString *)size;
 
 @end

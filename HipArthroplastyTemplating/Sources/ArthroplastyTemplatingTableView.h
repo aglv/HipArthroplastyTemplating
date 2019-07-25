@@ -6,10 +6,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "ArthroplastyTemplatingWindowController.h"
+#import "ArthroplastyTemplatesWindowController.h"
 
-@interface ArthroplastyTemplatingTableView : NSTableView {
-	IBOutlet ArthroplastyTemplatingWindowController *_controller;
-}
+@interface ArthroplastyTemplatingTableView : NSTableView
 
 @end

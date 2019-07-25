@@ -8,15 +8,17 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
-@class ArthroplastyTemplatingWindowController;
+@class ArthroplastyTemplatesWindowController;
 
-extern NSString* SelectablePDFViewDocumentDidChangeNotification;
+extern NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification;
 
 @interface SelectablePDFView : PDFView {
 	BOOL _selected, _selectionInitiated, _drawing;
 	NSRect _selectedRect;
 	NSPoint _mouseDownLocation;
-	IBOutlet ArthroplastyTemplatingWindowController* _controller;
+//    IBOutlet ArthroplastyTemplatesWindowController *_controller;
 }
+
+- (ArthroplastyTemplatesWindowController *)controller;
 
 @end

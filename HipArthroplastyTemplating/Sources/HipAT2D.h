@@ -15,11 +15,11 @@
 @property NSInteger x;
 @property NSInteger y;
 
-+(id)pointWith:(NSInteger)x :(NSInteger)y;
-+(id)pointWithX:(NSInteger)x y:(NSInteger)y;
--(id)initWithX:(NSInteger)x y:(NSInteger)y;
++ (id)pointWith:(NSInteger)x :(NSInteger)y;
++ (id)pointWithX:(NSInteger)x y:(NSInteger)y;
+- (id)initWithX:(NSInteger)x y:(NSInteger)y;
 
--(NSPoint)nsPoint;
+- (NSPoint)nsPoint;
 
 @end
 
@@ -27,7 +27,7 @@
 
 @interface HipAT2D : NSObject
 
-+ (BOOL)growRegionFromPoint:(HipAT2DIntegerPoint*)p0 onDCMPix:(DCMPix*)pix outputPoints:(NSMutableArray*)points outputContour:(NSMutableArray*)contour;
-+ (NSArray*)mostDistantPairOfPointsInArray:(NSArray*)points;
++ (BOOL)growRegionFromPoint:(HipAT2DIntegerPoint *)p0 onDCMPix:(DCMPix *)pix outputPoints:(NSMutableArray *)points outputContour:(NSMutableArray *)contour;
++ (NSArray *)mostDistantPairOfPointsInArray:(NSArray *)points;
 
 @end

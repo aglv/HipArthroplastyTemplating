@@ -7,7 +7,7 @@
 //
 
 #import "ArthroplastyTemplatingStepsController.h"
-#import "ArthroplastyTemplatingWindowController+Templates.h"
+#import "ArthroplastyTemplatesWindowController+Templates.h"
 #import "HipArthroplastyTemplating.h"
 #import "ArthroplastyTemplatingUserDefaults.h"
 
@@ -37,20 +37,20 @@
 
 #define kInvalidAngle 666
 #define kInvalidMagnification 0
-NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
+NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 @interface HATROI : ROI
 @end
 @implementation HATROI
 
--(BOOL)valid {
+- (BOOL)valid {
     return YES;
 }
 
 @end
 
 @interface ArthroplastyTemplatingStepsController (Private)
--(void)adjustStemToCup:(NSInteger)index;
+- (void)adjustStemToCup:(NSInteger)index;
 @end
 @implementation ArthroplastyTemplatingStepsController
 @synthesize viewerController = _viewerController;
@@ -58,7 +58,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 
 #pragma mark Initialization
 
--(id)initWithPlugin:(HipArthroplastyTemplating*)plugin viewerController:(ViewerController*)viewerController {
+- (id)initWithPlugin:(HipArthroplastyTemplating *)plugin viewerController:(ViewerController *)viewerController {
 	self = [self initWithWindowNibName:@"HipArthroplastyTemplatingSteps"];
 	_plugin = [plugin retain];
 	_viewerController = [viewerController retain];
@@ -88,7 +88,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	return self;
 }
 
--(void)awakeFromNib {
+- (void)awakeFromNib {
 	[_stepsView setForeColor:[NSColor whiteColor]];
 	[_stepsView setControlSize:NSSmallControlSize];
 
@@ -113,7 +113,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 		[_stepSave setDefaultButton:doneSave];
 	}
 	
-    for (NSButtonCell* cell in _magnificationRadio.cells)
+    for (NSButtonCell *cell in _magnificationRadio.cells)
         [cell setAttributedTitle:[[[NSAttributedString alloc] initWithString:[cell title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor whiteColor], NSForegroundColorAttributeName, [cell font], NSFontAttributeName, NULL]] autorelease]];
 	[_magnificationCustomFactor setBackgroundColor:[self.window backgroundColor]];
     [_magnificationCustomFactor setDrawsBackground:YES];
@@ -125,15 +125,15 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
     
 //	[self updateInfo];
 	 
-	[_plannersNameTextField setStringValue:[[[_plugin templatesWindowController] userDefaults] object:PlannersNameUserDefaultKey otherwise:NSFullUserName()]];
+	[_plannersNameTextField setStringValue:[[HipArthroplastyTemplating userDefaults] object:PlannersNameUserDefaultKey otherwise:NSFullUserName()]];
 	
 	[_steps setCurrentStep:_stepCalibration];
 }
 
--(void)applyMagnification:(CGFloat)magnificationValue {
+- (void)applyMagnification:(CGFloat)magnificationValue {
 	CGFloat factor = 1.*_appliedMagnification/magnificationValue;
 	
-	for (DCMPix* p in [_viewerController pixList]) {
+	for (DCMPix *p in [_viewerController pixList]) {
 		if (!p.pixelSpacingX && !p.pixelSpacingY) {
 			p.pixelSpacingX = p.pixelSpacingY = 1./72;	
 			factor *= 720;
@@ -171,7 +171,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	[super dealloc];
 }
 
--(NSString*)windowFrameAutosaveName {
+- (NSString *)windowFrameAutosaveName {
 	return @"Arthroplasty Templating";
 }
 
@@ -181,11 +181,11 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
     [self autorelease];
 }
 
-- (void)viewerWillClose:(NSNotification*)notification {
+- (void)viewerWillClose:(NSNotification *)notification {
 	[self close];
 }
 
--(void)viewerDidChangeKeyStatus:(NSNotification*)notif {
+- (void)viewerDidChangeKeyStatus:(NSNotification *)notif {
 	if ([[_viewerController window] isKeyWindow])
 		;//[[self window] orderFront:self];
 	else { 
@@ -195,20 +195,20 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 }
 
--(void)windowDidChangeKeyStatus:(NSNotification*)notif {
+- (void)windowDidChangeKeyStatus:(NSNotification *)notif {
 	NSLog(@"windowDidChangeKeyStatus");
 }
 
 #pragma mark Link to OsiriX
 
--(void)removeRoiFromViewer:(ROI*)roi {
+- (void)removeRoiFromViewer:(ROI *)roi {
 	if (!roi) return;
 	[[[_viewerController roiList] objectAtIndex:0] removeObject:roi];
 	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixRemoveROINotification object:roi userInfo:NULL];
 }
 
 // landmark OR horizontal axis has changed
--(BOOL)landmarkChanged:(ROI*)landmark axis:(ROI**)axis other:(ROI*)otherLandmark {
+- (BOOL)landmarkChanged:(ROI *)landmark axis:(ROI **)axis other:(ROI *)otherLandmark {
 	if (!landmark || [[landmark points] count] != 1 || !_horizontalAxis) {
 		if (*axis) {
 			[self removeRoiFromViewer:*axis];
@@ -255,7 +255,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	return newAxis; // returns YES if the axis was changed
 }
 
--(void)updateInequality:(ROI**)axis from:(ROI*)roiFrom to:(ROI*)roiTo name:(NSString*)name positioning:(CGFloat)positioning value:(CGFloat*)value
+- (void)updateInequality:(ROI **)axis from:(ROI *)roiFrom to:(ROI *)roiTo name:(NSString *)name positioning:(CGFloat)positioning value:(CGFloat *)value
 {
     if( axis == nil)
         return;
@@ -295,7 +295,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 //	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_legInequality userInfo:NULL];
 }
 
--(void)updateLegInequality {
+- (void)updateLegInequality {
 	ROI *lm1 = _femurLandmarkOther? (_femurLandmarkOther==_landmark1?_landmark2:_landmark1) : _landmark1, *lm2 = _femurLandmarkOther? _femurLandmarkOther : _landmark2;
 	[self updateInequality:&_originalLegInequality from:lm1 to:lm2 name:@"Original leg inequality" positioning:.5 value:&_originalLegInequalityValue];
 	[self updateInequality:&_legInequality from:_femurLandmark to:_femurLandmarkOther name:@"Leg inequality" positioning:1 value:&_legInequalityValue];
@@ -310,8 +310,8 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 //	[_verticalOffsetTextField setStringValue:[NSString stringWithFormat:@"Vertical offset: ", ]];
 }
 
--(void)roiChanged:(NSNotification*)notification {
-	ROI* roi = [notification object];
+- (void)roiChanged:(NSNotification *)notification {
+	ROI *roi = [notification object];
 	if (!roi) return;
 	
     if (_isMyRoiManupulation) return;
@@ -377,14 +377,14 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 			if (!_stemLayer && [roi type] == tLayerROI) {
 				_stemLayer = roi;
 				_stemTemplate = [[_plugin templatesWindowController] templateAtPath:[roi layerReferenceFilePath]];
-				NSArray* points = [_stemTemplate headRotationPointsForDirection:ArthroplastyTemplateAnteriorPosteriorDirection];
+				NSArray *points = [_stemTemplate headRotationPointsForProjection:ArthroplastyTemplateAnteriorPosteriorProjection];
 				for (int i = 0; i < 5; ++i) // S = 0 to XXL = 4
 					[[_neckSizePopUpButton itemAtIndex:i] setHidden:NSEqualPoints([[points objectAtIndex:i] pointValue], NSZeroPoint)];
                 if ([_stemTemplate isProximal] && !_distalStemLayer)
                     [[_plugin templatesWindowController] setFilter:@"Distal Stem"];
 			}
             if ([_stemTemplate isProximal] && !_distalStemLayer && [roi type] == tLayerROI) {
-                ArthroplastyTemplate* t = [[_plugin templatesWindowController] templateAtPath:[roi layerReferenceFilePath]];
+                ArthroplastyTemplate *t = [[_plugin templatesWindowController] templateAtPath:[roi layerReferenceFilePath]];
                 if ([t isDistal]) {
                     _distalStemLayer = roi;
                     _distalStemTemplate = t;
@@ -421,7 +421,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	[self computeValues];
 }
 
--(void)roiRemoved:(NSNotification*)notification {
+- (void)roiRemoved:(NSNotification *)notification {
 	ROI *roi = [notification object];
 	
 	[_knownRois removeObject:roi];
@@ -430,33 +430,33 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 		_magnificationLine = NULL;
 		[_stepCalibration setDone:NO];
 		[_steps setCurrentStep:_stepCalibration];
-        NSArray* ps = [roi points];
+        NSArray *ps = [roi points];
         if (ps.count) {
             BOOL go = YES;
-            MyPoint* p = [ps objectAtIndex:0];
+            MyPoint *p = [ps objectAtIndex:0];
             for (int i = 1; go && i < ps.count; ++i) {
-                MyPoint* q = [ps objectAtIndex:i];
+                MyPoint *q = [ps objectAtIndex:i];
                 if (p.x != q.x || p.y != q.y)
                     go = NO;
             }
             
             if (go) {
-                NSThread* thread = [NSThread performBlockInBackground:^{
-                    NSThread* thread = [NSThread currentThread];
+                NSThread *thread = [NSThread performBlockInBackground:^{
+                    NSThread *thread = [NSThread currentThread];
                     thread.name = NSLocalizedString(@"Calculating object diameter...", nil);
                     thread.status = NSLocalizedString(@"If you didn't click inside a calibration object, you better cancel this calculation.", nil);
                     thread.supportsCancel = YES;
                     
-                    NSMutableArray* contour = [NSMutableArray array];
+                    NSMutableArray *contour = [NSMutableArray array];
                     BOOL r = [HipAT2D growRegionFromPoint:[HipAT2DIntegerPoint pointWith:roundf(p.x):roundf(p.y)] onDCMPix:[self.viewerController.pixList objectAtIndex:self.viewerController.imageView.curImage] outputPoints:nil outputContour:contour];
                     if (!r) return;
                     
-                    NSArray* ps = [HipAT2D mostDistantPairOfPointsInArray:contour];
+                    NSArray *ps = [HipAT2D mostDistantPairOfPointsInArray:contour];
                     
                     if (ps)
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             // create the ROI
-                            ROI* nroi = [[ROI alloc] initWithType:tMesure :roi.pixelSpacingX :roi.pixelSpacingY :roi.imageOrigin];
+                            ROI *nroi = [[ROI alloc] initWithType:tMesure :roi.pixelSpacingX :roi.pixelSpacingY :roi.imageOrigin];
                             [nroi addPoint:[[ps objectAtIndex:0] nsPoint]];
                             [nroi addPoint:[[ps objectAtIndex:1] nsPoint]];
                             [_viewerController.imageView roiSet:nroi]; // [nroi setCurView: _viewerController.imageView]; is not available in horos
@@ -588,7 +588,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 
 #pragma mark General Methods
 
--(IBAction)resetSBS:(id)sender {
+- (IBAction)resetSBS:(id)sender {
 	[self resetSBSUpdatingView:YES];
 }
 
@@ -615,19 +615,19 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 
 #pragma mark Templates
 
--(IBAction)showTemplatesPanel:(id)sender {
+- (IBAction)showTemplatesPanel:(id)sender {
 	if ([[[_plugin templatesWindowController] window] isVisible]) return;
 	[[[_plugin templatesWindowController] window] makeKeyAndOrderFront:sender];
 	_userOpenedTemplates = [sender class] == [NSButton class];
 }
 
--(void)hideTemplatesPanel {
+- (void)hideTemplatesPanel {
 	[[[_plugin templatesWindowController] window] orderOut:self];
 }
 
 #pragma mark Step by Step
 
--(void)steps:(N2Steps*)steps willBeginStep:(N2Step*)step {
+- (void)steps:(N2Steps *)steps willBeginStep:(N2Step *)step {
 	if (steps != _steps)
 		return; // this should never happen
 	
@@ -655,15 +655,15 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	} else if (step == _stepCup) {
 		showTemplates = [[_plugin templatesWindowController] setFilter:@"Cup"];
 		NSPoint pt = NSZeroPoint;
-		for (MyPoint* p in [_femurRoi points])
+		for (MyPoint *p in [_femurRoi points])
 			pt += [p point];
 		pt /= [[_femurRoi points] count];
-		[[_plugin templatesWindowController] setSide: (pt.x > [[[_viewerController imageView] curDCM] pwidth]/2)? ATLeftSideMask : ATRightSideMask ];
+		[[_plugin templatesWindowController] setSide: (pt.x > [[[_viewerController imageView] curDCM] pwidth]/2)? ArthroplastyTemplateLeftSide : ArthroplastyTemplateRightSide ];
 	} else if (step == _stepStem) {
 		if (_stemLayer)
 			[_stemLayer setGroupID:0];
 		showTemplates = [[_plugin templatesWindowController] setFilter:@"Stem !Distal"];
-		[[_plugin templatesWindowController] setSide: ([_cupLayer pointAtIndex:4].x > [[[_viewerController imageView] curDCM] pwidth]/2)? ATLeftSideMask : ATRightSideMask ];
+		[[_plugin templatesWindowController] setSide: ([_cupLayer pointAtIndex:4].x > [[[_viewerController imageView] curDCM] pwidth]/2)? ArthroplastyTemplateLeftSide : ArthroplastyTemplateRightSide ];
 	} else if (step == _stepPlacement)
 		[self adjustStemToCup];
 	else if (step == _stepSave)
@@ -681,14 +681,14 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 		[self showTemplatesPanel:self];
 	else if (!_userOpenedTemplates) [self hideTemplatesPanel];
 	
-	[(N2Panel*)[self window] setCanBecomeKeyWindow:selfKey];
+	[(N2Panel *)[self window] setCanBecomeKeyWindow:selfKey];
 	if (selfKey) {
 		if ([[self window] isVisible]) 
 			[[self window] makeKeyAndOrderFront:self];
 	} else if (!showTemplates) [[_viewerController window] makeKeyAndOrderFront:self];
 }
 
--(void)steps:(N2Steps*)steps valueChanged:(id)sender {
+- (void)steps:(N2Steps *)steps valueChanged:(id)sender {
 	// calibration
 	if (sender == _magnificationRadio) {
 		BOOL calibrate = [_magnificationRadio selectedTag] == 1;
@@ -705,7 +705,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	[self advanceAfterInput:sender];
 }
 
--(void)advanceAfterInput:(id)sender {
+- (void)advanceAfterInput:(id)sender {
 	if (sender == _magnificationRadio) {
 		BOOL calibrate = [_magnificationRadio selectedTag] == 1;
         
@@ -727,8 +727,8 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	[_neckSizePopUpButton setEnabled: _stemLayer != NULL];
 }
 
--(BOOL)steps:(N2Steps*)steps shouldValidateStep:(N2Step*)step {
-	NSString* errorMessage = NULL;
+- (BOOL)steps:(N2Steps *)steps shouldValidateStep:(N2Step *)step {
+	NSString *errorMessage = NULL;
 	
 	if (step == _stepCalibration) {
 		if (![_magnificationRadio selectedTag]) {
@@ -772,8 +772,8 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	return errorMessage == NULL;
 }
 
--(ROI*)closestROIFromSet:(NSSet*)rois toPoints:(NSArray*)points {
-	NSArray* roisArray = [rois allObjects];
+- (ROI *)closestROIFromSet:(NSSet *)rois toPoints:(NSArray *)points {
+	NSArray *roisArray = [rois allObjects];
 	CGFloat distances[[rois count]];
 	// fill distances
 	for (unsigned i = 0; i < [rois count]; ++i) {
@@ -792,7 +792,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	return [roisArray objectAtIndex:minIndex];
 }
 
--(void)steps:(N2Steps*)steps validateStep:(N2Step*)step {
+- (void)steps:(N2Steps *)steps validateStep:(N2Step *)step {
 	if (step == _stepCalibration) {
 		if ([_magnificationRadio selectedTag]) {
 			if (!_magnificationLine || [[_magnificationLine points] count] != 2) return;
@@ -837,10 +837,10 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 		
 		// opacity
 
-		NSBitmapImageRep* femur = [NSBitmapImageRep imageRepWithData:[[_femurLayer layerImage] TIFFRepresentation]];
+		NSBitmapImageRep *femur = [NSBitmapImageRep imageRepWithData:[[_femurLayer layerImage] TIFFRepresentation]];
 		NSSize size = [[_femurLayer layerImage] size];
-		NSBitmapImageRep* bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:size.width*4 bitsPerPixel:32];
-		unsigned char* bitmapData = [bitmap bitmapData];
+		NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:size.width*4 bitsPerPixel:32];
+		unsigned char *bitmapData = [bitmap bitmapData];
 		NSInteger bytesPerRow = [bitmap bytesPerRow], bitsPerPixel = [bitmap bitsPerPixel];
 		for (NSInteger y = 0; y < size.height; ++y)
 			for (NSInteger x = 0; x < size.width; ++x) {
@@ -851,9 +851,9 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 				bitmapData[base+3] = [[femur colorAtX:x y:y] alphaComponent]>0? 128 : 0;
 			}
 		
-		NSImage* image = [[NSImage alloc] init];
+		NSImage *image = [[NSImage alloc] init];
 		unsigned kernelSize = 5; 
-		NSBitmapImageRep* temp = [bitmap smoothen:kernelSize];
+		NSBitmapImageRep *temp = [bitmap smoothen:kernelSize];
 		[image addRepresentation:temp];
 		
 		_originalFemurOpacityLayer = [_viewerController addLayerRoiToCurrentSliceWithImage:[image autorelease] referenceFilePath:@"none" layerPixelSpacingX:[[[_viewerController imageView] curDCM] pixelSpacingX] layerPixelSpacingY:[[[_viewerController imageView] curDCM] pixelSpacingY]];
@@ -881,16 +881,16 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 		[_viewerController bringToFrontROI:_stemLayer];
 	}
 	else if (step == _stepSave) {
-		[[[_plugin templatesWindowController] userDefaults] setObject:[_plannersNameTextField stringValue] forKey:PlannersNameUserDefaultKey];
+		[[HipArthroplastyTemplating userDefaults] setObject:[_plannersNameTextField stringValue] forKey:PlannersNameUserDefaultKey];
 		
 		if (_planningDate) [_planningDate release];
 		_planningDate = [[NSDate date] retain];
 		[self updateInfo];
 
-		NSManagedObject* study = [[[_viewerController fileList:0] objectAtIndex:[[_viewerController imageView] curImage]] valueForKeyPath:@"series.study"];
-		NSArray* seriesArray = [[study valueForKey:@"series"] allObjects];
+		NSManagedObject *study = [[[_viewerController fileList:0] objectAtIndex:[[_viewerController imageView] curImage]] valueForKeyPath:@"series.study"];
+		NSArray *seriesArray = [[study valueForKey:@"series"] allObjects];
 
-		NSString* namePrefix = @"Planning";
+		NSString *namePrefix = @"Planning";
 
 		int n = 1, m;
 		for (unsigned i = 0; i < [seriesArray count]; i++) {
@@ -901,10 +901,10 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 			}
 		}
 		
-		NSString* name = [NSString stringWithFormat:@"%@ %d", namePrefix, n];
+		NSString *name = [NSString stringWithFormat:@"%@ %d", namePrefix, n];
 		[_viewerController deselectAllROIs];
 		
-		NSDictionary* d = [_viewerController exportDICOMFileInt:YES withName:name];
+		NSDictionary *d = [_viewerController exportDICOMFileInt:YES withName:name];
 		if (d.count)
             [BrowserController.currentBrowser.database addFilesAtPaths: [NSArray arrayWithObject:[d valueForKey: @"file"]]
                                                                         postNotifications: YES
@@ -924,11 +924,11 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 }
 
--(CGFloat)estimateRotationOfROI:(ROI*)roi {
+- (CGFloat)estimateRotationOfROI:(ROI *)roi {
 	return NSAngle(NSMakeVector([[[roi points] objectAtIndex:4] point], [[[roi points] objectAtIndex:5] point]));
 }
 
--(void)replaceLayer:(ROI*)roi with:(ArthroplastyTemplate*)t {
+- (void)replaceLayer:(ROI *)roi with:(ArthroplastyTemplate *)t {
 	NSPoint center = [[[roi points] objectAtIndex:4] point];
 	CGFloat angle = [self estimateRotationOfROI:roi];
 	NSTimeInterval group = [roi groupID];
@@ -938,14 +938,14 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	[roi setGroupID:group];
 }
 
--(void)rotateLayer:(ROI*)roi by:(float)degs {
+- (void)rotateLayer:(ROI *)roi by:(float)degs {
 	NSPoint center = [[[roi points] objectAtIndex:4] point];
 	if (roi == _stemLayer && [_stemLayer groupID] == [_femurLayer groupID])
 		center = [[[roi points] objectAtIndex:4+_stemNeckSizeIndex] point];
 	[roi rotate:degs :center];
 }
 
--(void)rotateLayer:(ROI*)roi byTrackingMouseFrom:(NSPoint)wp1 to:(NSPoint)wp2 {
+- (void)rotateLayer:(ROI *)roi byTrackingMouseFrom:(NSPoint)wp1 to:(NSPoint)wp2 {
 	wp1 = [[_viewerController imageView] ConvertFromNSView2GL:[[_viewerController imageView] convertPoint:wp1 fromView:NULL]];
 	wp2 = [[_viewerController imageView] ConvertFromNSView2GL:[[_viewerController imageView] convertPoint:wp2 fromView:NULL]];
 	NSPoint center = [[[roi points] objectAtIndex:4] point];
@@ -955,7 +955,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	[self rotateLayer:roi by:angle/M_PI*180];
 }
 
--(BOOL)handleViewerEvent:(NSEvent*)event {
+- (BOOL)handleViewerEvent:(NSEvent *)event {
 	if ([event type] == NSKeyDown)
 		switch ([event keyCode]) {
 			case 76: // enter
@@ -973,22 +973,30 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 						BOOL next = uc == '+' || uc == NSUpArrowFunctionKey;
 						
 						if (_cupLayer && [_cupLayer ROImode] == ROI_selected && _cupTemplate) {
-							ArthroplastyTemplate* t = next? [[_cupTemplate family] templateAfter:_cupTemplate] : [[_cupTemplate family] templateBefore:_cupTemplate];
-							[self replaceLayer:_cupLayer with:t];
+                            ArthroplastyTemplate *t = next? [[_cupTemplate family] templateAfter:_cupTemplate] : [[_cupTemplate family] templateBefore:_cupTemplate];
+                            if (t) {
+                                [self replaceLayer:_cupLayer with:t];
+                            }
+                            
 							handled = YES;
 						}
 						if (_stemLayer && [_stemLayer ROImode] == ROI_selected && _stemTemplate) {
-							ArthroplastyTemplate* t = next? [[_stemTemplate family] templateAfter:_stemTemplate] : [[_stemTemplate family] templateBefore:_stemTemplate];
-                            id distalLayer = _distalStemLayer, distalTemplate = _distalStemTemplate;
-							[self replaceLayer:_stemLayer with:t];
-                            _distalStemLayer = distalLayer; _distalStemTemplate = distalTemplate;
-                            [self adjustDistalToProximal];
+							ArthroplastyTemplate *t = next? [[_stemTemplate family] templateAfter:_stemTemplate] : [[_stemTemplate family] templateBefore:_stemTemplate];
+                            if (t) {
+                                id distalLayer = _distalStemLayer, distalTemplate = _distalStemTemplate;
+                                [self replaceLayer:_stemLayer with:t];
+                                _distalStemLayer = distalLayer; _distalStemTemplate = distalTemplate;
+                                [self adjustDistalToProximal];
+                            }
 							handled = YES;
 						}
 						if (_distalStemLayer && [_distalStemLayer ROImode] == ROI_selected && _distalStemTemplate) {
-							ArthroplastyTemplate* t = next? [[_distalStemTemplate family] templateAfter:_distalStemTemplate] : [[_distalStemTemplate family] templateBefore:_distalStemTemplate];
-							[self replaceLayer:_distalStemLayer with:t];
-                            [self adjustDistalToProximal];
+							ArthroplastyTemplate *t = next? [[_distalStemTemplate family] templateAfter:_distalStemTemplate] : [[_distalStemTemplate family] templateBefore:_distalStemTemplate];
+                            if (t) {
+                                [self replaceLayer:_distalStemLayer with:t];
+                                [self adjustDistalToProximal];
+                            }
+                            
 							handled = YES;
 						}
 						
@@ -1040,7 +1048,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 
 #pragma mark Steps specific methods
 
--(void)adjustStemToCup {
+- (void)adjustStemToCup {
 	if (!_cupLayer || !_stemLayer)
 		return;
     
@@ -1062,7 +1070,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	[self adjustStemToCup:indexOfClosestMagnet];
 }
 
--(void)adjustStemToCup:(NSInteger)index {
+- (void)adjustStemToCup:(NSInteger)index {
 	if (!_cupLayer || !_stemLayer)
 		return;
 	
@@ -1087,7 +1095,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
     --_isMyRoiManupulation;
 }
 
--(void)adjustDistalToProximal {
+- (void)adjustDistalToProximal {
 	if (!_stemLayer || !_distalStemLayer || [[_distalStemLayer points] count] < 13)
         return;
     
@@ -1114,7 +1122,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 // dicom was added to database, send it to PACS
--(void)sendToPACS:(NSNotification*)notification {
+- (void)sendToPACS:(NSNotification *)notification {
 	if ([_sendToPACSButton state] && _imageToSendName) {
 		[_sendToPACSButton setState:NSOffState];
 		
@@ -1124,7 +1132,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 //		NSLog(@"[seriesArray count] : %d", [seriesArray count]);
 //		NSString *pathOfImageToSend;
 		
-		NSManagedObject* imageToSend = NULL;
+		NSManagedObject *imageToSend = NULL;
 		
 		for (unsigned i = 0; i < [seriesArray count]; i++)
 		{
@@ -1153,7 +1161,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 
 #pragma mark Result
 
--(void)computeValues {
+- (void)computeValues {
 	// horizontal angle
 	_horizontalAngle = kInvalidAngle;
 	if (_horizontalAxis && [[_horizontalAxis points] count] == 2)
@@ -1193,7 +1201,7 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 			return;
 		else {
 			NSPoint pt = NSZeroPoint;
-			for (MyPoint* p in [_femurRoi points])
+			for (MyPoint *p in [_femurRoi points])
 				pt += [p point];
 			pt /= [[_femurRoi points] count];
 			BOOL left = pt.x < [[[_viewerController imageView] curDCM] pwidth]/2;
@@ -1209,11 +1217,11 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 			[self removeRoiFromViewer:_infoBox];
 }
 
--(void)updateInfo {
+- (void)updateInfo {
 	[self createInfoBox];
 	if (!_infoBox) return;
 	
-	NSMutableString* str = [[NSMutableString alloc] initWithCapacity:512];
+	NSMutableString *str = [[NSMutableString alloc] initWithCapacity:512];
 	
 	[str appendString:@"OsiriX Hip Arthroplasty Templating"];
 	
@@ -1238,7 +1246,11 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	if (_cupLayer) {
 		[str appendFormat:@"\nCup: %@\n", [_cupTemplate name]];
 		[str appendFormat:@"\tManufacturer: %@\n", [_cupTemplate manufacturer]];
-		[str appendFormat:@"\tSize: %@\n", [_cupTemplate size]];
+        NSString *dimInfo = nil;
+        if (!_cupTemplate.offset)
+            dimInfo = [NSString stringWithFormat:@"Size: %@", _cupTemplate.size];
+        else dimInfo = [NSString stringWithFormat:@"Offset/Size: %@/%@", _cupTemplate.offset, _cupTemplate.size];
+        [str appendFormat:@"\t%@\n", dimInfo];
 		[str appendFormat:@"\tRotation: %.2f°\n", _cupAngle];
 		[str appendFormat:@"\tReference: %@\n", [_cupTemplate referenceNumber]];
 	}
@@ -1246,7 +1258,11 @@ NSString* const PlannersNameUserDefaultKey = @"Planner's Name";
 	if (_stemTemplate) {
 		[str appendFormat:@"\n%@: %@\n", ([_stemTemplate isProximal]? @"Stem Proximal Component" : @"Stem"), [_stemTemplate name]];
 		[str appendFormat:@"\tManufacturer: %@\n", [_stemTemplate manufacturer]];
-		[str appendFormat:@"\tSize: %@\n", [_stemTemplate size]];
+        NSString *dimInfo = nil;
+        if (!_stemTemplate.offset)
+            dimInfo = [NSString stringWithFormat:@"Size: %@", _stemTemplate.size];
+        else dimInfo = [NSString stringWithFormat:@"Offset/Size: %@/%@", _stemTemplate.offset, _stemTemplate.size];
+		[str appendFormat:@"\t%@\n", dimInfo];
 		[str appendFormat:@"\tReference: %@\n", [_stemTemplate referenceNumber]];
 	}
     

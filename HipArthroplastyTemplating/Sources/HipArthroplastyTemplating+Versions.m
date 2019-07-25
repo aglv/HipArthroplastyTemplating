@@ -21,14 +21,14 @@ typedef enum HTTPMethod HTTPMethod; // forward declaration for newer clang
 
 @implementation HipArthroplastyTemplating (Versions)
 
-+ (NSString*)sysctl:(NSString*)key {
++ (NSString *)sysctl:(NSString *)key {
     size_t len = 0;
     sysctlbyname(key.UTF8String, NULL, &len, NULL, 0);
     
     if (len) {
-        char* buffer = (char*)malloc((len+1)*sizeof(char));
+        char *buffer = (char *)malloc((len+1)*sizeof(char));
         sysctlbyname(key.UTF8String, buffer, &len, NULL, 0);
-        NSString* value = [NSString stringWithUTF8String:buffer];
+        NSString *value = [NSString stringWithUTF8String:buffer];
         free(buffer);
         return value;
     }
@@ -36,7 +36,7 @@ typedef enum HTTPMethod HTTPMethod; // forward declaration for newer clang
     return nil;
 }
 
-+ (BOOL)sysctl:(NSString*)key into4B:(uint32_t*)v {
++ (BOOL)sysctl:(NSString *)key into4B:(uint32_t *)v {
     size_t len = 0;
     sysctlbyname(key.UTF8String, NULL, &len, NULL, 0);
     
@@ -49,7 +49,7 @@ typedef enum HTTPMethod HTTPMethod; // forward declaration for newer clang
     return NO;
 }
 
-+ (BOOL)sysctl:(NSString*)key into8B:(uint64_t*)v {
++ (BOOL)sysctl:(NSString *)key into8B:(uint64_t *)v {
     size_t len = 0;
     sysctlbyname(key.UTF8String, NULL, &len, NULL, 0);
     
@@ -86,21 +86,21 @@ typedef enum HTTPMethod HTTPMethod; // forward declaration for newer clang
 //        io_service_t platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault, IOServiceMatching("IOPlatformExpertDevice"));
 //        if (platformExpert) {
 //            CFTypeRef serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert, CFSTR(kIOPlatformSerialNumberKey), kCFAllocatorDefault, 0);
-//            serialno = [(NSString*)serialNumberAsCFString autorelease];
+//            serialno = [(NSString *)serialNumberAsCFString autorelease];
 //            IOObjectRelease(platformExpert);
 //        }
 //        if (!serialno) serialno = @"";
 //        
-//        NSString* model = [[self class] sysctl:@"hw.model"]; // MacPro5,1 / iMac7,1 / ...
+//        NSString *model = [[self class] sysctl:@"hw.model"]; // MacPro5,1 / iMac7,1 / ...
 //        uint64_t memsize; [[self class] sysctl:@"hw.memsize" into8B:&memsize]; CGFloat memsizegb = 1.*memsize/1024/1024/1024; // ram in GB
 //        uint32_t physicalcpu; [[self class] sysctl:@"hw.physicalcpu" into4B:&physicalcpu]; // number of cores
 //        uint64_t cpufrequency; [[self class] sysctl:@"hw.cpufrequency" into8B:&cpufrequency]; CGFloat cpufrequencyghz = 1.*cpufrequency/1000000000; // cpu frequency, in GHz
 //        
 //        uint32_t noprocs = 1;
 //        @try {
-//            NSString* spxml = [N2Shell execute:@"/usr/sbin/system_profiler" arguments:[NSArray arrayWithObjects: @"-xml", @"SPHardwareDataType", nil]];
-//            NSData* spdata = [spxml dataUsingEncoding:NSUTF8StringEncoding];
-//            NSArray* sp = [NSPropertyListSerialization propertyListWithData:spdata options:NSPropertyListImmutable format:NULL error:NULL];
+//            NSString *spxml = [N2Shell execute:@"/usr/sbin/system_profiler" arguments:[NSArray arrayWithObjects: @"-xml", @"SPHardwareDataType", nil]];
+//            NSData *spdata = [spxml dataUsingEncoding:NSUTF8StringEncoding];
+//            NSArray *sp = [NSPropertyListSerialization propertyListWithData:spdata options:NSPropertyListImmutable format:NULL error:NULL];
 //            noprocs = [[[[[sp objectAtIndex:0] objectForKey:@"_items"] objectAtIndex:0] objectForKey:@"packages"] unsignedIntValue];
 //        } @catch (...) {
 //            // nothing

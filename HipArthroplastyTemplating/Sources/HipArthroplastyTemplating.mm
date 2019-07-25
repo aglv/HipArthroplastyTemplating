@@ -8,18 +8,22 @@
 
 #import "HipArthroplastyTemplating.h"
 #import "ArthroplastyTemplatingStepsController.h"
-#import "ArthroplastyTemplatingWindowController.h"
+#import "ArthroplastyTemplatesWindowController.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #import <OsiriXAPI/BrowserController.h>
 #import <OsiriXAPI/Notifications.h>
+#import <OsiriXAPI/O2ViewerThumbnailsMatrix.h>
 //#import <OsiriXAPI/NSPanel+N2.h>
 #pragma clang diagnostic pop
 
 #if HOROS == 1
 #import "HipArthroplastyTemplating+Versions.h"
 #endif
+
+#import "HipArthroplastyTemplating.h"
+#import "ArthroplastyTemplatingUserDefaults.h"
 
 #import <objc/runtime.h>
 
@@ -29,7 +33,15 @@
     
 @end
 
+@interface ViewerController (HipArthroplastyTemplating)
+
+- (void)HipArthroplastyTemplating_changeImageData:(NSMutableArray *)f :(NSMutableArray *)d :(NSData *) v :(BOOL)applyTransition;
+
+@end
+
 @implementation HipArthroplastyTemplating
+
+static HipArthroplastyTemplating *_Plugin = nil;
 
 @synthesize templatesWindowController = _templatesWindowController;
 
@@ -45,11 +57,22 @@
     return nil;
 }
 
--(void)initialize {
++ (ArthroplastyTemplatingUserDefaults *)userDefaults {
+    static ArthroplastyTemplatingUserDefaults *userDefaults = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        userDefaults = [[ArthroplastyTemplatingUserDefaults alloc] init];
+    });
+    
+    return userDefaults;
+}
+
+- (void)initialize {
 	if (_initialized) return;
 	_initialized = YES;
 	
-	_templatesWindowController = [[ArthroplastyTemplatingWindowController alloc] initWithPlugin:self];
+	_templatesWindowController = [[ArthroplastyTemplatesWindowController alloc] initWithPlugin:self];
 	[_templatesWindowController window]; // force nib loading
 }
 
@@ -74,6 +97,8 @@
 #endif
 
 - (void)initPlugin {
+    _Plugin = self;
+    
 #if VALIDATE_OSIRIX == 1
     [self validateOsiriX];
 #endif
@@ -87,31 +112,32 @@
     
     // swizzle OsiriX methods
     
+    method_exchangeImplementations(class_getInstanceMethod(DCMView.class, @selector(acceptsFirstMouse:)), class_getInstanceMethod(DCMView.class, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
+    
+    method_exchangeImplementations(class_getInstanceMethod(ViewerController.class, @selector(changeImageData::::)), class_getInstanceMethod(ViewerController.class, @selector(HipArthroplastyTemplating_changeImageData::::)));
 
-    Class c = [DCMView class];
-    method_exchangeImplementations(class_getInstanceMethod(c, @selector(acceptsFirstMouse:)), class_getInstanceMethod(c, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
     
 #if HOROS == 1
     [self checkVersion];
 #endif
 }
 
-- (long)filterImage:(NSString*)menuName {
+- (long)filterImage:(NSString *)menuName {
 //	if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] intValue] < 6894) {
-//		NSAlert* alert = [NSAlert alertWithMessageText:@"The OsiriX application you are running is out of date." defaultButton:@"Close" alternateButton:NULL otherButton:NULL informativeTextWithFormat:@"OsiriX 3.7.1 is necessary for this plugin to execute."];
+//		NSAlert *alert = [NSAlert alertWithMessageText:@"The OsiriX application you are running is out of date." defaultButton:@"Close" alternateButton:NULL otherButton:NULL informativeTextWithFormat:@"OsiriX 3.7.1 is necessary for this plugin to execute."];
 //		[alert beginSheetModalForWindow:[viewerController window] modalDelegate:NULL didEndSelector:NULL contextInfo:NULL];
 //		return 0;
 //	}
 	
 	[self initialize];
-	ArthroplastyTemplatingStepsController* window = [self windowControllerForViewer:viewerController];
+	ArthroplastyTemplatingStepsController *window = [self windowControllerForViewer:viewerController];
 	if (window) {
 		[window showWindow:self];
 		return 0;
 	}
     
     if (![NSUserDefaults.standardUserDefaults boolForKey:@"CarelessHipArthroplastyTemplating"]) {
-        NSString* disclaimer = NSLocalizedString(@"THE SOFTWARE IS PROVIDED AS IS. USE THE SOFTWARE AT YOUR OWN RISK. THE AUTHORS MAKE NO WARRANTIES AS TO PERFORMANCE OR FITNESS FOR A PARTICULAR PURPOSE, OR ANY OTHER WARRANTIES WHETHER EXPRESSED OR IMPLIED. NO ORAL OR WRITTEN COMMUNICATION FROM OR INFORMATION PROVIDED BY THE AUTHORS SHALL CREATE A WARRANTY. UNDER NO CIRCUMSTANCES SHALL THE AUTHORS BE LIABLE FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES RESULTING FROM THE USE, MISUSE, OR INABILITY TO USE THE SOFTWARE, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THESE EXCLUSIONS AND LIMITATIONS MAY NOT APPLY IN ALL JURISDICTIONS. YOU MAY HAVE ADDITIONAL RIGHTS AND SOME OF THESE LIMITATIONS MAY NOT APPLY TO YOU.\n\nTHIS SOFTWARE IS NOT INTENDED FOR PRIMARY DIAGNOSTIC, ONLY FOR SCIENTIFIC USAGE.\n\nTHE VERSION OF OSIRIX USED MAY NOT BE CERTIFIED AS A MEDICAL DEVICE FOR PRIMARY DIAGNOSIS. IF YOUR VERSION IS NOT CERTIFIED, YOU CAN ONLY USE OSIRIX AS A REVIEWING AND SCIENTIFIC SOFTWARE, NOT FOR PRIMARY DIAGNOSTIC.\n\nAll calculations, measurements and images provided by this software are intended only for scientific research. Any other use is entirely at the discretion and risk of the user. If you do use this software for scientific research please give appropriate credit in publications. This software may not be redistributed, sold or commercially used in any other way without prior approval of the author.", nil);
+        NSString *disclaimer = NSLocalizedString(@"THE SOFTWARE IS PROVIDED AS IS. USE THE SOFTWARE AT YOUR OWN RISK. THE AUTHORS MAKE NO WARRANTIES AS TO PERFORMANCE OR FITNESS FOR A PARTICULAR PURPOSE, OR ANY OTHER WARRANTIES WHETHER EXPRESSED OR IMPLIED. NO ORAL OR WRITTEN COMMUNICATION FROM OR INFORMATION PROVIDED BY THE AUTHORS SHALL CREATE A WARRANTY. UNDER NO CIRCUMSTANCES SHALL THE AUTHORS BE LIABLE FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES RESULTING FROM THE USE, MISUSE, OR INABILITY TO USE THE SOFTWARE, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THESE EXCLUSIONS AND LIMITATIONS MAY NOT APPLY IN ALL JURISDICTIONS. YOU MAY HAVE ADDITIONAL RIGHTS AND SOME OF THESE LIMITATIONS MAY NOT APPLY TO YOU.\n\nTHIS SOFTWARE IS NOT INTENDED FOR PRIMARY DIAGNOSTIC, ONLY FOR SCIENTIFIC USAGE.\n\nTHE VERSION OF OSIRIX USED MAY NOT BE CERTIFIED AS A MEDICAL DEVICE FOR PRIMARY DIAGNOSIS. IF YOUR VERSION IS NOT CERTIFIED, YOU CAN ONLY USE OSIRIX AS A REVIEWING AND SCIENTIFIC SOFTWARE, NOT FOR PRIMARY DIAGNOSTIC.\n\nAll calculations, measurements and images provided by this software are intended only for scientific research. Any other use is entirely at the discretion and risk of the user. If you do use this software for scientific research please give appropriate credit in publications. This software may not be redistributed, sold or commercially used in any other way without prior approval of the author.", nil);
 #if HOROS == 1
         disclaimer = [disclaimer stringByReplacingOccurrencesOfString:@"OSIRIX" withString:@"HOROS"];
 #endif
@@ -140,12 +166,12 @@
 	return 0;
 }
 
--(void)proceed {
+- (void)proceed {
 	if ([[[viewerController roiList:0] objectAtIndex:0] count])
 		if (!NSRunAlertPanel(@"Hip Arthroplasty Templating", @"All the ROIs on this image will be removed.", @"OK", @"Cancel", NULL))
 			return;
 	
-	ArthroplastyTemplatingStepsController* controller = [[ArthroplastyTemplatingStepsController alloc] initWithPlugin:self viewerController:viewerController];
+	ArthroplastyTemplatingStepsController *controller = [[ArthroplastyTemplatingStepsController alloc] initWithPlugin:self viewerController:viewerController];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerWillClose:) name:OsirixCloseViewerNotification object:viewerController];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowWillClose:) name:NSWindowWillCloseNotification object:[controller window]];
 	[_windows addObject:[controller window]];
@@ -153,32 +179,32 @@
 }
 
 
--(void)windowWillClose:(NSNotification*)notification {
+- (void)windowWillClose:(NSNotification *)notification {
 	[_windows removeObject:[notification object]];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowWillCloseNotification object:[notification object]];
 }
 
--(ArthroplastyTemplatingStepsController*)windowControllerForViewer:(ViewerController*)viewer {
-	for (NSWindow* window in _windows)
-		if ([(ArthroplastyTemplatingStepsController*)[window delegate] viewerController] == viewer)
-			return (ArthroplastyTemplatingStepsController*)[window delegate];
+- (ArthroplastyTemplatingStepsController *)windowControllerForViewer:(ViewerController *)viewer {
+	for (NSWindow *window in _windows)
+		if ([(ArthroplastyTemplatingStepsController *)[window delegate] viewerController] == viewer)
+			return (ArthroplastyTemplatingStepsController *)[window delegate];
 	return NULL;
 }
 
--(void)viewerWillClose:(NSNotification*)notification {
-	NSWindowController* wc = [self windowControllerForViewer:[notification object]];
+- (void)viewerWillClose:(NSNotification *)notification {
+	NSWindowController *wc = [self windowControllerForViewer:[notification object]];
     if (wc && [wc.window isVisible])
         [[wc window] close];
 }
 
--(BOOL)handleEvent:(NSEvent*)event forViewer:(ViewerController*)controller {
-	ArthroplastyTemplatingStepsController* window = [self windowControllerForViewer:controller];
+- (BOOL)handleEvent:(NSEvent *)event forViewer:(ViewerController *)controller {
+	ArthroplastyTemplatingStepsController *window = [self windowControllerForViewer:controller];
 	if (window)
 		return [window handleViewerEvent:event];
 	return NO;
 }
 
-//- (void)viewerWillClose:(NSNotification*)notification;
+//- (void)viewerWillClose:(NSNotification *)notification;
 //{
 //	if(stepByStepController) [stepByStepController close];
 //}
@@ -201,12 +227,48 @@
 @implementation DCMView (HipArthroplastyTemplating)
 
 - (BOOL)HipArthroplastyTemplating_acceptsFirstMouse:(NSEvent *)event {
-    for (NSWindow* window in [NSApplication.sharedApplication windows])
-        if ([window.windowController isKindOfClass:[ArthroplastyTemplatingStepsController class]]) {
-            if ([[self window] windowController] == [window.windowController viewerController])
+    for (NSWindow *window in [NSApplication.sharedApplication windows])
+        if ([window.windowController isKindOfClass:ArthroplastyTemplatingStepsController.class]) {
+            if (self.window.windowController == [window.windowController viewerController])
                 return YES;
         }
     return [self HipArthroplastyTemplating_acceptsFirstMouse:event];
+}
+
+@end
+
+@implementation ViewerController (HipArthroplastyTemplating)
+
+- (void)HipArthroplastyTemplating_changeImageData:(NSMutableArray *)f :(NSMutableArray *)d :(NSData *)v :(BOOL)n {
+    ArthroplastyTemplatingStepsController *controller = [_Plugin windowControllerForViewer:self];
+
+    if (!controller)
+        return [self HipArthroplastyTemplating_changeImageData:f :d :v :n];
+    
+    DicomSeries *selectedSeries = [[previewMatrix.selectedCell representedObject] object];
+    
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    alert.messageText = NSLocalizedString(@"Data change", nil);
+    alert.informativeText = NSLocalizedString(@"You are using the HipArthroplastyTemplating plugin on the current series. Switching to another series will interrupt the plugin's workflow.", nil);
+    [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+//    [alert addButtonWithTitle:NSLocalizedString(@"New Viewer", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    
+    [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
+        [alert.window orderOut:self];
+        switch (returnCode) {
+            case NSAlertFirstButtonReturn: {
+                [self HipArthroplastyTemplating_changeImageData:f :d :v :n];
+            } break;
+            case NSAlertSecondButtonReturn: {
+//                [self loadSelectedSeries:selectedSeries rightClick:YES];
+//            } break;
+//            case NSAlertThirdButtonReturn: {
+                [previewMatrix selectCell:[[previewMatrix.cells filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"representedObject.object = %@", self.currentSeries]] lastObject]];
+            } break;
+        }
+    }];
+
 }
 
 @end

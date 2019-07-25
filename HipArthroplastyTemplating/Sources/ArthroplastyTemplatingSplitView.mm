@@ -11,15 +11,14 @@
 
 @implementation ArthroplastyTemplatingSplitView
 
-
--(void)awakeFromNib {
+- (void)awakeFromNib {
 	[self setDelegate:self];
 }
 
 // keep the right subview's size constant
--(void)splitView:(NSSplitView*)sender resizeSubviewsWithOldSize:(NSSize)oldSize {
-	NSView* left = (NSView*)[[sender subviews] objectAtIndex:0];
-	NSView* right = (NSView*)[[sender subviews] objectAtIndex:1];
+- (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize {
+	NSView *left = (NSView *)[[sender subviews] objectAtIndex:0];
+	NSView *right = (NSView *)[[sender subviews] objectAtIndex:1];
 	
 	NSRect splitFrame = [sender frame];
 	CGFloat dividerThickness = [sender dividerThickness];

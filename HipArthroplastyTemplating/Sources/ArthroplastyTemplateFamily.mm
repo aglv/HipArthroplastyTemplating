@@ -15,8 +15,9 @@
 
 @synthesize templates = _templates;
 
--(id)initWithTemplate:(ArthroplastyTemplate*)templat {
-	self = [super init];
+- (id)initWithTemplate:(ArthroplastyTemplate *)templat {
+	if (!(self = [super init]))
+        return nil;
 	
 	_templates = [[NSMutableArray arrayWithCapacity:8] retain];
 	[self add:templat];
@@ -24,63 +25,85 @@
 	return self;
 }
 
--(NSArray*)templates {
-    return [_templates sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        NSString* n1 = [(ArthroplastyTemplate*)obj1 size];
-        NSString* n2 = [(ArthroplastyTemplate*)obj2 size];
+- (NSArray *)templates {
+    return [_templates sortedArrayUsingComparator:^NSComparisonResult(ArthroplastyTemplate *t1, ArthroplastyTemplate *t2) {
+        NSString *o1 = t1.offset, *o2 = t2.offset;
+        
+        if (o1 && o2) {
+            NSComparisonResult cr = [o1 compare:o2 options:NSNumericSearch|NSLiteralSearch];
+            if (cr != NSOrderedSame)
+                return cr;
+        }
+        else if (o1)
+            return NSOrderedDescending;
+        else if (o2)
+            return NSOrderedAscending;
+        
+        NSString *n1 = [t1 size], *n2 = [t2 size];
+        
         unichar c10 = [n1 characterAtIndex:0];
         if (c10 >= '0' && c10 <= '9' && [n1 floatValue] == [n2 floatValue]) {
             if (n1.length > n2.length)
                 return NSOrderedAscending;
-            return NSOrderedDescending;
+            if (n1.length < n2.length)
+                return NSOrderedDescending;
+            return NSOrderedSame;
         }
+        
         return [n1 compare:n2 options:NSNumericSearch|NSLiteralSearch];
     }];
 }
 
--(void)dealloc {
+- (void)dealloc {
 	[_templates release]; _templates = NULL;
 	[super dealloc];
 }
 
--(BOOL)matches:(ArthroplastyTemplate*)templat {
+- (BOOL)matches:(ArthroplastyTemplate *)templat {
 	if (![[templat manufacturer] isEqualToString:[self manufacturer]]) return NO;
 	if (![[templat name] isEqualToString:[self name]]) return NO;
 	return YES;
 }
 
--(void)add:(ArthroplastyTemplate*)templat {
+- (void)add:(ArthroplastyTemplate *)templat {
 	[_templates addObject:templat];
 	[templat setFamily:self];
 }
 
-+(CGFloat)numberForSize:(NSString*)size {
-    NSRange r = [size rangeOfCharacterFromSet:[NSCharacterSet.decimalDigitCharacterSet invertedSet]];
++ (CGFloat)numberForString:(NSString *)str {
+    if (!str)
+        return 0;
+    NSRange r = [str rangeOfCharacterFromSet:[NSCharacterSet.decimalDigitCharacterSet invertedSet]];
     if (r.location == 0)
         return 0;
     if (r.location != NSNotFound)
-        size = [size substringToIndex:r.location];
-    return [size floatValue];
+        str = [str substringToIndex:r.location];
+    return [str floatValue];
 }
 
--(ArthroplastyTemplate*)templateMatchingSize:(NSString*)size side:(ATSide)side {
+- (ArthroplastyTemplate *)templateMatchingOffset:(NSString *)offset size:(NSString *)size side:(ArthroplastyTemplateSide)side {
     // 1) by compairing strings
-    for (ArthroplastyTemplate* at in _templates)
-        if ([at.size isEqualToString:size] && (at.allowedSides&side) == side)
+    for (ArthroplastyTemplate *at in _templates)
+        if ([at.offset isEqualToString:offset] && [at.size isEqualToString:size] && (at.allowedSides&side) == side)
             return at;
     
     // 2) by compairing numbers...
+    
+    CGFloat noffset = [self.class numberForString:offset];
+    CGFloat nsize = [self.class numberForString:size];
+    
     NSInteger closestIndex = -1;
     CGFloat closestDelta;
-    CGFloat nin = [[self class] numberForSize:size];
     for (NSInteger i = 0; i < _templates.count; ++i) {
-        ArthroplastyTemplate* at = [_templates objectAtIndex:i];
+        ArthroplastyTemplate *at = [_templates objectAtIndex:i];
         if ((at.allowedSides&side) == side) {
-            CGFloat nat = [[self class] numberForSize:at.size];
-            if (nin == nat)
-                return at;
+            CGFloat atnsize = [self.class numberForString:at.size];
+            CGFloat atnoffset = [self.class numberForString:at.offset];
+            if (nsize == atnsize)
+                if (noffset == atnoffset)
+                    return at;
             
-            CGFloat delta = std::pow(nat-nin, 2); // actially this is delta pow 2, but we don't need the actual value so avoid sqrt to save time
+            CGFloat delta = std::pow(atnsize-nsize, 2); // actually this is delta pow 2, but we don't need the actual value so avoid sqrt to save time
             
             if (closestIndex == -1 || closestDelta > delta) {
                 closestIndex = i;
@@ -95,61 +118,84 @@
     return nil;
 }
 
--(ArthroplastyTemplate*)templateForIndex:(NSInteger)index {
+- (ArthroplastyTemplate *)templateForIndex:(NSInteger)index {
 	return [self.templates objectAtIndex:index];
 }
 
--(ArthroplastyTemplate*)templateAfter:(ArthroplastyTemplate*)t {
-    NSArray* ts = [self.templates filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"patientSide = %@", t.patientSide]];
-	return [ts objectAtIndex:([ts indexOfObject:t]+1)%[ts count]];
-}
-
--(ArthroplastyTemplate*)templateBefore:(ArthroplastyTemplate*)t {
-    NSArray* ts = [self.templates filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"patientSide = %@", t.patientSide]];
+- (ArthroplastyTemplate *)templateAfter:(ArthroplastyTemplate *)t {
+    NSArray *ts = [self.templates filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"patientSide = %@", t.patientSide]];
+	
     NSUInteger index = [ts indexOfObject:t];
-	if (index == 0) index = [ts count]-1;
-    else --index;
-	return [ts objectAtIndex:index];
+    if (index == ts.count-1)
+        return nil;
+    
+    return ts[index+1];
 }
 
--(NSString*)fixation {
+- (ArthroplastyTemplate *)templateBefore:(ArthroplastyTemplate *)t {
+    NSArray *ts = [self.templates filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"patientSide = %@", t.patientSide]];
+    
+    NSUInteger index = [ts indexOfObject:t];
+	if (index == 0)
+        return nil;
+    
+	return ts[index-1];
+}
+
+//- (BOOL)hasOffsets {
+//    if (_hasOffsets)
+//        return _hasOffsets.boolValue;
+//
+//    BOOL hasOffsets = NO;
+//    for (ArthroplastyTemplate *templat in self.templates)
+//        if (templat.offset.length) {
+//            hasOffsets = YES;
+//            break;
+//        }
+//
+//    _hasOffsets = [@(hasOffsets) retain];
+//
+//    return hasOffsets;
+//}
+
+- (NSString *)fixation {
 	return [self templatesValueForKey:@"fixation"];
 }
 
--(NSString*)group {
+- (NSString *)group {
 	return [self templatesValueForKey:@"group"];
 }
 
--(NSString*)manufacturer {
+- (NSString *)manufacturer {
 	return [self templatesValueForKey:@"manufacturer"];
 }
 
--(NSString*)modularity {
+- (NSString *)modularity {
 	return [self templatesValueForKey:@"modularity"];
 }
 
--(NSString*)name {
+- (NSString *)name {
 	return [self templatesValueForKey:@"name"];
 }
 
--(NSString*)patientSide {
+- (NSString *)patientSide {
 	return [self templatesValueForKey:@"patientSide"];
 }
 
--(NSString*)surgery {
+- (NSString *)surgery {
 	return [self templatesValueForKey:@"surgery"];
 }
 
--(NSString*)type {
+- (NSString *)type {
 	return [self templatesValueForKey:@"type"];
 }
 
--(NSString*)templatesValueForKey:(NSString*)key {
-    NSArray* distinctValues = [_templates valueForKeyPath:[@"@distinctUnionOfObjects" stringByAppendingPathExtension:key]];
+- (NSString *)templatesValueForKey:(NSString *)key {
+    NSArray *distinctValues = [_templates valueForKeyPath:[@"@distinctUnionOfObjects" stringByAppendingPathExtension:key]];
     
-    NSMutableArray* values = [NSMutableArray array];
+    NSMutableArray *values = [NSMutableArray array];
     
-    for (NSString* distinctValue in distinctValues)
+    for (NSString *distinctValue in distinctValues)
         if ([distinctValue isKindOfClass:[NSString class]])
             for (NSString *value in [distinctValue componentsSeparatedByString:@"|"])
                 if (![values containsObject:value])

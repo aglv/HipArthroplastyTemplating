@@ -1,7 +1,10 @@
+## v2.8.7
+- added Medacta MasterLoc (new LAT PLUS and added LAT 13-14), STD and X-acta
+
 ## v2.8.6
 - fixed missing OsiriX 10.0.3 API findSystemFolderOfType:forDomain:
 
-## v2.8.3
+## v2.8.3==
 - added Medacta MasterLoc
 - fixed double horizontal flip PDF view bug
 - fixed ``acceptsFirstMouse:`` problem

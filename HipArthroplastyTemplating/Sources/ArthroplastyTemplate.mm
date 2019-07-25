@@ -8,92 +8,101 @@
 
 #import "ArthroplastyTemplate.h"
 
-
 @implementation ArthroplastyTemplate
+
 @synthesize family = _family;
 @synthesize path = _path;
 
--(id)initWithPath:(NSString*)path {
-	self = [super init];
+- (id)initWithPath:(NSString *)path {
+	if (!(self = [super init]))
+        return nil;
+    
 	_path = [path retain];
-	return self;
+	
+    return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
 	[_path release];
+    
 	[super dealloc];
 }
 
--(NSString*)fixation {
+- (NSString *)fixation {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate fixation] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(NSString*)group {
+- (NSString *)group {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate group] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(NSString*)manufacturer {
+- (NSString *)manufacturer {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate manufacturer] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(NSString*)modularity {
+- (NSString *)modularity {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate modularity] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(NSString*)name {
+- (NSString *)name {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate name] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(NSString*)patientSide {
+- (NSString *)patientSide {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate patientSide] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(NSString*)surgery {
+- (NSString *)surgery {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate surgery] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(NSString*)type {
+- (NSString *)type {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate type] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(NSString*)size {
-	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate size] must be implemented"];
-	return NULL;
+- (NSString *)size {
+    [NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate size] must be implemented"];
+    return nil;
 }
 
--(NSString*)referenceNumber {
+- (NSString *)offset {
+    [NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate offset] must be implemented"];
+    return nil;
+}
+
+- (NSString *)referenceNumber {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate referenceNumber] must be implemented"];
-	return NULL;
+	return nil;
 }
 
--(CGFloat)scale {
+- (CGFloat)scale {
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate scale] must be implemented"];
 	return 0;
 }
 
--(CGFloat)rotation { // in RADS
+- (CGFloat)rotation { // in RADS
 	[NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate rotation] must be implemented"];
 	return 0;
 }
 
--(NSString*)referenceNumberForOtherPatientSide {
+- (NSString *)referenceNumberForOtherPatientSide {
     return nil;
 }
 
--(ArthroplastyTemplate*)templateForOtherPatientSide {
+- (ArthroplastyTemplate *)templateForOtherPatientSide {
     return nil;
 }
 
--(ATSide)side {
-	return ATRightSideMask;
+- (ArthroplastyTemplateSide)side {
+	return ArthroplastyTemplateRightSide;
 }
 
 @end

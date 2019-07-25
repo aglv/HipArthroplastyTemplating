@@ -10,9 +10,9 @@
 #import "ArthroplastyTemplate.h"
 
 @interface InfoTxtTemplate : ArthroplastyTemplate {
-	NSDictionary* _properties;
+	NSDictionary *_properties;
 }
 
--(id)initFromFileAtPath:(NSString*)path;
+- (id)initFromFileAtPath:(NSString *)path;
 
 @end
