@@ -153,24 +153,40 @@ static HipArthroplastyTemplating *_Plugin = nil;
 //        alert.showsSuppressionButton = NO;
         
         [alert beginSheetModalForWindow:viewerController.window completionHandler:^(NSModalResponse returnCode) {
-            [alert.window orderOut:nil];
+            [alert.window orderOut:self];
             
             if (returnCode == NSAlertFirstButtonReturn) // Stop
                 return;
 
-            [self proceed];
+            [self proceedAfterDisclaimer];
         }];
     } else
-        [self proceed];
+        [self proceedAfterDisclaimer];
     
 	return 0;
 }
 
-- (void)proceed {
-	if ([[[viewerController roiList:0] objectAtIndex:0] count])
-		if (!NSRunAlertPanel(@"Hip Arthroplasty Templating", @"All the ROIs on this image will be removed.", @"OK", @"Cancel", NULL))
-			return;
-	
+- (void)proceedAfterDisclaimer {
+    if ([[[viewerController roiList:0] objectAtIndex:0] count]) {
+        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        alert.messageText = NSLocalizedString(@"HipArthroplastyTemplating", nil);
+        alert.informativeText = NSLocalizedString(@"The plugin will remove all ROIs from this series.", nil);
+        [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+        
+        [alert beginSheetModalForWindow:viewerController.window completionHandler:^(NSModalResponse returnCode) {
+            [alert.window orderOut:self];
+            
+            if (returnCode != NSAlertFirstButtonReturn)
+                return;
+            
+            [self proceedAfterROIsDialog];
+        }];
+    } else
+        [self proceedAfterROIsDialog];
+}
+
+- (void)proceedAfterROIsDialog {
 	ArthroplastyTemplatingStepsController *controller = [[ArthroplastyTemplatingStepsController alloc] initWithPlugin:self viewerController:viewerController];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerWillClose:) name:OsirixCloseViewerNotification object:viewerController];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowWillClose:) name:NSWindowWillCloseNotification object:[controller window]];
@@ -249,7 +265,7 @@ static HipArthroplastyTemplating *_Plugin = nil;
     
     NSAlert *alert = [[[NSAlert alloc] init] autorelease];
     alert.messageText = NSLocalizedString(@"Data change", nil);
-    alert.informativeText = NSLocalizedString(@"You are using the HipArthroplastyTemplating plugin on the current series. Switching to another series will interrupt the plugin's workflow.", nil);
+    alert.informativeText = NSLocalizedString(@"You are using the HipArthroplastyTemplating plugin on the current series. Switching to another series will interrupt the plugin workflow.", nil);
     [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
 //    [alert addButtonWithTitle:NSLocalizedString(@"New Viewer", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
