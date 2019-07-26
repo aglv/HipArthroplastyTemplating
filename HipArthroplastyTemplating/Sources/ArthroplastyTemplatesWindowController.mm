@@ -84,10 +84,11 @@
 //    _pdfView.scaleFactor = _pdfView.scaleFactorForSizeToFit;
 	[self awakeColor];
     
-    self.familiesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES] ];
+    self.familiesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] ];
+    
     self.offsetsArrayController.sortDescriptors = self.sizesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES comparator:^NSComparisonResult(NSString *s1, NSString *s2) {
         unichar c10 = [s1 characterAtIndex:0];
-        if (c10 >= '0' && c10 <= '9' && s1.floatValue == s2.floatValue) {
+        if (c10 >= '0' && c10 <= '9' && s1.floatValue == s2.floatValue) { // same numeric value, sort '00' before '0'
             if (s1.length > s2.length)
                 return NSOrderedAscending;
              if (s1.length < s2.length)
@@ -95,7 +96,7 @@
             return NSOrderedSame;
         }
         
-        return [s1 compare:s2 options:NSNumericSearch|NSLiteralSearch];
+        return [s1 compare:s2 options:NSNumericSearch|NSLiteralSearch|NSCaseInsensitiveSearch];
     }] ];
     
     

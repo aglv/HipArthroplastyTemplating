@@ -456,7 +456,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
                     if (ps)
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             // create the ROI
-                            ROI *nroi = [[ROI alloc] initWithType:tMesure :roi.pixelSpacingX :roi.pixelSpacingY :roi.imageOrigin];
+                            ROI *nroi = [[[ROI alloc] initWithType:tMesure :roi.pixelSpacingX :roi.pixelSpacingY :roi.imageOrigin] autorelease];
                             [nroi addPoint:[[ps objectAtIndex:0] nsPoint]];
                             [nroi addPoint:[[ps objectAtIndex:1] nsPoint]];
                             [_viewerController.imageView roiSet:nroi]; // [nroi setCurView: _viewerController.imageView]; is not available in horos
@@ -839,7 +839,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 		NSBitmapImageRep *femur = [NSBitmapImageRep imageRepWithData:[[_femurLayer layerImage] TIFFRepresentation]];
 		NSSize size = [[_femurLayer layerImage] size];
-		NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:size.width*4 bitsPerPixel:32];
+		NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:size.width*4 bitsPerPixel:32] autorelease];
 		unsigned char *bitmapData = [bitmap bitmapData];
 		NSInteger bytesPerRow = [bitmap bytesPerRow], bitsPerPixel = [bitmap bitsPerPixel];
 		for (NSInteger y = 0; y < size.height; ++y)
@@ -963,7 +963,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 				[_steps nextStep:_steps.currentStep];
 				return YES;
 			default:
-				unichar uc = [[event charactersIgnoringModifiers] characterAtIndex:0];
+				unichar uc = [event.charactersIgnoringModifiers characterAtIndex:0];
 				BOOL handled = NO;
 				switch (uc) {
 					case '+':
@@ -1221,7 +1221,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	[self createInfoBox];
 	if (!_infoBox) return;
 	
-	NSMutableString *str = [[NSMutableString alloc] initWithCapacity:512];
+	NSMutableString *str = [[[NSMutableString alloc] initWithCapacity:512] autorelease];
 	
 	[str appendString:@"OsiriX Hip Arthroplasty Templating"];
 	

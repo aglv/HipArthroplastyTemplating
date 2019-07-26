@@ -261,26 +261,26 @@ static HipArthroplastyTemplating *_Plugin = nil;
     if (!controller)
         return [self HipArthroplastyTemplating_changeImageData:f :d :v :n];
     
-    DicomSeries *selectedSeries = [[previewMatrix.selectedCell representedObject] object];
+//    DicomSeries *selectedSeries = [[previewMatrix.selectedCell representedObject] object];
     
     NSAlert *alert = [[[NSAlert alloc] init] autorelease];
     alert.messageText = NSLocalizedString(@"Data change", nil);
     alert.informativeText = NSLocalizedString(@"You are using the HipArthroplastyTemplating plugin on the current series. Switching to another series will interrupt the plugin workflow.", nil);
-    [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
-//    [alert addButtonWithTitle:NSLocalizedString(@"New Viewer", nil)];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+//    [alert addButtonWithTitle:NSLocalizedString(@"New Viewer", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Proceed", nil)];
     
     [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
         [alert.window orderOut:self];
         switch (returnCode) {
             case NSAlertFirstButtonReturn: {
-                [self HipArthroplastyTemplating_changeImageData:f :d :v :n];
+                [previewMatrix selectCell:[[previewMatrix.cells filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"representedObject.object = %@", self.currentSeries]] lastObject]];
             } break;
-            case NSAlertSecondButtonReturn: {
+//            case NSAlertSecondButtonReturn: {
 //                [self loadSelectedSeries:selectedSeries rightClick:YES];
 //            } break;
-//            case NSAlertThirdButtonReturn: {
-                [previewMatrix selectCell:[[previewMatrix.cells filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"representedObject.object = %@", self.currentSeries]] lastObject]];
+            case NSAlertSecondButtonReturn /*NSAlertThirdButtonReturn*/: {
+                [self HipArthroplastyTemplating_changeImageData:f :d :v :n];
             } break;
         }
     }];

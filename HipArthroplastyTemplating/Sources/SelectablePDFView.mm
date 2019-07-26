@@ -105,7 +105,7 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
 }
 
 - (void)enhanceSelection {
-	N2Image *image = [[N2Image alloc] initWithContentsOfFile:[[[self document] documentURL] path]];
+	N2Image *image = [[[N2Image alloc] initWithContentsOfFile:[self.document.documentURL path]] autorelease];
 	
 	NSSize size = [image size];
 	NSRect sel = _selectedRect;

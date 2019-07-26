@@ -39,18 +39,18 @@
         else if (o2)
             return NSOrderedAscending;
         
-        NSString *n1 = [t1 size], *n2 = [t2 size];
+        NSString *s1 = [t1 size], *s2 = [t2 size];
         
-        unichar c10 = [n1 characterAtIndex:0];
-        if (c10 >= '0' && c10 <= '9' && [n1 floatValue] == [n2 floatValue]) {
-            if (n1.length > n2.length)
+        unichar c10 = [s1 characterAtIndex:0];
+        if (c10 >= '0' && c10 <= '9' && [s1 floatValue] == [s2 floatValue]) { // same numeric value, sort '00' before '0'
+            if (s1.length > s2.length)
                 return NSOrderedAscending;
-            if (n1.length < n2.length)
+            if (s1.length < s2.length)
                 return NSOrderedDescending;
             return NSOrderedSame;
         }
         
-        return [n1 compare:n2 options:NSNumericSearch|NSLiteralSearch];
+        return [s1 compare:s2 options:NSNumericSearch|NSLiteralSearch|NSCaseInsensitiveSearch];
     }];
 }
 
@@ -83,9 +83,10 @@
 
 - (ArthroplastyTemplate *)templateMatchingOffset:(NSString *)offset size:(NSString *)size side:(ArthroplastyTemplateSide)side {
     // 1) by compairing strings
-    for (ArthroplastyTemplate *at in _templates)
-        if ([at.offset isEqualToString:offset] && [at.size isEqualToString:size] && (at.allowedSides&side) == side)
-            return at;
+    for (ArthroplastyTemplate *t in _templates) {
+        if ((t.offset == offset || [t.offset isEqualToString:offset]) && (t.size == size || [t.size isEqualToString:size]) && (t.allowedSides&side) == side)
+            return t;
+    }
     
     // 2) by compairing numbers...
     
