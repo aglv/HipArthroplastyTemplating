@@ -1,5 +1,8 @@
-## v2.8.7
-- added Medacta MasterLoc (new LAT PLUS and added LAT 13-14), STD and X-acta
+## v2.9
+- added Medacta MasterLoc (new LAT PLUS and added LAT 13-14), Quadra Short neck (added STD 4-10 and LAT 4-7), Quadra-P STD and LAT, SMS STD and LAT, and X-acta
+- added viewer series change guard
+- major changes in templates window, most stuff was switched to bindings
+- code formatting (pointers)
 
 ## v2.8.6
 - fixed missing OsiriX 10.0.3 API findSystemFolderOfType:forDomain:
