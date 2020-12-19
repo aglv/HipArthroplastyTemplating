@@ -1,3 +1,6 @@
+## v2.9.1
+- added Medacta Quadra-P Collared
+
 ## v2.9
 - added Medacta MasterLoc (new LAT PLUS and added LAT 13-14), Quadra Short neck (added STD 4-10 and LAT 4-7), Quadra-P STD and LAT, SMS STD and LAT, and X-acta
 - added viewer series change guard
