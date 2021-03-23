@@ -59,7 +59,9 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 #pragma mark Initialization
 
 - (id)initWithPlugin:(HipArthroplastyTemplating *)plugin viewerController:(ViewerController *)viewerController {
-	self = [self initWithWindowNibName:@"HipArthroplastyTemplatingSteps"];
+	if (!(self = [self initWithWindowNibName:@"HipArthroplastyTemplatingSteps" owner:self]))
+        return nil;
+    
 	_plugin = [plugin retain];
 	_viewerController = [viewerController retain];
 	_appliedMagnification = 1;

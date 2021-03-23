@@ -21,6 +21,7 @@
 
     NSMutableDictionary *_selections;
 
+    ArthroplastyTemplateSide _side;
     ArthroplastyTemplateProjection _projection;
 }
 
@@ -34,7 +35,6 @@
 
 @property ArthroplastyTemplateSide side;
 @property ArthroplastyTemplateProjection projection;
-
 
 @property NSInteger projectionTag, sideTag;
 @property (readonly) BOOL offsetsEnabled;

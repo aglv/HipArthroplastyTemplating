@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "ArthroplastyTemplate.h"
 
-@interface InfoTxtTemplate : ArthroplastyTemplate {
+@interface InfoTxtArthroplastyTemplate : ArthroplastyTemplate {
 	NSDictionary *_properties;
 }
 

@@ -49,7 +49,7 @@
 
 @synthesize plugin = _plugin;
 
-//@synthesize side = _side;
+@synthesize side = _side;
 
 @synthesize projection = _projection, projectionButtons = _projectionButtons;
 @synthesize familiesArrayController = _familiesArrayController, offsetsArrayController = _offsetsArrayController, sizesArrayController = _sizesArrayController;
@@ -59,7 +59,7 @@
 @synthesize shouldTransformColor = _shouldTransformColor, transformColor = _transformColor;
 
 - (id)initWithPlugin:(HipArthroplastyTemplating *)plugin {
-	if (!(self = [self initWithWindowNibName:@"ArthroplastyTemplatesWindow"]))
+	if (!(self = [self initWithWindowNibName:@"ArthroplastyTemplatesWindow" owner:self]))
         return nil;
     
 	_plugin = plugin;
@@ -68,7 +68,6 @@
     
 	_projection = ArthroplastyTemplateAnteriorPosteriorProjection;
 	
-//    _userDefaults = [[HipArthroplastyTemplating userDefaults] retain];
 	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     
 	_selections = [[NSMutableDictionary alloc] init];

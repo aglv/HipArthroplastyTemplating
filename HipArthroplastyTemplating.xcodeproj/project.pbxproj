@@ -21,7 +21,7 @@
 		711AE6DB260A24B000E5FE8A /* ArthroplastyTemplatingSplitView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C7260A24AF00E5FE8A /* ArthroplastyTemplatingSplitView.mm */; };
 		711AE6DC260A24B000E5FE8A /* ArthroplastyTemplatingStepsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6CA260A24AF00E5FE8A /* ArthroplastyTemplatingStepsController.mm */; };
 		711AE6DD260A24B000E5FE8A /* HipAT2D.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6CB260A24AF00E5FE8A /* HipAT2D.mm */; };
-		711AE6DE260A24B000E5FE8A /* InfoTxtTemplate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6CD260A24AF00E5FE8A /* InfoTxtTemplate.mm */; };
+		711AE6DE260A24B000E5FE8A /* InfoTxtArthroplastyTemplate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6CD260A24AF00E5FE8A /* InfoTxtArthroplastyTemplate.mm */; };
 		711AE6EC260A26AF00E5FE8A /* HipArthroplastyTemplating.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 711AE6EA260A26AF00E5FE8A /* HipArthroplastyTemplating.tiff */; };
 		711AE6F0260A26DA00E5FE8A /* HipArthroplastyTemplatingSteps.xib in Resources */ = {isa = PBXBuildFile; fileRef = 711AE6EF260A26DA00E5FE8A /* HipArthroplastyTemplatingSteps.xib */; };
 		711AE6F6260A270500E5FE8A /* MEDACTA Templates in Resources */ = {isa = PBXBuildFile; fileRef = 711AE6F4260A270500E5FE8A /* MEDACTA Templates */; };
@@ -60,8 +60,8 @@
 		711AE6C9260A24AF00E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+ArthroplastyTemplating.h"; sourceTree = "<group>"; };
 		711AE6CA260A24AF00E5FE8A /* ArthroplastyTemplatingStepsController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingStepsController.mm; sourceTree = "<group>"; };
 		711AE6CB260A24AF00E5FE8A /* HipAT2D.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HipAT2D.mm; sourceTree = "<group>"; };
-		711AE6CD260A24AF00E5FE8A /* InfoTxtTemplate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InfoTxtTemplate.mm; sourceTree = "<group>"; };
-		711AE6CE260A24AF00E5FE8A /* InfoTxtTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoTxtTemplate.h; sourceTree = "<group>"; };
+		711AE6CD260A24AF00E5FE8A /* InfoTxtArthroplastyTemplate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InfoTxtArthroplastyTemplate.mm; sourceTree = "<group>"; };
+		711AE6CE260A24AF00E5FE8A /* InfoTxtArthroplastyTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoTxtArthroplastyTemplate.h; sourceTree = "<group>"; };
 		711AE6CF260A24AF00E5FE8A /* HipArthroplastyTemplating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HipArthroplastyTemplating.h; sourceTree = "<group>"; };
 		711AE6E5260A262500E5FE8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = HipArthroplastyTemplating/Info.plist; sourceTree = "<group>"; };
 		711AE6EA260A26AF00E5FE8A /* HipArthroplastyTemplating.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = HipArthroplastyTemplating.tiff; path = HipArthroplastyTemplating/Resources/HipArthroplastyTemplating.tiff; sourceTree = "<group>"; };
@@ -137,8 +137,8 @@
 		711AE6CC260A24AF00E5FE8A /* TemplateTypes */ = {
 			isa = PBXGroup;
 			children = (
-				711AE6CD260A24AF00E5FE8A /* InfoTxtTemplate.mm */,
-				711AE6CE260A24AF00E5FE8A /* InfoTxtTemplate.h */,
+				711AE6CD260A24AF00E5FE8A /* InfoTxtArthroplastyTemplate.mm */,
+				711AE6CE260A24AF00E5FE8A /* InfoTxtArthroplastyTemplate.h */,
 			);
 			name = TemplateTypes;
 			sourceTree = "<group>";
@@ -323,7 +323,7 @@
 				711AE6D3260A24B000E5FE8A /* ArthroplastyTemplate.mm in Sources */,
 				711AE6D5260A24B000E5FE8A /* HipArthroplastyTemplating.mm in Sources */,
 				711AE6D1260A24B000E5FE8A /* ArthroplastyTemplatesWindowController.mm in Sources */,
-				711AE6DE260A24B000E5FE8A /* InfoTxtTemplate.mm in Sources */,
+				711AE6DE260A24B000E5FE8A /* InfoTxtArthroplastyTemplate.mm in Sources */,
 				711AE6DB260A24B000E5FE8A /* ArthroplastyTemplatingSplitView.mm in Sources */,
 				711AE6D9260A24B000E5FE8A /* ArthroplastyTemplatingTableView.mm in Sources */,
 				711AE6DC260A24B000E5FE8A /* ArthroplastyTemplatingStepsController.mm in Sources */,

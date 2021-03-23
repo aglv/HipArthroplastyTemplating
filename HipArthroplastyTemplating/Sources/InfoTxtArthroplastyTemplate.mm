@@ -1,12 +1,12 @@
 //
-//  InfoTxtTemplate.m
+//  InfoTxtArthroplastyTemplate.m
 //  HipArthroplastyTemplating
 //  Created by Joris Heuberger on 19/03/07.
 //  Copyright 2007-2016 OsiriX Team
 //  Copyright 2017 volz.io
 //
 
-#import "InfoTxtTemplate.h"
+#import "InfoTxtArthroplastyTemplate.h"
 #import "ArthroplastyTemplateFamily.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -14,7 +14,7 @@
 #import <OsiriXAPI/N2Operators.h>
 #pragma clang diagnostic pop
 
-@implementation InfoTxtTemplate
+@implementation InfoTxtArthroplastyTemplate
 
 static id First(id a, id b) {
 	return a? a : b;

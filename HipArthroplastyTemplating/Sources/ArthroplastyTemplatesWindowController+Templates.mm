@@ -10,7 +10,7 @@
 #import "ArthroplastyTemplatesWindowController+Private.h"
 
 #import "ArthroplastyTemplateFamily.h"
-#import "InfoTxtTemplate.h"
+#import "InfoTxtArthroplastyTemplate.h"
 #import "HipArthroplastyTemplating.h"
 
 #pragma clang diagnostic push
@@ -74,7 +74,7 @@
     NSMutableArray *templates = [NSMutableArray array];
     
     NSDictionary *classes = [NSDictionary dictionaryWithObjectsAndKeys:
-                             [InfoTxtTemplate class], @"txt",
+                             [InfoTxtArthroplastyTemplate class], @"txt",
                              nil];
     
     BOOL isDirectory, exists = [[NSFileManager defaultManager] fileExistsAtPath:dirpath isDirectory:&isDirectory];
