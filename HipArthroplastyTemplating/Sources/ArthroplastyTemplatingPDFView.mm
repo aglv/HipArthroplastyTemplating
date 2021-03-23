@@ -1,12 +1,12 @@
 //
-//  SelectablePDFView.m
+//  ArthroplastyTemplatingPDFView.m
 //  HipArthroplastyTemplating
 //  Created by Alessandro Volz on 6/8/09.
 //  Copyright 2007-2016 OsiriX Team
 //  Copyright 2017 volz.io
 //
 
-#import "SelectablePDFView.h"
+#import "ArthroplastyTemplatingPDFView.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #import <OsiriXAPI/N2Operators.h>
@@ -29,7 +29,7 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
 
 @end
 
-@implementation SelectablePDFView
+@implementation ArthroplastyTemplatingPDFView
 
 //static BOOL PDFDocumentViewHasAcceptsFirstMouse = NO;
 
@@ -46,6 +46,8 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
 
 - (void)awakeFromNib {
 	[self setMenu:nil];
+    
+    self.autoScales = YES;
 }
 
 - (ArthroplastyTemplatesWindowController *)controller {
@@ -225,7 +227,7 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
         return [self HipArthroplastyTemplating_acceptsFirstMouse:e];
     
     for (NSView *view = self; view; view = view.superview)
-        if ([view isKindOfClass:SelectablePDFView.class])
+        if ([view isKindOfClass:ArthroplastyTemplatingPDFView.class])
             return YES;
     
     return [self HipArthroplastyTemplating_acceptsFirstMouse:e];

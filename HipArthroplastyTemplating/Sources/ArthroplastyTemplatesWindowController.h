@@ -7,12 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "SelectablePDFView.h"
 #import "ArthroplastyTemplate.h"
 
 @class ArthroplastyTemplatingTableView, N2Image, ROI, ViewerController;
 @class ArthroplastyTemplateFamily, HipArthroplastyTemplating;
 @class ArthroplastyTemplatesWindowControllerTemplatesHelper;
+@class ArthroplastyTemplatingPDFView;
 
 @interface ArthroplastyTemplatesWindowController : NSWindowController {
 	__unsafe_unretained HipArthroplastyTemplating *_plugin;
@@ -20,24 +20,11 @@
     NSMutableArray *_templates;
 
     NSMutableDictionary *_selections;
-    
-    // IBOutlets
 
-    NSArrayController *_familiesArrayController, *_offsetsArrayController, *_sizesArrayController;
-
-    ArthroplastyTemplatingTableView *_familiesTableView;
-    SelectablePDFView *_pdfView;
-	NSPopUpButton *_sizesPopUp, *_offsetsPopUp;
-    NSView *_offsetsView;
-	IBOutlet NSButton *_shouldTransformColor;
-	IBOutlet NSColorWell *_transformColor;
-	NSSegmentedControl *_projectionButtons, *_sideButtons;
-	NSSearchField *_searchField;
-	ArthroplastyTemplateProjection _projection;
-	
+    ArthroplastyTemplateProjection _projection;
 }
 
-@property (readonly) HipArthroplastyTemplating *plugin;
+@property (weak, readonly) HipArthroplastyTemplating *plugin;
 
 @property (retain) ArthroplastyTemplateFamily *family;
 @property (retain) NSString *offset;
@@ -48,14 +35,6 @@
 @property ArthroplastyTemplateSide side;
 @property ArthroplastyTemplateProjection projection;
 
-@property (assign) IBOutlet NSArrayController *familiesArrayController, *offsetsArrayController, *sizesArrayController;
-
-@property (weak) IBOutlet ArthroplastyTemplatingTableView *familiesTableView;
-@property (weak) IBOutlet SelectablePDFView *pdfView;
-@property (weak) IBOutlet NSSegmentedControl *projectionButtons, *sideButtons;
-@property (weak) IBOutlet NSPopUpButton *sizesPopUp, *offsetsPopUp;
-@property (weak) IBOutlet NSView *offsetsView;
-@property (weak) IBOutlet NSSearchField *searchField;
 
 @property NSInteger projectionTag, sideTag;
 @property (readonly) BOOL offsetsEnabled;

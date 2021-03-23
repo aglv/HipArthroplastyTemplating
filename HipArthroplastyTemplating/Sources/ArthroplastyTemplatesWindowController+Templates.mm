@@ -64,7 +64,7 @@
 	}
 	
 	//	[_familiesArrayController rearrangeObjects];
-	[self.familiesTableView reloadData];
+	[_familiesTableView reloadData];
 }
 
 - (void)deallocTemplates {
@@ -114,7 +114,7 @@
 - (void)filterTemplates {
     NSMutableArray *subpredicates = [NSMutableArray arrayWithObject:[NSPredicate predicateWithValue:YES]];
     
-    for (NSString *str in [self.searchField.stringValue componentsSeparatedByString:@" "]) {
+    for (NSString *str in [_searchField.stringValue componentsSeparatedByString:@" "]) {
         str = [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if (str.length) {
             BOOL no = NO;
@@ -134,14 +134,14 @@
     [_familiesArrayController setFilterPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:subpredicates]];
 
 	//	[_familiesArrayController rearrangeObjects];
-    [self.familiesTableView noteNumberOfRowsChanged];
+    [_familiesTableView noteNumberOfRowsChanged];
 	//	[self.familiesTableView reloadData];
 
     [self.window orderFront:self];
 }
 
 - (BOOL)setFilter:(NSString *)string {
-	self.searchField.stringValue = string;
+	_searchField.stringValue = string;
 	[self filterTemplates];
 	return [_familiesArrayController.arrangedObjects count] > 0;
 }

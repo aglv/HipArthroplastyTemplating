@@ -3,443 +3,344 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 47;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5912DF3C118F24F1007F7D40 /* Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5912DF3B118F24F1007F7D40 /* Prefix.pch */; };
-		5912DF49118F26AB007F7D40 /* HipArthroplastyTemplatingSteps.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5912DF47118F26AB007F7D40 /* HipArthroplastyTemplatingSteps.xib */; };
-		5912DF4A118F26AB007F7D40 /* ArthroplastyTemplatesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5912DF48118F26AB007F7D40 /* ArthroplastyTemplatesWindow.xib */; };
-		5912DF4C118F26B0007F7D40 /* HipArthroplastyTemplating.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 5912DF4B118F26B0007F7D40 /* HipArthroplastyTemplating.tiff */; };
-		5912DF4E118F26B7007F7D40 /* io.volz.osirix.hiparthroplastytemplating.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5912DF4D118F26B7007F7D40 /* io.volz.osirix.hiparthroplastytemplating.plist */; };
-		592C9F3B0FDFAD0C00EB256B /* ArthroplastyTemplatingSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 592C9F390FDFAD0C00EB256B /* ArthroplastyTemplatingSplitView.h */; };
-		595252810FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5952527F0FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.mm */; };
-		595252820FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 595252800FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.h */; };
-		595B975811172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.h in Headers */ = {isa = PBXBuildFile; fileRef = 595B975611172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.h */; };
-		595B975911172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.mm in Sources */ = {isa = PBXBuildFile; fileRef = 595B975711172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.mm */; };
-		598E1E2B0FFB3E0200BC313C /* ArthroplastyTemplate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 598E1E2A0FFB3E0200BC313C /* ArthroplastyTemplate.mm */; };
-		598E1E2D0FFB3E0800BC313C /* HipArthroplastyTemplating.mm in Sources */ = {isa = PBXBuildFile; fileRef = 598E1E2C0FFB3E0800BC313C /* HipArthroplastyTemplating.mm */; };
-		598E1E2F0FFB3E4D00BC313C /* ArthroplastyTemplatingTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 598E1E2E0FFB3E4D00BC313C /* ArthroplastyTemplatingTableView.mm */; };
-		598E1E310FFB3E5A00BC313C /* ArthroplastyTemplateFamily.mm in Sources */ = {isa = PBXBuildFile; fileRef = 598E1E300FFB3E5A00BC313C /* ArthroplastyTemplateFamily.mm */; };
-		598E1E330FFB3E7E00BC313C /* ArthroplastyTemplatingSplitView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 598E1E320FFB3E7E00BC313C /* ArthroplastyTemplatingSplitView.mm */; };
-		59956E780FD812CF007C151F /* ArthroplastyTemplateFamily.h in Headers */ = {isa = PBXBuildFile; fileRef = 59956E760FD812CF007C151F /* ArthroplastyTemplateFamily.h */; };
-		599572900FDD3E2B007C151F /* SelectablePDFView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5995728E0FDD3E2B007C151F /* SelectablePDFView.h */; };
-		599572910FDD3E2B007C151F /* SelectablePDFView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5995728F0FDD3E2B007C151F /* SelectablePDFView.mm */; };
-		599572CC0FDD5170007C151F /* ArthroplastyTemplatesWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 599572CB0FDD5170007C151F /* ArthroplastyTemplatesWindowController.mm */; };
-		599A23CB138648C50086168F /* InfoTxtTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 599A23C9138648C50086168F /* InfoTxtTemplate.h */; };
-		599A23CC138648C50086168F /* InfoTxtTemplate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 599A23CA138648C50086168F /* InfoTxtTemplate.mm */; };
-		599C7B190FFCFED000AD1EB9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 599C7B180FFCFED000AD1EB9 /* Accelerate.framework */; };
-		59A640051042DFF3003F4069 /* ArthroplastyTemplatingStepsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 59A640031042DFF3003F4069 /* ArthroplastyTemplatingStepsController.mm */; };
-		59A640061042DFF3003F4069 /* ArthroplastyTemplatingStepsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 59A640041042DFF3003F4069 /* ArthroplastyTemplatingStepsController.h */; };
-		59B8B7470FFDEF2900891365 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59B8B7460FFDEF2900891365 /* CoreFoundation.framework */; };
-		59D94E840FCE807D00509EEC /* ArthroplastyTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 59D94E680FCE807D00509EEC /* ArthroplastyTemplate.h */; };
-		59D94E860FCE807D00509EEC /* HipArthroplastyTemplating.h in Headers */ = {isa = PBXBuildFile; fileRef = 59D94E6A0FCE807D00509EEC /* HipArthroplastyTemplating.h */; };
-		59D94E8B0FCE807D00509EEC /* ArthroplastyTemplatingTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 59D94E6F0FCE807D00509EEC /* ArthroplastyTemplatingTableView.h */; };
-		59D94E8D0FCE807D00509EEC /* ArthroplastyTemplatesWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 59D94E710FCE807D00509EEC /* ArthroplastyTemplatesWindowController.h */; };
-		59F523FD1055235F009B6D89 /* MEDACTA Templates in Resources */ = {isa = PBXBuildFile; fileRef = 59F523CD1055235F009B6D89 /* MEDACTA Templates */; };
-		59F6A15F105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.h in Headers */ = {isa = PBXBuildFile; fileRef = 59F6A15D105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.h */; };
-		59F6A160105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.mm in Sources */ = {isa = PBXBuildFile; fileRef = 59F6A15E105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.mm */; };
-		59F6A17610564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.h in Headers */ = {isa = PBXBuildFile; fileRef = 59F6A17410564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.h */; };
-		59F6A17710564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.mm in Sources */ = {isa = PBXBuildFile; fileRef = 59F6A17510564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.mm */; };
-		713FAB301F61446000DDAC80 /* HipArthroplastyTemplating+Versions.m in Sources */ = {isa = PBXBuildFile; fileRef = 713FAB2E1F61446000DDAC80 /* HipArthroplastyTemplating+Versions.m */; };
-		713FAB311F61446000DDAC80 /* HipArthroplastyTemplating+Versions.h in Headers */ = {isa = PBXBuildFile; fileRef = 713FAB2F1F61446000DDAC80 /* HipArthroplastyTemplating+Versions.h */; };
-		718D0AEA159C8E9A00F27CE9 /* HipAT2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 718D0AE8159C8E9A00F27CE9 /* HipAT2D.h */; };
-		718D0AEB159C8E9A00F27CE9 /* HipAT2D.mm in Sources */ = {isa = PBXBuildFile; fileRef = 718D0AE9159C8E9A00F27CE9 /* HipAT2D.mm */; };
-		71EADCC21D1195D2007B583A /* Mathys Templates in Resources */ = {isa = PBXBuildFile; fileRef = 71EADCC11D1195D2007B583A /* Mathys Templates */; };
-		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
-		A9F8BEED0B9DD21E00FDB71F /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9F8BEEC0B9DD21E00FDB71F /* Quartz.framework */; };
-		CEE107521D361E08000B77AF /* OsiriXAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEE107511D361E08000B77AF /* OsiriXAPI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		711AE6D0260A24B000E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6B6260A24AF00E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.mm */; };
+		711AE6D1260A24B000E5FE8A /* ArthroplastyTemplatesWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6B7260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController.mm */; };
+		711AE6D2260A24B000E5FE8A /* ArthroplastyTemplatesWindowController+Color.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6B8260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Color.mm */; };
+		711AE6D3260A24B000E5FE8A /* ArthroplastyTemplate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6BB260A24AF00E5FE8A /* ArthroplastyTemplate.mm */; };
+		711AE6D4260A24B000E5FE8A /* HipArthroplastyTemplating+Versions.m in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6BD260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.m */; };
+		711AE6D5260A24B000E5FE8A /* HipArthroplastyTemplating.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6BF260A24AF00E5FE8A /* HipArthroplastyTemplating.mm */; };
+		711AE6D6260A24B000E5FE8A /* ArthroplastyTemplatingUserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C1260A24AF00E5FE8A /* ArthroplastyTemplatingUserDefaults.mm */; };
+		711AE6D7260A24B000E5FE8A /* ArthroplastyTemplatingPDFView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C2260A24AF00E5FE8A /* ArthroplastyTemplatingPDFView.mm */; };
+		711AE6D8260A24B000E5FE8A /* ArthroplastyTemplateFamily.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C3260A24AF00E5FE8A /* ArthroplastyTemplateFamily.mm */; };
+		711AE6D9260A24B000E5FE8A /* ArthroplastyTemplatingTableView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C5260A24AF00E5FE8A /* ArthroplastyTemplatingTableView.mm */; };
+		711AE6DA260A24B000E5FE8A /* ArthroplastyTemplatesWindowController+Templates.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C6260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Templates.mm */; };
+		711AE6DB260A24B000E5FE8A /* ArthroplastyTemplatingSplitView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C7260A24AF00E5FE8A /* ArthroplastyTemplatingSplitView.mm */; };
+		711AE6DC260A24B000E5FE8A /* ArthroplastyTemplatingStepsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6CA260A24AF00E5FE8A /* ArthroplastyTemplatingStepsController.mm */; };
+		711AE6DD260A24B000E5FE8A /* HipAT2D.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6CB260A24AF00E5FE8A /* HipAT2D.mm */; };
+		711AE6DE260A24B000E5FE8A /* InfoTxtTemplate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6CD260A24AF00E5FE8A /* InfoTxtTemplate.mm */; };
+		711AE6EC260A26AF00E5FE8A /* HipArthroplastyTemplating.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 711AE6EA260A26AF00E5FE8A /* HipArthroplastyTemplating.tiff */; };
+		711AE6F0260A26DA00E5FE8A /* HipArthroplastyTemplatingSteps.xib in Resources */ = {isa = PBXBuildFile; fileRef = 711AE6EF260A26DA00E5FE8A /* HipArthroplastyTemplatingSteps.xib */; };
+		711AE6F6260A270500E5FE8A /* MEDACTA Templates in Resources */ = {isa = PBXBuildFile; fileRef = 711AE6F4260A270500E5FE8A /* MEDACTA Templates */; };
+		711AE6F7260A270500E5FE8A /* Mathys Templates in Resources */ = {isa = PBXBuildFile; fileRef = 711AE6F5260A270500E5FE8A /* Mathys Templates */; };
+		711AE709260A2B6400E5FE8A /* ArthroplastyTemplatesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 711AE708260A2B6400E5FE8A /* ArthroplastyTemplatesWindow.xib */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		59A6368710428D88003F4069 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
-		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		5912DF3B118F24F1007F7D40 /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prefix.pch; path = HipArthroplastyTemplating/Prefix.pch; sourceTree = "<group>"; };
-		5912DF47118F26AB007F7D40 /* HipArthroplastyTemplatingSteps.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HipArthroplastyTemplatingSteps.xib; sourceTree = "<group>"; };
-		5912DF48118F26AB007F7D40 /* ArthroplastyTemplatesWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ArthroplastyTemplatesWindow.xib; path = ../Resources/ArthroplastyTemplatesWindow.xib; sourceTree = "<group>"; };
-		5912DF4B118F26B0007F7D40 /* HipArthroplastyTemplating.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = HipArthroplastyTemplating.tiff; sourceTree = "<group>"; };
-		5912DF4D118F26B7007F7D40 /* io.volz.osirix.hiparthroplastytemplating.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = io.volz.osirix.hiparthroplastytemplating.plist; sourceTree = "<group>"; };
-		592C9F390FDFAD0C00EB256B /* ArthroplastyTemplatingSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingSplitView.h; sourceTree = "<group>"; };
-		5952527F0FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingUserDefaults.mm; sourceTree = "<group>"; };
-		595252800FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingUserDefaults.h; sourceTree = "<group>"; };
-		595B975611172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+ArthroplastyTemplating.h"; sourceTree = "<group>"; };
-		595B975711172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSBitmapImageRep+ArthroplastyTemplating.mm"; sourceTree = "<group>"; };
-		598E1E2A0FFB3E0200BC313C /* ArthroplastyTemplate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplate.mm; sourceTree = "<group>"; };
-		598E1E2C0FFB3E0800BC313C /* HipArthroplastyTemplating.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HipArthroplastyTemplating.mm; sourceTree = "<group>"; };
-		598E1E2E0FFB3E4D00BC313C /* ArthroplastyTemplatingTableView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingTableView.mm; sourceTree = "<group>"; };
-		598E1E300FFB3E5A00BC313C /* ArthroplastyTemplateFamily.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplateFamily.mm; sourceTree = "<group>"; };
-		598E1E320FFB3E7E00BC313C /* ArthroplastyTemplatingSplitView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingSplitView.mm; sourceTree = "<group>"; };
-		59956E760FD812CF007C151F /* ArthroplastyTemplateFamily.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplateFamily.h; sourceTree = "<group>"; };
-		5995728E0FDD3E2B007C151F /* SelectablePDFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectablePDFView.h; sourceTree = "<group>"; };
-		5995728F0FDD3E2B007C151F /* SelectablePDFView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SelectablePDFView.mm; sourceTree = "<group>"; };
-		599572CB0FDD5170007C151F /* ArthroplastyTemplatesWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatesWindowController.mm; sourceTree = "<group>"; };
-		599A23C9138648C50086168F /* InfoTxtTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoTxtTemplate.h; sourceTree = "<group>"; };
-		599A23CA138648C50086168F /* InfoTxtTemplate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InfoTxtTemplate.mm; sourceTree = "<group>"; };
-		599C7B180FFCFED000AD1EB9 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
-		59A640031042DFF3003F4069 /* ArthroplastyTemplatingStepsController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingStepsController.mm; sourceTree = "<group>"; };
-		59A640041042DFF3003F4069 /* ArthroplastyTemplatingStepsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingStepsController.h; sourceTree = "<group>"; };
-		59B8B7460FFDEF2900891365 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
-		59D94E680FCE807D00509EEC /* ArthroplastyTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplate.h; sourceTree = "<group>"; };
-		59D94E6A0FCE807D00509EEC /* HipArthroplastyTemplating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HipArthroplastyTemplating.h; sourceTree = "<group>"; };
-		59D94E6F0FCE807D00509EEC /* ArthroplastyTemplatingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingTableView.h; sourceTree = "<group>"; };
-		59D94E710FCE807D00509EEC /* ArthroplastyTemplatesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatesWindowController.h; sourceTree = "<group>"; };
-		59D951DA0FCE826400509EEC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = HipArthroplastyTemplating/Info.plist; sourceTree = "<group>"; };
-		59F523CD1055235F009B6D89 /* MEDACTA Templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "MEDACTA Templates"; sourceTree = "<group>"; };
-		59F6A15D105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatesWindowController+Color.h"; sourceTree = "<group>"; };
-		59F6A15E105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "ArthroplastyTemplatesWindowController+Color.mm"; sourceTree = "<group>"; };
-		59F6A17410564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatesWindowController+Templates.h"; sourceTree = "<group>"; };
-		59F6A17510564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "ArthroplastyTemplatesWindowController+Templates.mm"; sourceTree = "<group>"; };
-		7121CF681D0EFE2200D7D743 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
-		713FAB2E1F61446000DDAC80 /* HipArthroplastyTemplating+Versions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "HipArthroplastyTemplating+Versions.m"; sourceTree = "<group>"; };
-		713FAB2F1F61446000DDAC80 /* HipArthroplastyTemplating+Versions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HipArthroplastyTemplating+Versions.h"; sourceTree = "<group>"; };
-		718D0AE8159C8E9A00F27CE9 /* HipAT2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HipAT2D.h; sourceTree = "<group>"; };
-		718D0AE9159C8E9A00F27CE9 /* HipAT2D.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HipAT2D.mm; sourceTree = "<group>"; };
-		71B26E6022E7402300A7F8A9 /* ArthroplastyTemplatesWindowController+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatesWindowController+Private.h"; sourceTree = "<group>"; };
-		71EADCC11D1195D2007B583A /* Mathys Templates */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Mathys Templates"; sourceTree = "<group>"; };
-		71F4E7A51F04398A0098B24C /* version.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = version.sh; sourceTree = "<group>"; };
-		A9F8BEEC0B9DD21E00FDB71F /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
-		AB5D36050680E57E00F4007A /* HipArthroplastyTemplating.osirixplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HipArthroplastyTemplating.osirixplugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		CEE107511D361E08000B77AF /* OsiriXAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OsiriXAPI.framework; path = "OsiriX-API/OsiriXAPI.framework"; sourceTree = "<group>"; };
+		711AE691260A20B200E5FE8A /* HipArthroplastyTemplating.osirixplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HipArthroplastyTemplating.osirixplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		711AE6A7260A214000E5FE8A /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		711AE6B0260A24AF00E5FE8A /* ArthroplastyTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplate.h; sourceTree = "<group>"; };
+		711AE6B1260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatesWindowController+Color.h"; sourceTree = "<group>"; };
+		711AE6B2260A24AF00E5FE8A /* ArthroplastyTemplatingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingTableView.h; sourceTree = "<group>"; };
+		711AE6B3260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HipArthroplastyTemplating+Versions.h"; sourceTree = "<group>"; };
+		711AE6B4260A24AF00E5FE8A /* ArthroplastyTemplatingUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingUserDefaults.h; sourceTree = "<group>"; };
+		711AE6B5260A24AF00E5FE8A /* ArthroplastyTemplatingSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingSplitView.h; sourceTree = "<group>"; };
+		711AE6B6260A24AF00E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSBitmapImageRep+ArthroplastyTemplating.mm"; sourceTree = "<group>"; };
+		711AE6B7260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatesWindowController.mm; sourceTree = "<group>"; };
+		711AE6B8260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Color.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "ArthroplastyTemplatesWindowController+Color.mm"; sourceTree = "<group>"; };
+		711AE6B9260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatesWindowController.h; sourceTree = "<group>"; };
+		711AE6BA260A24AF00E5FE8A /* ArthroplastyTemplatingStepsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingStepsController.h; sourceTree = "<group>"; };
+		711AE6BB260A24AF00E5FE8A /* ArthroplastyTemplate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplate.mm; sourceTree = "<group>"; };
+		711AE6BC260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Templates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatesWindowController+Templates.h"; sourceTree = "<group>"; };
+		711AE6BD260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "HipArthroplastyTemplating+Versions.m"; sourceTree = "<group>"; };
+		711AE6BE260A24AF00E5FE8A /* ArthroplastyTemplatingPDFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingPDFView.h; sourceTree = "<group>"; };
+		711AE6BF260A24AF00E5FE8A /* HipArthroplastyTemplating.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HipArthroplastyTemplating.mm; sourceTree = "<group>"; };
+		711AE6C0260A24AF00E5FE8A /* ArthroplastyTemplateFamily.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplateFamily.h; sourceTree = "<group>"; };
+		711AE6C1260A24AF00E5FE8A /* ArthroplastyTemplatingUserDefaults.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingUserDefaults.mm; sourceTree = "<group>"; };
+		711AE6C2260A24AF00E5FE8A /* ArthroplastyTemplatingPDFView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingPDFView.mm; sourceTree = "<group>"; };
+		711AE6C3260A24AF00E5FE8A /* ArthroplastyTemplateFamily.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplateFamily.mm; sourceTree = "<group>"; };
+		711AE6C4260A24AF00E5FE8A /* HipAT2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HipAT2D.h; sourceTree = "<group>"; };
+		711AE6C5260A24AF00E5FE8A /* ArthroplastyTemplatingTableView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingTableView.mm; sourceTree = "<group>"; };
+		711AE6C6260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Templates.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "ArthroplastyTemplatesWindowController+Templates.mm"; sourceTree = "<group>"; };
+		711AE6C7260A24AF00E5FE8A /* ArthroplastyTemplatingSplitView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingSplitView.mm; sourceTree = "<group>"; };
+		711AE6C8260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatesWindowController+Private.h"; sourceTree = "<group>"; };
+		711AE6C9260A24AF00E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBitmapImageRep+ArthroplastyTemplating.h"; sourceTree = "<group>"; };
+		711AE6CA260A24AF00E5FE8A /* ArthroplastyTemplatingStepsController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingStepsController.mm; sourceTree = "<group>"; };
+		711AE6CB260A24AF00E5FE8A /* HipAT2D.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HipAT2D.mm; sourceTree = "<group>"; };
+		711AE6CD260A24AF00E5FE8A /* InfoTxtTemplate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = InfoTxtTemplate.mm; sourceTree = "<group>"; };
+		711AE6CE260A24AF00E5FE8A /* InfoTxtTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoTxtTemplate.h; sourceTree = "<group>"; };
+		711AE6CF260A24AF00E5FE8A /* HipArthroplastyTemplating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HipArthroplastyTemplating.h; sourceTree = "<group>"; };
+		711AE6E5260A262500E5FE8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = HipArthroplastyTemplating/Info.plist; sourceTree = "<group>"; };
+		711AE6EA260A26AF00E5FE8A /* HipArthroplastyTemplating.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = HipArthroplastyTemplating.tiff; path = HipArthroplastyTemplating/Resources/HipArthroplastyTemplating.tiff; sourceTree = "<group>"; };
+		711AE6EF260A26DA00E5FE8A /* HipArthroplastyTemplatingSteps.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HipArthroplastyTemplatingSteps.xib; sourceTree = "<group>"; };
+		711AE6F4260A270500E5FE8A /* MEDACTA Templates */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "MEDACTA Templates"; path = "HipArthroplastyTemplating/Resources/MEDACTA Templates"; sourceTree = "<group>"; };
+		711AE6F5260A270500E5FE8A /* Mathys Templates */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Mathys Templates"; path = "HipArthroplastyTemplating/Resources/Mathys Templates"; sourceTree = "<group>"; };
+		711AE6FA260A272E00E5FE8A /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Scripts; path = HipArthroplastyTemplating/Scripts; sourceTree = "<group>"; };
+		711AE708260A2B6400E5FE8A /* ArthroplastyTemplatesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArthroplastyTemplatesWindow.xib; sourceTree = "<group>"; };
+		711AE70C260A2BEC00E5FE8A /* OsiriXAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OsiriXAPI.framework; path = "OsiriX-API/OsiriXAPI.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8D5B49B3048680CD000E48DA /* Frameworks */ = {
+		711AE68E260A20B200E5FE8A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
-				A9F8BEED0B9DD21E00FDB71F /* Quartz.framework in Frameworks */,
-				CEE107521D361E08000B77AF /* OsiriXAPI.framework in Frameworks */,
-				599C7B190FFCFED000AD1EB9 /* Accelerate.framework in Frameworks */,
-				59B8B7470FFDEF2900891365 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		089C166AFE841209C02AAC07 /* XRayTemplatesPlugin */ = {
+		711AE688260A20B200E5FE8A = {
 			isa = PBXGroup;
 			children = (
-				7121CF681D0EFE2200D7D743 /* CHANGELOG.md */,
-				59D951DA0FCE826400509EEC /* Info.plist */,
-				5912DF3B118F24F1007F7D40 /* Prefix.pch */,
-				59D94E580FCE807D00509EEC /* Sources */,
-				59D94E910FCE81BD00509EEC /* Resources */,
-				71F4E7A41F04398A0098B24C /* Scripts */,
-				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
-				19C28FB8FE9D52D311CA2CBB /* Products */,
+				711AE6E5260A262500E5FE8A /* Info.plist */,
+				711AE6A7260A214000E5FE8A /* CHANGELOG.md */,
+				711AE6AF260A24AF00E5FE8A /* Sources */,
+				711AE6E8260A269D00E5FE8A /* Resources */,
+				711AE6FA260A272E00E5FE8A /* Scripts */,
+				711AE70B260A2BD700E5FE8A /* Frameworks */,
+				711AE692260A20B200E5FE8A /* Products */,
 			);
-			name = XRayTemplatesPlugin;
 			sourceTree = "<group>";
 		};
-		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+		711AE692260A20B200E5FE8A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CEE107511D361E08000B77AF /* OsiriXAPI.framework */,
-				59B8B7460FFDEF2900891365 /* CoreFoundation.framework */,
-				599C7B180FFCFED000AD1EB9 /* Accelerate.framework */,
-				A9F8BEEC0B9DD21E00FDB71F /* Quartz.framework */,
-				089C1672FE841209C02AAC07 /* Foundation.framework */,
-				089C167FFE841241C02AAC07 /* AppKit.framework */,
-				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
-			);
-			name = "Frameworks and Libraries";
-			sourceTree = "<group>";
-		};
-		19C28FB8FE9D52D311CA2CBB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				AB5D36050680E57E00F4007A /* HipArthroplastyTemplating.osirixplugin */,
+				711AE691260A20B200E5FE8A /* HipArthroplastyTemplating.osirixplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		59956E4D0FD8105F007C151F /* TemplateTypes */ = {
+		711AE6AF260A24AF00E5FE8A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				599A23C9138648C50086168F /* InfoTxtTemplate.h */,
-				599A23CA138648C50086168F /* InfoTxtTemplate.mm */,
-			);
-			path = TemplateTypes;
-			sourceTree = "<group>";
-		};
-		59D94E580FCE807D00509EEC /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				59D94E6A0FCE807D00509EEC /* HipArthroplastyTemplating.h */,
-				598E1E2C0FFB3E0800BC313C /* HipArthroplastyTemplating.mm */,
-				713FAB2F1F61446000DDAC80 /* HipArthroplastyTemplating+Versions.h */,
-				713FAB2E1F61446000DDAC80 /* HipArthroplastyTemplating+Versions.m */,
-				59F6A173105640F0008585F5 /* Templates Window */,
-				59A640041042DFF3003F4069 /* ArthroplastyTemplatingStepsController.h */,
-				59A640031042DFF3003F4069 /* ArthroplastyTemplatingStepsController.mm */,
-				718D0AE8159C8E9A00F27CE9 /* HipAT2D.h */,
-				718D0AE9159C8E9A00F27CE9 /* HipAT2D.mm */,
-				59D94E680FCE807D00509EEC /* ArthroplastyTemplate.h */,
-				598E1E2A0FFB3E0200BC313C /* ArthroplastyTemplate.mm */,
-				59956E4D0FD8105F007C151F /* TemplateTypes */,
-				59956E760FD812CF007C151F /* ArthroplastyTemplateFamily.h */,
-				598E1E300FFB3E5A00BC313C /* ArthroplastyTemplateFamily.mm */,
-				59D94E6F0FCE807D00509EEC /* ArthroplastyTemplatingTableView.h */,
-				598E1E2E0FFB3E4D00BC313C /* ArthroplastyTemplatingTableView.mm */,
-				592C9F390FDFAD0C00EB256B /* ArthroplastyTemplatingSplitView.h */,
-				598E1E320FFB3E7E00BC313C /* ArthroplastyTemplatingSplitView.mm */,
-				5995728E0FDD3E2B007C151F /* SelectablePDFView.h */,
-				5995728F0FDD3E2B007C151F /* SelectablePDFView.mm */,
-				595252800FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.h */,
-				5952527F0FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.mm */,
-				595B975611172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.h */,
-				595B975711172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.mm */,
+				711AE6CF260A24AF00E5FE8A /* HipArthroplastyTemplating.h */,
+				711AE6BF260A24AF00E5FE8A /* HipArthroplastyTemplating.mm */,
+				711AE6B3260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.h */,
+				711AE6BD260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.m */,
+				711AE6E3260A255000E5FE8A /* Templates Window */,
+				711AE6F3260A26EA00E5FE8A /* Steps */,
+				711AE6C4260A24AF00E5FE8A /* HipAT2D.h */,
+				711AE6CB260A24AF00E5FE8A /* HipAT2D.mm */,
+				711AE6B0260A24AF00E5FE8A /* ArthroplastyTemplate.h */,
+				711AE6BB260A24AF00E5FE8A /* ArthroplastyTemplate.mm */,
+				711AE6CC260A24AF00E5FE8A /* TemplateTypes */,
+				711AE6C0260A24AF00E5FE8A /* ArthroplastyTemplateFamily.h */,
+				711AE6C3260A24AF00E5FE8A /* ArthroplastyTemplateFamily.mm */,
+				711AE6B2260A24AF00E5FE8A /* ArthroplastyTemplatingTableView.h */,
+				711AE6C5260A24AF00E5FE8A /* ArthroplastyTemplatingTableView.mm */,
+				711AE6B5260A24AF00E5FE8A /* ArthroplastyTemplatingSplitView.h */,
+				711AE6C7260A24AF00E5FE8A /* ArthroplastyTemplatingSplitView.mm */,
+				711AE6B4260A24AF00E5FE8A /* ArthroplastyTemplatingUserDefaults.h */,
+				711AE6C1260A24AF00E5FE8A /* ArthroplastyTemplatingUserDefaults.mm */,
+				711AE6C9260A24AF00E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.h */,
+				711AE6B6260A24AF00E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.mm */,
 			);
 			name = Sources;
 			path = HipArthroplastyTemplating/Sources;
 			sourceTree = "<group>";
 		};
-		59D94E910FCE81BD00509EEC /* Resources */ = {
+		711AE6CC260A24AF00E5FE8A /* TemplateTypes */ = {
 			isa = PBXGroup;
 			children = (
-				5912DF4B118F26B0007F7D40 /* HipArthroplastyTemplating.tiff */,
-				5912DF4D118F26B7007F7D40 /* io.volz.osirix.hiparthroplastytemplating.plist */,
-				5912DF47118F26AB007F7D40 /* HipArthroplastyTemplatingSteps.xib */,
-				71EADCC11D1195D2007B583A /* Mathys Templates */,
-				59F523CD1055235F009B6D89 /* MEDACTA Templates */,
+				711AE6CD260A24AF00E5FE8A /* InfoTxtTemplate.mm */,
+				711AE6CE260A24AF00E5FE8A /* InfoTxtTemplate.h */,
 			);
-			name = Resources;
-			path = HipArthroplastyTemplating/Resources;
+			name = TemplateTypes;
 			sourceTree = "<group>";
 		};
-		59F6A173105640F0008585F5 /* Templates Window */ = {
+		711AE6E3260A255000E5FE8A /* Templates Window */ = {
 			isa = PBXGroup;
 			children = (
-				5912DF48118F26AB007F7D40 /* ArthroplastyTemplatesWindow.xib */,
-				71B26E6022E7402300A7F8A9 /* ArthroplastyTemplatesWindowController+Private.h */,
-				59D94E710FCE807D00509EEC /* ArthroplastyTemplatesWindowController.h */,
-				599572CB0FDD5170007C151F /* ArthroplastyTemplatesWindowController.mm */,
-				59F6A15D105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.h */,
-				59F6A15E105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.mm */,
-				59F6A17410564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.h */,
-				59F6A17510564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.mm */,
+				711AE708260A2B6400E5FE8A /* ArthroplastyTemplatesWindow.xib */,
+				711AE6C8260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Private.h */,
+				711AE6B9260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController.h */,
+				711AE6B7260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController.mm */,
+				711AE6B1260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Color.h */,
+				711AE6B8260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Color.mm */,
+				711AE6BC260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Templates.h */,
+				711AE6C6260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Templates.mm */,
+				711AE6BE260A24AF00E5FE8A /* ArthroplastyTemplatingPDFView.h */,
+				711AE6C2260A24AF00E5FE8A /* ArthroplastyTemplatingPDFView.mm */,
 			);
 			name = "Templates Window";
 			sourceTree = "<group>";
 		};
-		71F4E7A41F04398A0098B24C /* Scripts */ = {
+		711AE6E8260A269D00E5FE8A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				71F4E7A51F04398A0098B24C /* version.sh */,
+				711AE6EA260A26AF00E5FE8A /* HipArthroplastyTemplating.tiff */,
+				711AE6F5260A270500E5FE8A /* Mathys Templates */,
+				711AE6F4260A270500E5FE8A /* MEDACTA Templates */,
 			);
-			path = Scripts;
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		711AE6F3260A26EA00E5FE8A /* Steps */ = {
+			isa = PBXGroup;
+			children = (
+				711AE6EF260A26DA00E5FE8A /* HipArthroplastyTemplatingSteps.xib */,
+				711AE6BA260A24AF00E5FE8A /* ArthroplastyTemplatingStepsController.h */,
+				711AE6CA260A24AF00E5FE8A /* ArthroplastyTemplatingStepsController.mm */,
+			);
+			name = Steps;
+			sourceTree = "<group>";
+		};
+		711AE70B260A2BD700E5FE8A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				711AE70C260A2BEC00E5FE8A /* OsiriXAPI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		8D5B49AD048680CD000E48DA /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				59D94E840FCE807D00509EEC /* ArthroplastyTemplate.h in Headers */,
-				59D94E860FCE807D00509EEC /* HipArthroplastyTemplating.h in Headers */,
-				59D94E8B0FCE807D00509EEC /* ArthroplastyTemplatingTableView.h in Headers */,
-				59D94E8D0FCE807D00509EEC /* ArthroplastyTemplatesWindowController.h in Headers */,
-				59956E780FD812CF007C151F /* ArthroplastyTemplateFamily.h in Headers */,
-				599572900FDD3E2B007C151F /* SelectablePDFView.h in Headers */,
-				595252820FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.h in Headers */,
-				592C9F3B0FDFAD0C00EB256B /* ArthroplastyTemplatingSplitView.h in Headers */,
-				59A640061042DFF3003F4069 /* ArthroplastyTemplatingStepsController.h in Headers */,
-				59F6A15F105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.h in Headers */,
-				59F6A17610564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.h in Headers */,
-				713FAB311F61446000DDAC80 /* HipArthroplastyTemplating+Versions.h in Headers */,
-				595B975811172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.h in Headers */,
-				5912DF3C118F24F1007F7D40 /* Prefix.pch in Headers */,
-				599A23CB138648C50086168F /* InfoTxtTemplate.h in Headers */,
-				718D0AEA159C8E9A00F27CE9 /* HipAT2D.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
-		8D5B49AC048680CD000E48DA /* HipArthroplastyTemplating */ = {
+		711AE690260A20B200E5FE8A /* HipArthroplastyTemplating */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CE6A9A9008AC841300D0C1EE /* Build configuration list for PBXNativeTarget "HipArthroplastyTemplating" */;
+			buildConfigurationList = 711AE697260A20B200E5FE8A /* Build configuration list for PBXNativeTarget "HipArthroplastyTemplating" */;
 			buildPhases = (
-				71194E591D0E9F5E00332C03 /* Check for submodules */,
-				8D5B49AD048680CD000E48DA /* Headers */,
-				8D5B49AF048680CD000E48DA /* Resources */,
-				597B7075111B0BC900933C30 /* Copy Templates from Home */,
-				59F510221054F3FA009B6D89 /* Clean Templates Directories */,
-				59A6368710428D88003F4069 /* Copy Frameworks */,
-				8D5B49B1048680CD000E48DA /* Sources */,
-				8D5B49B3048680CD000E48DA /* Frameworks */,
-				8D5B49B5048680CD000E48DA /* Rez */,
-				711481F31AC5676000DB7108 /* Version */,
+				711AE6AE260A248D00E5FE8A /* Check for Submodules */,
+				711AE68D260A20B200E5FE8A /* Sources */,
+				711AE68E260A20B200E5FE8A /* Frameworks */,
+				711AE68F260A20B200E5FE8A /* Resources */,
+				711AE6FD260A276200E5FE8A /* Clean Template Directories */,
+				711AE6FE260A279200E5FE8A /* Version */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = HipArthroplastyTemplating;
-			productInstallPath = "$(HOME)/Library/Bundles";
-			productName = Invert;
-			productReference = AB5D36050680E57E00F4007A /* HipArthroplastyTemplating.osirixplugin */;
+			productName = Test;
+			productReference = 711AE691260A20B200E5FE8A /* HipArthroplastyTemplating.osirixplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		089C1669FE841209C02AAC07 /* Project object */ = {
+		711AE689260A20B200E5FE8A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					711AE690260A20B200E5FE8A = {
+						CreatedOnToolsVersion = 12.4;
+					};
+				};
 			};
-			buildConfigurationList = CE6A9A9408AC841300D0C1EE /* Build configuration list for PBXProject "HipArthroplastyTemplating" */;
-			compatibilityVersion = "Xcode 6.3";
-			developmentRegion = English;
-			hasScannedForEncodings = 1;
+			buildConfigurationList = 711AE68C260A20B200E5FE8A /* Build configuration list for PBXProject "HipArthroplastyTemplating" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
-				Japanese,
-				French,
-				German,
+				en,
+				Base,
 			);
-			mainGroup = 089C166AFE841209C02AAC07 /* XRayTemplatesPlugin */;
+			mainGroup = 711AE688260A20B200E5FE8A;
+			productRefGroup = 711AE692260A20B200E5FE8A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D5B49AC048680CD000E48DA /* HipArthroplastyTemplating */,
+				711AE690260A20B200E5FE8A /* HipArthroplastyTemplating */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		8D5B49AF048680CD000E48DA /* Resources */ = {
+		711AE68F260A20B200E5FE8A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				59F523FD1055235F009B6D89 /* MEDACTA Templates in Resources */,
-				5912DF49118F26AB007F7D40 /* HipArthroplastyTemplatingSteps.xib in Resources */,
-				5912DF4A118F26AB007F7D40 /* ArthroplastyTemplatesWindow.xib in Resources */,
-				5912DF4C118F26B0007F7D40 /* HipArthroplastyTemplating.tiff in Resources */,
-				5912DF4E118F26B7007F7D40 /* io.volz.osirix.hiparthroplastytemplating.plist in Resources */,
-				71EADCC21D1195D2007B583A /* Mathys Templates in Resources */,
+				711AE6F0260A26DA00E5FE8A /* HipArthroplastyTemplatingSteps.xib in Resources */,
+				711AE6EC260A26AF00E5FE8A /* HipArthroplastyTemplating.tiff in Resources */,
+				711AE6F6260A270500E5FE8A /* MEDACTA Templates in Resources */,
+				711AE6F7260A270500E5FE8A /* Mathys Templates in Resources */,
+				711AE709260A2B6400E5FE8A /* ArthroplastyTemplatesWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXRezBuildPhase section */
-		8D5B49B5048680CD000E48DA /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
-
 /* Begin PBXShellScriptBuildPhase section */
-		597B7075111B0BC900933C30 /* Copy Templates from Home */ = {
+		711AE6AE260A248D00E5FE8A /* Check for Submodules */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-			);
-			name = "Copy Templates from Home";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /usr/bin/perl;
-			shellScript = "use strict;\n#\n#my $source = \"$ENV{HOME}/Library/Development/HipArthroplastyTemplating/Templates\";\n#my $target = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{UNLOCALIZED_RESOURCES_FOLDER_PATH}/\";\n#\n#opendir(TEMPLATES, $source);\n#foreach (readdir(TEMPLATES)) {\n#\tif ($_ !~ /^\\./i) {\n#\t\tmy $name = $_;\n#\t\tmy $path = \"$source/$_\";\n#\n#\t\tmy $linkpath = readlink($path);\n#\t\tprint \"$path is $linkpath\\n\";\n#\t\tif ($linkpath) {\n#\t\t\t$path = $linkpath;\n#\t\t}\n#       else { # maybe an alias?\n#           #            my $osa = \"tell application \\\"Finder\\\"\\nposix path of (original item of alias file (posix file \\\"$path\\\") as text)\\nend tell\";\n#           open(FH, \"osascript -e 'tell application \\\"Finder\\\"' -e 'posix path of (original item of alias file (posix file \\\"$path\\\") as text)' -e 'end tell' |\");\n#           my $linkpath;\n#           while (<FH>) {\n#               s:\\n::g;\n#               $linkpath = $_;\n#               chop($linkpath); # remove last /\n#           }\n#            close(FH);\n#\n#            if ($linkpath) {\n#                $path = $linkpath;\n#            }\n#        }\n#\n#        print \"cp -Rfp $path $target\\n\";\n#\t\tmy @args = (\"cp\", \"-Rfp\", $path, $target);\n#\t\tsystem(@args);\n#\t}\n#}\n#\n#closedir(TEMPLATES);\n#\nexit 0;";
-		};
-		59F510221054F3FA009B6D89 /* Clean Templates Directories */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FULL_PRODUCT_NAME)",
-			);
-			name = "Clean Templates Directories";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /usr/bin/perl;
-			shellScript = "#/usr/bin/perl\n\nuse strict;\nuse subs qw(process);\n\nmy $path = \"$ENV{TARGET_BUILD_DIR}/$ENV{UNLOCALIZED_RESOURCES_FOLDER_PATH}\";\n\nsub process {\n\tmy ($path) = @_;\n\treturn if $path =~ /\\/(?:\\.|\\.\\.)$/;\n\tunlink $path if -f $path && $path !~ /\\.(?:pdf|txt|plist)$/i;\n\tunlink $path if -f $path && $path =~ /readme/i;\n\n\tif (-d $path) {\n\t\topendir(DIR, $path);\n\t\tprocess \"$path/$_\" foreach readdir(DIR);\n\t\tclosedir(DIR);\n\t}\n}\n\nopendir(RESOURCES, $path);\nforeach (readdir(RESOURCES)) {\n\tmy $resource = \"$path/$_\";\n\tnext unless -d $resource && $resource =~ /templates/i;\n\tprocess $resource;\n}\n\nclosedir(RESOURCES);\n\nexit 0;\n";
-		};
-		711481F31AC5676000DB7108 /* Version */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
+			inputFileListPaths = (
 			);
 			inputPaths = (
 			);
-			name = Version;
-			outputPaths = (
+			name = "Check for Submodules";
+			outputFileListPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "sh \"$PROJECT_DIR/Scripts/version.sh\"";
-		};
-		71194E591D0E9F5E00332C03 /* Check for submodules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check for submodules";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "git submodule foreach --recursive \"git submodule init\"\n\n#if [ ! -d \"OsiriX-API/OsiriX.framework\" ]; then\n#    echo \"warning: submodule OsiriX-API requires init/update, please wait...\"\n#    cd \"OsiriX-API\"\n#    git submodule init\n#    git submodule update\n#fi";
+			shellScript = "git submodule foreach --recursive \"git submodule init\"\n\n#if [ ! -d \"OsiriX-API/OsiriX.framework\" ]; then\n#    echo \"warning: submodule OsiriX-API requires init/update, please wait...\"\n#    cd \"OsiriX-API\"\n#    git submodule init\n#    git submodule update\n#fi\n";
+		};
+		711AE6FD260A276200E5FE8A /* Clean Template Directories */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Clean Template Directories";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /usr/bin/perl;
+			shellScript = "#/usr/bin/perl\n\nuse strict;\nuse subs qw(process);\n\nmy $path = \"$ENV{TARGET_BUILD_DIR}/$ENV{UNLOCALIZED_RESOURCES_FOLDER_PATH}\";\n\nsub process {\n    my ($path) = @_;\n    return if $path =~ /\\/(?:\\.|\\.\\.)$/;\n    unlink $path if -f $path && $path !~ /\\.(?:pdf|txt|plist)$/i;\n    unlink $path if -f $path && $path =~ /readme/i;\n\n    if (-d $path) {\n        opendir(DIR, $path);\n        process \"$path/$_\" foreach readdir(DIR);\n        closedir(DIR);\n    }\n}\n\nopendir(RESOURCES, $path);\nforeach (readdir(RESOURCES)) {\n    my $resource = \"$path/$_\";\n    next unless -d $resource && $resource =~ /templates/i;\n    process $resource;\n}\n\nclosedir(RESOURCES);\n\nexit 0;\n";
+		};
+		711AE6FE260A279200E5FE8A /* Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Version;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"HipArthroplastyTemplating/Scripts/Version.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		8D5B49B1048680CD000E48DA /* Sources */ = {
+		711AE68D260A20B200E5FE8A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				599572910FDD3E2B007C151F /* SelectablePDFView.mm in Sources */,
-				599572CC0FDD5170007C151F /* ArthroplastyTemplatesWindowController.mm in Sources */,
-				595252810FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.mm in Sources */,
-				598E1E2B0FFB3E0200BC313C /* ArthroplastyTemplate.mm in Sources */,
-				598E1E2D0FFB3E0800BC313C /* HipArthroplastyTemplating.mm in Sources */,
-				598E1E2F0FFB3E4D00BC313C /* ArthroplastyTemplatingTableView.mm in Sources */,
-				713FAB301F61446000DDAC80 /* HipArthroplastyTemplating+Versions.m in Sources */,
-				598E1E310FFB3E5A00BC313C /* ArthroplastyTemplateFamily.mm in Sources */,
-				598E1E330FFB3E7E00BC313C /* ArthroplastyTemplatingSplitView.mm in Sources */,
-				59A640051042DFF3003F4069 /* ArthroplastyTemplatingStepsController.mm in Sources */,
-				59F6A160105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.mm in Sources */,
-				59F6A17710564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.mm in Sources */,
-				595B975911172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.mm in Sources */,
-				599A23CC138648C50086168F /* InfoTxtTemplate.mm in Sources */,
-				718D0AEB159C8E9A00F27CE9 /* HipAT2D.mm in Sources */,
+				711AE6DD260A24B000E5FE8A /* HipAT2D.mm in Sources */,
+				711AE6D3260A24B000E5FE8A /* ArthroplastyTemplate.mm in Sources */,
+				711AE6D5260A24B000E5FE8A /* HipArthroplastyTemplating.mm in Sources */,
+				711AE6D1260A24B000E5FE8A /* ArthroplastyTemplatesWindowController.mm in Sources */,
+				711AE6DE260A24B000E5FE8A /* InfoTxtTemplate.mm in Sources */,
+				711AE6DB260A24B000E5FE8A /* ArthroplastyTemplatingSplitView.mm in Sources */,
+				711AE6D9260A24B000E5FE8A /* ArthroplastyTemplatingTableView.mm in Sources */,
+				711AE6DC260A24B000E5FE8A /* ArthroplastyTemplatingStepsController.mm in Sources */,
+				711AE6D2260A24B000E5FE8A /* ArthroplastyTemplatesWindowController+Color.mm in Sources */,
+				711AE6D4260A24B000E5FE8A /* HipArthroplastyTemplating+Versions.m in Sources */,
+				711AE6D7260A24B000E5FE8A /* ArthroplastyTemplatingPDFView.mm in Sources */,
+				711AE6D6260A24B000E5FE8A /* ArthroplastyTemplatingUserDefaults.mm in Sources */,
+				711AE6DA260A24B000E5FE8A /* ArthroplastyTemplatesWindowController+Templates.mm in Sources */,
+				711AE6D8260A24B000E5FE8A /* ArthroplastyTemplateFamily.mm in Sources */,
+				711AE6D0260A24B000E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		711481F41AC5680100DB7108 /* Release */ = {
+		711AE695260A20B200E5FE8A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -453,204 +354,116 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/OsiriX-API";
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = "VALIDATE_OSIRIX=1";
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		711481F51AC5680100DB7108 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = HipArthroplastyTemplating/Prefix.pch;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				HEADER_SEARCH_PATHS = /usr/local/include;
-				INFOPLIST_FILE = HipArthroplastyTemplating/Info.plist;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
-				);
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.volz.osirix.hiparthroplastytemplating;
-				PRODUCT_NAME = HipArthroplastyTemplating;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "";
-				WRAPPER_EXTENSION = osirixplugin;
-			};
-			name = Release;
-		};
-		71F4E7A21F04345E0098B24C /* Horos */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/OsiriX-API";
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = "HOROS=1";
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-			};
-			name = Horos;
-		};
-		71F4E7A31F04345E0098B24C /* Horos */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = HipArthroplastyTemplating/Prefix.pch;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				HEADER_SEARCH_PATHS = /usr/local/include;
-				INFOPLIST_FILE = HipArthroplastyTemplating/Info.plist;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
-				);
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.volz.horos.hiparthroplastytemplating;
-				PRODUCT_NAME = HipArthroplastyTemplating;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "";
-				WRAPPER_EXTENSION = horosplugin;
-			};
-			name = Horos;
-		};
-		CE6A9A9108AC841300D0C1EE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = HipArthroplastyTemplating/Prefix.pch;
-				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
-				HEADER_SEARCH_PATHS = /usr/local/include;
-				INFOPLIST_FILE = HipArthroplastyTemplating/Info.plist;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_2)",
-				);
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.volz.osirix.hiparthroplastytemplating;
-				PRODUCT_NAME = HipArthroplastyTemplating;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "";
-				WRAPPER_EXTENSION = osirixplugin;
-			};
-			name = Debug;
-		};
-		CE6A9A9508AC841300D0C1EE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CONFIGURATION_BUILD_DIR = "$(PROJECT_DIR)/build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
-				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/OsiriX-API";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
+		711AE696260A20B200E5FE8A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/OsiriX-API";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		711AE698260A20B200E5FE8A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				INFOPLIST_FILE = HipArthroplastyTemplating/Info.plist;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.volz.hiparthroplastytemplating;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = osirixplugin;
+			};
+			name = Debug;
+		};
+		711AE699260A20B200E5FE8A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				INFOPLIST_FILE = HipArthroplastyTemplating/Info.plist;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.volz.hiparthroplastytemplating;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = osirixplugin;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE6A9A9008AC841300D0C1EE /* Build configuration list for PBXNativeTarget "HipArthroplastyTemplating" */ = {
+		711AE68C260A20B200E5FE8A /* Build configuration list for PBXProject "HipArthroplastyTemplating" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CE6A9A9108AC841300D0C1EE /* Debug */,
-				711481F51AC5680100DB7108 /* Release */,
-				71F4E7A31F04345E0098B24C /* Horos */,
+				711AE695260A20B200E5FE8A /* Debug */,
+				711AE696260A20B200E5FE8A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CE6A9A9408AC841300D0C1EE /* Build configuration list for PBXProject "HipArthroplastyTemplating" */ = {
+		711AE697260A20B200E5FE8A /* Build configuration list for PBXNativeTarget "HipArthroplastyTemplating" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				CE6A9A9508AC841300D0C1EE /* Debug */,
-				711481F41AC5680100DB7108 /* Release */,
-				71F4E7A21F04345E0098B24C /* Horos */,
+				711AE698260A20B200E5FE8A /* Debug */,
+				711AE699260A20B200E5FE8A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+	rootObject = 711AE689260A20B200E5FE8A /* Project object */;
 }

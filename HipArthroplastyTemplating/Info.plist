@@ -6,16 +6,12 @@
 	<string>English</string>
 	<key>CFBundleExecutable</key>
 	<string>HipArthroplastyTemplating</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
-	<key>CFBundleVersion</key>
-	<string>2.9.1</string>
 	<key>CFBundleShortVersionString</key>
 	<string>2.9.1</string>
 	<key>CFBundleSignature</key>
@@ -25,7 +21,7 @@
 		<string>Hip Templating</string>
 	</array>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2020 OsiriX Team &amp; volz.io</string>
+	<string>© 2007-2021 OsiriX Team &amp; volz.io</string>
 	<key>NSPrincipalClass</key>
 	<string>HipArthroplastyTemplating</string>
 	<key>ToolbarIcon</key>

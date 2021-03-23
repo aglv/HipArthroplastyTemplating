@@ -1,5 +1,5 @@
 //
-//  SelectablePDFView.h
+//  ArthroplastyTemplatingPDFView.h
 //  HipArthroplastyTemplating
 //  Created by Alessandro Volz on 6/8/09.
 //  Copyright 2007-2016 OsiriX Team
@@ -8,11 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+
 @class ArthroplastyTemplatesWindowController;
 
 extern NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification;
 
-@interface SelectablePDFView : PDFView {
+@interface ArthroplastyTemplatingPDFView : PDFView {
 	BOOL _selected, _selectionInitiated, _drawing;
 	NSRect _selectedRect;
 	NSPoint _mouseDownLocation;

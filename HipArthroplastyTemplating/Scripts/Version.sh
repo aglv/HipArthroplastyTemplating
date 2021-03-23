@@ -6,7 +6,7 @@ pinfo="$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/Info.plist"
 plistversion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$oinfo")
 plistsversion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$oinfo")
 if [ -z "$plistversion" ]; then
-    echo "warning: CFBundleVersion is not set"
+#    echo "warning: CFBundleVersion is not set"
     plistversion="$plistsversion"
 fi
 

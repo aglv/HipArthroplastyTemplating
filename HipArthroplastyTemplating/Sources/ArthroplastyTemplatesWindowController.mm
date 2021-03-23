@@ -20,6 +20,7 @@
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
+#import "ArthroplastyTemplatingPDFView.h"
 #import "HipArthroplastyTemplating.h"
 #include <cmath>
 #include <algorithm>
@@ -28,6 +29,21 @@
 #import "NSBitmapImageRep+ArthroplastyTemplating.h"
 
 #import "ArthroplastyTemplatingUserDefaults.h"
+
+@interface ArthroplastyTemplatesWindowController ()
+
+@property (assign) IBOutlet NSArrayController *familiesArrayController, *offsetsArrayController, *sizesArrayController;
+
+@property (weak) IBOutlet ArthroplastyTemplatingTableView *familiesTableView;
+@property (weak) IBOutlet ArthroplastyTemplatingPDFView *pdfView;
+@property (weak) IBOutlet NSSegmentedControl *projectionButtons, *sideButtons;
+@property (weak) IBOutlet NSPopUpButton *sizesPopUp, *offsetsPopUp;
+@property (weak) IBOutlet NSView *offsetsView;
+@property (weak) IBOutlet NSSearchField *searchField;
+@property (weak) IBOutlet NSButton *shouldTransformColor;
+@property (weak) IBOutlet NSColorWell *transformColor;
+
+@end
 
 @implementation ArthroplastyTemplatesWindowController
 
@@ -40,6 +56,7 @@
 @synthesize family = _family;
 @synthesize familiesTableView = _familiesTableView, searchField = _searchField;
 @synthesize sizesPopUp = _sizesPopUp, offsetsPopUp = _offsetsPopUp, offsetsView = _offsetsView;
+@synthesize shouldTransformColor = _shouldTransformColor, transformColor = _transformColor;
 
 - (id)initWithPlugin:(HipArthroplastyTemplating *)plugin {
 	if (!(self = [self initWithWindowNibName:@"ArthroplastyTemplatesWindow"]))
@@ -79,7 +96,7 @@
 
 - (void)awakeFromNib {
 //    [_pdfView setDisplayMode:kPDFDisplaySinglePage];
-    _pdfView.autoScales = YES;
+//    _pdfView.autoScales = YES;
     
 //    _pdfView.scaleFactor = _pdfView.scaleFactorForSizeToFit;
 	[self awakeColor];
