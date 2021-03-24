@@ -14,8 +14,6 @@
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>2.9.1</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>MenuTitles</key>
 	<array>
 		<string>Hip Templating</string>

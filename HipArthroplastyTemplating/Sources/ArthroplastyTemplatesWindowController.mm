@@ -20,7 +20,7 @@
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
-#import "ArthroplastyTemplatingPDFView.h"
+#import "ArthroplastyTemplatingTemplateView.h"
 #import "HipArthroplastyTemplating.h"
 #include <cmath>
 #include <algorithm>
@@ -35,7 +35,7 @@
 @property (assign) IBOutlet NSArrayController *familiesArrayController, *offsetsArrayController, *sizesArrayController;
 
 @property (weak) IBOutlet ArthroplastyTemplatingTableView *familiesTableView;
-@property (weak) IBOutlet ArthroplastyTemplatingPDFView *pdfView;
+@property (weak) IBOutlet ArthroplastyTemplatingTemplateView *pdfView;
 @property (weak) IBOutlet NSSegmentedControl *projectionButtons, *sideButtons;
 @property (weak) IBOutlet NSPopUpButton *sizesPopUp, *offsetsPopUp;
 @property (weak) IBOutlet NSView *offsetsView;
@@ -116,7 +116,7 @@
     }] ];
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfViewDocumentDidChange:) name:ArthroplastyTemplatingPDFViewDocumentDidChangeNotification object:_pdfView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfViewDocumentDidChange:) name:ArthroplastyTemplatingTemplateViewDocumentDidChangeNotification object:_pdfView];
     
 	[self awakeTemplates];
     

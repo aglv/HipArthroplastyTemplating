@@ -25,7 +25,7 @@
     [self selectRowIndexes:dragRows byExtendingSelection:NO];
     [self setNeedsDisplay:YES];
     
-    ArthroplastyTemplatesWindowController *controller = (id)self.delegate;
+    ArthroplastyTemplatesWindowController *controller = (id) self.delegate;
     assert([controller isKindOfClass:ArthroplastyTemplatesWindowController.class]);
     
     ArthroplastyTemplate *t = [controller templat];

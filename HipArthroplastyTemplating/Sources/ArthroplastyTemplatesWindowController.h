@@ -7,14 +7,15 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Quartz/PDFKit.h>
 #import "ArthroplastyTemplate.h"
 
 @class ArthroplastyTemplatingTableView, N2Image, ROI, ViewerController;
 @class ArthroplastyTemplateFamily, HipArthroplastyTemplating;
 @class ArthroplastyTemplatesWindowControllerTemplatesHelper;
-@class ArthroplastyTemplatingPDFView;
+@class ArthroplastyTemplatingTemplateView;
 
-@interface ArthroplastyTemplatesWindowController : NSWindowController {
+@interface ArthroplastyTemplatesWindowController : NSWindowController<PDFViewDelegate> {
 	__unsafe_unretained HipArthroplastyTemplating *_plugin;
 
     NSMutableArray *_templates;

@@ -1,12 +1,12 @@
 //
-//  ArthroplastyTemplatingPDFView.m
+//  ArthroplastyTemplatingTemplateView.m
 //  HipArthroplastyTemplating
 //  Created by Alessandro Volz on 6/8/09.
 //  Copyright 2007-2016 OsiriX Team
 //  Copyright 2017 volz.io
 //
 
-#import "ArthroplastyTemplatingPDFView.h"
+#import "ArthroplastyTemplatingTemplateView.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #import <OsiriXAPI/N2Operators.h>
@@ -18,7 +18,7 @@
 
 #import <objc/runtime.h>
 
-NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"ArthroplastyTemplatingPDFViewDocumentDidChangeNotification";
+NSString * const ArthroplastyTemplatingTemplateViewDocumentDidChangeNotification = @"ArthroplastyTemplatingTemplateViewDocumentDidChangeNotification";
 
 //@interface PDFDocumentView : NSView // PDFDocumentView is a private class, but to define a category on it we need its interface - but we're not going to provide an @implementation
 //@end
@@ -29,7 +29,9 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
 
 @end
 
-@implementation ArthroplastyTemplatingPDFView
+@implementation ArthroplastyTemplatingTemplateView
+
+@dynamic delegate; // defined in super
 
 //static BOOL PDFDocumentViewHasAcceptsFirstMouse = NO;
 
@@ -50,13 +52,13 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
     self.autoScales = YES;
 }
 
-- (ArthroplastyTemplatesWindowController *)controller {
-    return (id)self.delegate;
-}
+//- (ArthroplastyTemplatesWindowController *)controller {
+//    return (id)self.delegate;
+//}
 
 - (NSPoint)convertPointTo01:(NSPoint)point forPage:(PDFPage *)page {
 	NSRect box = [page boundsForBox:kPDFDisplayBoxMediaBox];
-	return NSMakePoint([self.controller mustFlipHorizontally]? 1-point.x/box.size.width : point.x/box.size.width, point.y/box.size.height);
+	return NSMakePoint(self.delegate.mustFlipHorizontally? 1-point.x/box.size.width : point.x/box.size.width, point.y/box.size.height);
 }
 
 - (NSPoint)convertPointFrom01:(NSPoint)point forPage:(PDFPage *)page {
@@ -102,7 +104,7 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
     }
     else {
 		if (NSDistance(_mouseDownLocation, [event locationInWindow]) > 5)
-			[self.controller dragTemplate:[self.controller templat] startedByEvent:event onView:self];
+			[self.delegate dragTemplate:self.delegate.templat startedByEvent:event onView:self];
     }
 }
 
@@ -130,10 +132,10 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
     
     if (_selected) {
         [self enhanceSelection];
-        [self.controller setSelectionForCurrentTemplate:_selectedRect];
+        [self.delegate setSelectionForCurrentTemplate:_selectedRect];
         [self setNeedsDisplay:YES];
     }
-    else [self.controller setSelectionForCurrentTemplate:NSMakeRect(0,0,1,1)];
+    else [self.delegate setSelectionForCurrentTemplate:NSMakeRect(0,0,1,1)];
 }
 
 - (void)setDocument:(PDFDocument *)document {
@@ -141,9 +143,9 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
 
     [self.documentView scrollPoint:NSZeroPoint]; // fix a bug that first appeared with macOS 10.12 (PDFView didn't properly center the page until interacted with)
     
-	_selected = [self.controller selectionForCurrentTemplate:&_selectedRect];
+	_selected = [self.delegate selectionForCurrentTemplate:&_selectedRect];
 	
-    [[NSNotificationCenter defaultCenter] postNotificationName:ArthroplastyTemplatingPDFViewDocumentDidChangeNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ArthroplastyTemplatingTemplateViewDocumentDidChangeNotification object:self];
 }
 
 // this is for macOS versions up to 10.11, now deprecated in PDFView
@@ -157,7 +159,7 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
     
 	NSRect box = [page boundsForBox:kPDFDisplayBoxMediaBox];
 
-	if ([self.controller mustFlipHorizontally]) {
+	if ([self.delegate mustFlipHorizontally]) {
 		NSAffineTransform *transform = [NSAffineTransform transform];
 		[transform translateXBy:box.size.width yBy:0];
 		[transform scaleXBy:-1 yBy:1];
@@ -194,7 +196,7 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
     
     NSRect box = [page boundsForBox:kPDFDisplayBoxMediaBox];
     
-    if ([self.controller mustFlipHorizontally]) {
+    if ([self.delegate mustFlipHorizontally]) {
         NSAffineTransform *transform = [NSAffineTransform transform];
         [transform translateXBy:box.size.width yBy:0];
         [transform scaleXBy:-1 yBy:1];
@@ -227,7 +229,7 @@ NSString * const ArthroplastyTemplatingPDFViewDocumentDidChangeNotification = @"
         return [self HipArthroplastyTemplating_acceptsFirstMouse:e];
     
     for (NSView *view = self; view; view = view.superview)
-        if ([view isKindOfClass:ArthroplastyTemplatingPDFView.class])
+        if ([view isKindOfClass:ArthroplastyTemplatingTemplateView.class])
             return YES;
     
     return [self HipArthroplastyTemplating_acceptsFirstMouse:e];
