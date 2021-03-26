@@ -32,16 +32,16 @@
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
-#import "HipAT2D.h"
+#import "ArthroplastyTemplatingGeometry.h"
 #include <vector>
 
 #define kInvalidAngle 666
 #define kInvalidMagnification 0
 NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
-@interface HATROI : ROI
+@interface ArthroplastyTemplatingROI : ROI
 @end
-@implementation HATROI
+@implementation ArthroplastyTemplatingROI
 
 - (BOOL)valid {
     return YES;
@@ -77,15 +77,15 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	[_viewerController roiDeleteAll:self];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roiChanged:) name:OsirixROIChangeNotification object:NULL];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roiRemoved:) name:OsirixRemoveROINotification object:NULL];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roiChanged:) name:OsirixROIChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roiRemoved:) name:OsirixRemoveROINotification object:nil];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowWillClose:) name:NSWindowWillCloseNotification object:[self window]];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerDidChangeKeyStatus:) name:NSWindowDidBecomeKeyNotification object:[_viewerController window]];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerDidChangeKeyStatus:) name:NSWindowDidResignKeyNotification object:[_viewerController window]];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidChangeKeyStatus:) name:NSWindowDidBecomeKeyNotification object:[self window]];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidChangeKeyStatus:) name:NSWindowDidResignKeyNotification object:[self window]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendToPACS:) name:OsirixAddToDBNotification object:NULL];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerWillClose:) name:OsirixCloseViewerNotification object:NULL];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendToPACS:) name:OsirixAddToDBNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerWillClose:) name:OsirixCloseViewerNotification object:nil];
 	
 	return self;
 }
@@ -116,7 +116,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 	
     for (NSButtonCell *cell in _magnificationRadio.cells)
-        [cell setAttributedTitle:[[[NSAttributedString alloc] initWithString:[cell title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor whiteColor], NSForegroundColorAttributeName, [cell font], NSFontAttributeName, NULL]] autorelease]];
+        [cell setAttributedTitle:[[[NSAttributedString alloc] initWithString:[cell title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor whiteColor], NSForegroundColorAttributeName, [cell font], NSFontAttributeName, nil]] autorelease]];
 	[_magnificationCustomFactor setBackgroundColor:[self.window backgroundColor]];
     [_magnificationCustomFactor setDrawsBackground:YES];
 	[_magnificationCalibrateLength setBackgroundColor:[self.window backgroundColor]];
@@ -206,7 +206,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 - (void)removeRoiFromViewer:(ROI *)roi {
 	if (!roi) return;
 	[[[_viewerController roiList] objectAtIndex:0] removeObject:roi];
-	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixRemoveROINotification object:roi userInfo:NULL];
+	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixRemoveROINotification object:roi userInfo:nil];
 }
 
 // landmark OR horizontal axis has changed
@@ -214,7 +214,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	if (!landmark || [[landmark points] count] != 1 || !_horizontalAxis) {
 		if (*axis) {
 			[self removeRoiFromViewer:*axis];
-			*axis = NULL;
+			*axis = nil;
 		} return NO;	
 	}
 	
@@ -249,8 +249,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		}
 	
 	if (newAxis) {
-		[*axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:axisP0], [MyPoint point:axisP1], NULL]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:*axis userInfo:NULL];
+		[*axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:axisP0], [MyPoint point:axisP1], nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:*axis userInfo:nil];
 //		[_viewerController bringToFrontROI:landmark]; // TODO: this makes the landmark disappear!
 	}
 	
@@ -274,7 +274,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	if (roiFrom && roiTo) {
 		if (!*axis) {
-			*axis = [[[HATROI alloc] initWithType:tMesure :_horizontalAxis.pixelSpacingX :_horizontalAxis.pixelSpacingY :_horizontalAxis.imageOrigin] autorelease];
+			*axis = [[[ArthroplastyTemplatingROI alloc] initWithType:tMesure :_horizontalAxis.pixelSpacingX :_horizontalAxis.pixelSpacingY :_horizontalAxis.imageOrigin] autorelease];
 			[*axis setThickness:1]; [*axis setOpacity:.5];
 			[*axis setSelectable:NO];
             [_viewerController.imageView roiSet:*axis]; // [*axis setCurView: _viewerController.imageView]; is not available in horos
@@ -290,11 +290,11 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	NSPoint pointFrom = lineFrom*inequalityLine, pointTo = lineTo*inequalityLine;
 	
 	if ([[*axis points] count]) [[*axis points] removeAllObjects];
-	[*axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:pointFrom], [MyPoint point:pointTo], NULL]];
+	[*axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:pointFrom], [MyPoint point:pointTo], nil]];
 	*value = [*axis MesureLength:NULL]*NSSign((pointTo-pointFrom).y)*(-1);
 	
 	[*axis setName:name];
-//	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_legInequality userInfo:NULL];
+//	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_legInequality userInfo:nil];
 }
 
 - (void)updateLegInequality {
@@ -429,7 +429,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	[_knownRois removeObject:roi];
 
     if (roi == _magnificationLine) {
-		_magnificationLine = NULL;
+		_magnificationLine = nil;
 		[_stepCalibration setDone:NO];
 		[_steps setCurrentStep:_stepCalibration];
         NSArray *ps = [roi points];
@@ -449,21 +449,21 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
                     thread.status = NSLocalizedString(@"If you didn't click inside a calibration object, you better cancel this calculation.", nil);
                     thread.supportsCancel = YES;
                     
-                    NSMutableArray *contour = [NSMutableArray array];
-                    BOOL r = [HipAT2D growRegionFromPoint:[HipAT2DIntegerPoint pointWith:roundf(p.x):roundf(p.y)] onDCMPix:[self.viewerController.pixList objectAtIndex:self.viewerController.imageView.curImage] outputPoints:nil outputContour:contour];
-                    if (!r) return;
+                    NSMutableArray<ArthroplastyTemplatingPoint *> *contour = [NSMutableArray array];
+                    if (![ArthroplastyTemplatingGeometry growRegionFromPoint:[ArthroplastyTemplatingPoint pointWith:roundf(p.x):roundf(p.y)] onDCMPix:[self.viewerController.pixList objectAtIndex:self.viewerController.imageView.curImage] outputPoints:nil outputContour:contour])
+                        return;
                     
-                    NSArray *ps = [HipAT2D mostDistantPairOfPointsInArray:contour];
+                    NSArray<ArthroplastyTemplatingPoint *> *ps = [ArthroplastyTemplatingGeometry mostDistantPairOfPointsInArray:contour];
                     
                     if (ps)
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             // create the ROI
                             ROI *nroi = [[[ROI alloc] initWithType:tMesure :roi.pixelSpacingX :roi.pixelSpacingY :roi.imageOrigin] autorelease];
-                            [nroi addPoint:[[ps objectAtIndex:0] nsPoint]];
-                            [nroi addPoint:[[ps objectAtIndex:1] nsPoint]];
+                            [nroi addPoint:ps[0].NSPoint];
+                            [nroi addPoint:ps[1].NSPoint];
                             [_viewerController.imageView roiSet:nroi]; // [nroi setCurView: _viewerController.imageView]; is not available in horos
-                            [[[_viewerController roiList] objectAtIndex:[[_viewerController imageView] curImage]] addObject:nroi];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:nroi userInfo:NULL];
+                            [_viewerController.roiList[_viewerController.imageView.curImage] addObject:nroi];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:nroi userInfo:nil];
                         }];
                 }];
                 
@@ -481,26 +481,26 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 	
 	if (roi == _horizontalAxis) {
-		_horizontalAxis = NULL;
+		_horizontalAxis = nil;
 		[_stepAxes setDone:NO];
 		[_steps setCurrentStep:_stepAxes];
 		[self updateLegInequality];
 	}
 	
 	if (roi == _femurAxis) {
-		_femurAxis = NULL;
+		_femurAxis = nil;
 		[_steps setCurrentStep:_stepAxes];
 	}
 	
 	if (roi == _landmark1) {
-		_landmark1 = NULL;
+		_landmark1 = nil;
 		[self landmarkChanged:_landmark1 axis:&_landmark1Axis other:_landmark2]; // removes _landmark1Axis
 		if (_landmark2) {
-			_landmark1 = _landmark2; _landmark2 = NULL;
-			_landmark1Axis = _landmark2Axis; _landmark2Axis = NULL;
+			_landmark1 = _landmark2; _landmark2 = nil;
+			_landmark1Axis = _landmark2Axis; _landmark2Axis = nil;
 			[_landmark1 setName:@"Landmark 1"];
 			if (![self landmarkChanged:_landmark1 axis:&_landmark1Axis other:_landmark2])
-				[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_landmark1 userInfo:NULL];
+				[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_landmark1 userInfo:nil];
 		} else
 			[_stepLandmarks setDone:NO];
 		[_steps setCurrentStep:_stepLandmarks];
@@ -508,31 +508,31 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 	
 	if (roi == _landmark1Axis)
-		_landmark1Axis = NULL;
+		_landmark1Axis = nil;
 	
 	if (roi == _landmark2) {
-		_landmark2 = NULL;
+		_landmark2 = nil;
 		[self landmarkChanged:_landmark1 axis:&_landmark1Axis other:_landmark2];
 		[self landmarkChanged:_landmark2 axis:&_landmark2Axis other:_landmark1];
 		[self updateLegInequality];
 	}
 	
 	if (roi == _landmark2Axis)
-		_landmark2Axis = NULL;
+		_landmark2Axis = nil;
 
 	if (roi == _femurRoi)
-		_femurRoi = NULL;
+		_femurRoi = nil;
 	
 	if (roi == _femurLayer) {
-		_femurLayer = NULL; _femurLandmark = NULL;
+		_femurLayer = nil; _femurLandmark = nil;
 		[self removeRoiFromViewer:_originalFemurOpacityLayer];
 		[_stepCutting setDone:NO];
 		[_steps setCurrentStep:_stepCutting];
 	}
 	
 	if (roi == _cupLayer) {
-		_cupLayer = NULL;
-		_cupTemplate = NULL;
+		_cupLayer = nil;
+		_cupTemplate = nil;
 		[_stepCup setDone:NO];
 		[_steps setCurrentStep:_stepCup];
 		_cupRotated = NO;
@@ -540,7 +540,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	if (roi == _stemLayer) {
 		_stemLayer = nil;
-		_stemTemplate = NULL;
+		_stemTemplate = nil;
         _distalStemLayer = nil;
         _distalStemTemplate = nil;
 		[_stepStem setDone:NO];
@@ -557,33 +557,33 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     }
 	
 	if (roi == _infoBox)
-		_infoBox = NULL;
+		_infoBox = nil;
 	
 	if (roi == _femurLandmark) {
-		_femurLandmark = NULL;
+		_femurLandmark = nil;
 		[self removeRoiFromViewer:_femurLandmarkAxis];
 		[self updateLegInequality];
 	}
 	
 	if (roi == _femurLandmarkAxis)
-		_femurLandmarkAxis = NULL;
+		_femurLandmarkAxis = nil;
 	
 	if (roi == _femurLandmarkOther)
-		_femurLandmarkOther = NULL;
+		_femurLandmarkOther = nil;
 	
 	if (roi == _legInequality)
-		_legInequality = NULL;
+		_legInequality = nil;
 	
 	if (roi == _originalLegInequality)
-		_originalLegInequality = NULL;
+		_originalLegInequality = nil;
 	
 	if (roi == _originalFemurOpacityLayer)
-		 _originalFemurOpacityLayer = NULL;
+		 _originalFemurOpacityLayer = nilnil;
 		
 	if (roi == _femurLandmarkOriginal)
-		_femurLandmarkOriginal = NULL;
+		_femurLandmarkOriginal = nil;
 		
-	[self advanceAfterInput:NULL];
+	[self advanceAfterInput:nil];
 	[self computeValues];
 }
 
@@ -607,7 +607,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	[self removeRoiFromViewer:_infoBox];
 	[_viewerController roiDeleteAll:self];
 	
-	if (_planningDate) [_planningDate release]; _planningDate = NULL;
+	if (_planningDate) [_planningDate release]; _planningDate = nil;
 	
 	if (updateView) {
 		[_steps reset:self];
@@ -652,7 +652,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			[_femurRoi setOpacity:1];
 			[_femurRoi setSelectable:YES];
 			[_femurRoi setROIMode:ROI_selected];
-			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:NULL];
+			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:nil];
 		}
 	} else if (step == _stepCup) {
 		showTemplates = [[_plugin templatesWindowController] setFilter:@"Cup"];
@@ -726,11 +726,11 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		else [_magnificationCustomFactor performClick:self];
 	}
 	
-	[_neckSizePopUpButton setEnabled: _stemLayer != NULL];
+	[_neckSizePopUpButton setEnabled: _stemLayer != nil];
 }
 
 - (BOOL)steps:(N2Steps *)steps shouldValidateStep:(N2Step *)step {
-	NSString *errorMessage = NULL;
+	NSString *errorMessage = nil;
 	
 	if (step == _stepCalibration) {
 		if (![_magnificationRadio selectedTag]) {
@@ -770,8 +770,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 
 	if (errorMessage)
-		[[NSAlert alertWithMessageText:[step title] defaultButton:@"OK" alternateButton:NULL otherButton:NULL informativeTextWithFormat:@"%@", errorMessage] beginSheetModalForWindow:[self window] modalDelegate:NULL didEndSelector:NULL contextInfo:NULL];
-	return errorMessage == NULL;
+		[[NSAlert alertWithMessageText:[step title] defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%@", errorMessage] beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	return errorMessage == nil;
 }
 
 - (ROI *)closestROIFromSet:(NSSet *)rois toPoints:(NSArray *)points {
@@ -818,7 +818,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		[_femurLayer setDisplayTextualData:NO];
 		
 		
-		_femurLandmarkOriginal = [self closestROIFromSet:[NSSet setWithObjects:_landmark1, _landmark2, NULL] toPoints:[_femurRoi points]];
+		_femurLandmarkOriginal = [self closestROIFromSet:[NSSet setWithObjects:_landmark1, _landmark2, nil] toPoints:[_femurRoi points]];
 		_femurLandmark = [[ROI alloc] initWithType:t2DPoint :_femurLandmarkOriginal.pixelSpacingX :_femurLandmarkOriginal.pixelSpacingY :_femurLandmarkOriginal.imageOrigin];
 		[_femurLandmark setROIRect:[_femurLandmarkOriginal rect]];
 		[_femurLandmark setName:[NSString stringWithFormat:@"%@'",[_femurLandmarkOriginal name]]]; // same name + prime
@@ -827,7 +827,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		_femurLandmarkOther = _femurLandmarkOriginal == _landmark1? _landmark2 : _landmark1;
         [_viewerController.imageView roiSet:_femurLandmark]; // [_femurLandmark setCurView:_viewerController.imageView]; is not available in horos
 		[[[_viewerController roiList] objectAtIndex:[[_viewerController imageView] curImage]] addObject:_femurLandmark];
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurLandmark userInfo:NULL];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurLandmark userInfo:nil];
 		
 		// bring the point to front (we don't want it behind the layer)
 		[_viewerController bringToFrontROI:_femurLandmark];
@@ -841,7 +841,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 		NSBitmapImageRep *femur = [NSBitmapImageRep imageRepWithData:[[_femurLayer layerImage] TIFFRepresentation]];
 		NSSize size = [[_femurLayer layerImage] size];
-		NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:size.width*4 bitsPerPixel:32] autorelease];
+		NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:nil pixelsWide:size.width pixelsHigh:size.height bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:size.width*4 bitsPerPixel:32] autorelease];
 		unsigned char *bitmapData = [bitmap bitmapData];
 		NSInteger bytesPerRow = [bitmap bytesPerRow], bitsPerPixel = [bitmap bitsPerPixel];
 		for (NSInteger y = 0; y < size.height; ++y)
@@ -864,12 +864,12 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		[_originalFemurOpacityLayer roiMove:[[[_femurLayer points] objectAtIndex:0] point]-[[[_originalFemurOpacityLayer points] objectAtIndex:0] point]-([temp size]-[bitmap size])/2];
 		[_originalFemurOpacityLayer setNSColor:[[NSColor redColor] colorWithAlphaComponent:.5]];
         [_viewerController.imageView roiSet:_originalFemurOpacityLayer]; // [_originalFemurOpacityLayer setCurView: _viewerController.imageView]; is not available in horos
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_originalFemurOpacityLayer userInfo:NULL];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_originalFemurOpacityLayer userInfo:nil];
 
 		[_femurRoi setROIMode:ROI_sleep];
 		[_femurRoi setSelectable:NO];
 		[_femurRoi setOpacity:0.2];
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:NULL];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:nil];
 		
 		[_viewerController selectROI:_femurLayer deselectingOther:YES];
 		[_viewerController bringToFrontROI:_femurLayer];
@@ -921,7 +921,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			_imageToSendName = [name retain];
 		else {
 			[_imageToSendName release];
-			_imageToSendName = NULL;
+			_imageToSendName = nil;
 		}
 	}
 }
@@ -948,8 +948,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 - (void)rotateLayer:(ROI *)roi byTrackingMouseFrom:(NSPoint)wp1 to:(NSPoint)wp2 {
-	wp1 = [[_viewerController imageView] ConvertFromNSView2GL:[[_viewerController imageView] convertPoint:wp1 fromView:NULL]];
-	wp2 = [[_viewerController imageView] ConvertFromNSView2GL:[[_viewerController imageView] convertPoint:wp2 fromView:NULL]];
+	wp1 = [[_viewerController imageView] ConvertFromNSView2GL:[[_viewerController imageView] convertPoint:wp1 fromView:nil]];
+	wp2 = [[_viewerController imageView] ConvertFromNSView2GL:[[_viewerController imageView] convertPoint:wp2 fromView:nil]];
 	NSPoint center = [[[roi points] objectAtIndex:4] point];
 	if (roi == _stemLayer && [_stemLayer groupID] == [_femurLayer groupID])
 		center = [[[roi points] objectAtIndex:4+_stemNeckSizeIndex] point];
@@ -1027,8 +1027,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	if ([event type] == NSLeftMouseDown || [event type] == NSRightMouseDown || [event type] == NSOtherMouseDown) {
 		if ((_cupLayer && [_cupLayer ROImode] == ROI_selected) || (_stemLayer && [_stemLayer ROImode] == ROI_selected)) {
 			NSUInteger modifiers = [event modifierFlags]&0xffff0000;
-			_isMyMouse = (modifiers == NSCommandKeyMask+NSAlternateKeyMask)? [event retain] : NULL;
-			return _isMyMouse != NULL;
+			_isMyMouse = (modifiers == NSCommandKeyMask+NSAlternateKeyMask)? [event retain] : nil;
+			return _isMyMouse != nil;
 		}
 	} else if (_isMyMouse && ([event type] == NSLeftMouseDragged || [event type] == NSRightMouseDragged || [event type] == NSOtherMouseDragged)) {
 		if (_cupLayer && [_cupLayer ROImode] == ROI_selected)
@@ -1041,7 +1041,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	} else if ([event type] == NSLeftMouseUp || [event type] == NSRightMouseUp || [event type] == NSOtherMouseUp) {
 		if ([_femurLayer groupID] == [_stemLayer groupID])
 			[self adjustStemToCup];
-		if (_isMyMouse) [_isMyMouse release]; _isMyMouse = NULL;
+		if (_isMyMouse) [_isMyMouse release]; _isMyMouse = nil;
 	}
 	
 	return NO;
@@ -1134,7 +1134,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 //		NSLog(@"[seriesArray count] : %d", [seriesArray count]);
 //		NSString *pathOfImageToSend;
 		
-		NSManagedObject *imageToSend = NULL;
+		NSManagedObject *imageToSend = nil;
 		
 		for (unsigned i = 0; i < [seriesArray count]; i++)
 		{
@@ -1211,7 +1211,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			[_infoBox setROIRect:NSMakeRect([[[_viewerController imageView] curDCM] pwidth]/4*(left?3:1), [[[_viewerController imageView] curDCM] pheight]/3*2, 0.0, 0.0)];
             [_viewerController.imageView roiSet:_infoBox]; // [_infoBox setCurView: _viewerController.imageView]; is not available in horos
 			[[[_viewerController roiList] objectAtIndex:[[_viewerController imageView] curImage]] addObject:_infoBox];
-			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_infoBox userInfo:NULL];
+			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_infoBox userInfo:nil];
 			[_infoBox release];
 		}
 	else

@@ -162,6 +162,7 @@ DQ
                     </connections>
                 </button>
             </subviews>
+            <point key="canvasLocation" x="-297" y="155"/>
         </customView>
         <customView id="152" userLabel="Axes">
             <rect key="frame" x="0.0" y="0.0" width="180" height="58"/>

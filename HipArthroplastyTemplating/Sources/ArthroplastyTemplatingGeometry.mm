@@ -1,19 +1,19 @@
 //
-//  HipAT2D.m
+//  ArthroplastyTemplatingGeometry.m
 //  HipArthroplastyTemplating
 //  Created by Alessandro Volz on 28.06.12.
 //  Copyright 2007-2016 OsiriX Team
 //  Copyright 2017 volz.io
 //
 
-#import "HipAT2D.h"
+#import "ArthroplastyTemplatingGeometry.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #import <OsiriXAPI/DCMPix.h>
 #pragma clang diagnostic pop
 #include <cmath>
 
-@implementation HipAT2DIntegerPoint
+@implementation ArthroplastyTemplatingPoint
 
 @synthesize x = _x, y = _y;
 
@@ -34,24 +34,24 @@
     return self;
 }
 
-- (BOOL)isEqual:(HipAT2DIntegerPoint *)other {
-    return [other isKindOfClass:[HipAT2DIntegerPoint class]] && _x == other.x && _y == other.y;
+- (BOOL)isEqual:(ArthroplastyTemplatingPoint *)other {
+    return [other isKindOfClass:[ArthroplastyTemplatingPoint class]] && _x == other.x && _y == other.y;
 }
 
 - (NSArray *)neighbors {
     return [NSArray arrayWithObjects:
-            [HipAT2DIntegerPoint pointWith:_x:_y-1],
-            [HipAT2DIntegerPoint pointWith:_x+1:_y],
-            [HipAT2DIntegerPoint pointWith:_x:_y+1],
-            [HipAT2DIntegerPoint pointWith:_x-1:_y],
+            [ArthroplastyTemplatingPoint pointWith:_x:_y-1],
+            [ArthroplastyTemplatingPoint pointWith:_x+1:_y],
+            [ArthroplastyTemplatingPoint pointWith:_x:_y+1],
+            [ArthroplastyTemplatingPoint pointWith:_x-1:_y],
             nil];
 }
 
-/*-(CGFloat)distanceTo:(HipAT2DIntegerPoint *)p {
+/*-(CGFloat)distanceTo:(ArthroplastyTemplatingPoint *)p {
     return std::sqrt(std::pow((CGFloat)_x-p.x, 2)+std::pow((CGFloat)_y-p.y, 2));
 }*/
 
-- (CGFloat)distanceToNoSqrt:(HipAT2DIntegerPoint *)p {
+- (CGFloat)distanceToNoSqrt:(ArthroplastyTemplatingPoint *)p {
     return std::pow((CGFloat)_x-p.x, 2)+std::pow((CGFloat)_y-p.y, 2);
 }
 
@@ -59,15 +59,15 @@
     return [NSString stringWithFormat:@"[%d,%d]", (int)_x, (int)_y];
 }
 
-- (NSPoint)nsPoint {
+- (NSPoint)NSPoint {
     return NSMakePoint(_x, _y);
 }
 
 @end
 
-@implementation HipAT2D
+@implementation ArthroplastyTemplatingGeometry
 
-+ (BOOL)growRegionFromPoint:(HipAT2DIntegerPoint *)p0 onDCMPix:(DCMPix *)pix outputPoints:(NSMutableArray *)points outputContour:(NSMutableArray *)contour {
++ (BOOL)growRegionFromPoint:(ArthroplastyTemplatingPoint *)p0 onDCMPix:(DCMPix *)pix outputPoints:(NSMutableArray<ArthroplastyTemplatingPoint *> *)points outputContour:(NSMutableArray<ArthroplastyTemplatingPoint *> *)contour {
     NSThread *thread = [NSThread currentThread];
     
     const NSInteger w = pix.pwidth, h = pix.pheight, wh = w*h;
@@ -94,10 +94,10 @@
     mask(p0) = 1;
     
     while (toBeVisited.count && !thread.isCancelled) {
-        HipAT2DIntegerPoint *p = [toBeVisited lastObject];
+        ArthroplastyTemplatingPoint *p = [toBeVisited lastObject];
         [toBeVisited removeLastObject];
         [points addObject:p];
-        for (HipAT2DIntegerPoint *t in p.neighbors)
+        for (ArthroplastyTemplatingPoint *t in p.neighbors)
             if (t.x >= 0 && t.y >= 0 && t.x < w && t.y < h && !mask(t)) {
                 mask(t) = 1;
                 if (data(t) >= threshold)
@@ -109,13 +109,13 @@
             }
     }
     
+#undef data
+#undef mask
+    
     return !thread.isCancelled;
 }
 
-#undef data
-#undef mask
-
-+ (NSArray *)mostDistantPairOfPointsInArray:(NSArray *)points {
++ (NSArray<ArthroplastyTemplatingPoint *> *)mostDistantPairOfPointsInArray:(NSArray<ArthroplastyTemplatingPoint *> *)points {
     if (points.count < 2)
         return nil;
 
@@ -129,13 +129,13 @@
         for (NSUInteger j = i+1; j <= jlimit; ++j) {
             if (thread.isCancelled)
                 return nil;
-            CGFloat ijd = [[points objectAtIndex:i] distanceToNoSqrt:[points objectAtIndex:j]];
+            CGFloat ijd = [points[i] distanceToNoSqrt:points[j]];
             if (ijd > rd) {
                 rd = ijd; p1i = i; p2i = j;
             }
         }
     
-    return [NSArray arrayWithObjects: [points objectAtIndex:p1i], [points objectAtIndex:p2i], nil];
+    return @[ points[p1i], points[p2i] ];
 }
 
 @end
