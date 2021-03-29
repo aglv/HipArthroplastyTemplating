@@ -63,6 +63,8 @@
 	NSString *_imageToSendName;
 	NSEvent *_isMyMouse;
     NSInteger _isMyRoiManupulation;
+    
+    BOOL _computeValuesGuard;
 }
 
 

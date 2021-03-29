@@ -91,7 +91,7 @@ static HipArthroplastyTemplating *_Plugin = nil;
         else status = -1;
     }
     
-    if(status != noErr)
+    if (status != noErr)
         [NSException raise:NSGenericException format:@"Couldn't validate certified OsiriX environment"];
 }
 #endif
@@ -214,24 +214,27 @@ static HipArthroplastyTemplating *_Plugin = nil;
 }
 
 - (BOOL)handleEvent:(NSEvent *)event forViewer:(ViewerController *)controller {
+    if (![event isKindOfClass:NSEvent.class])
+        return NO;
+    
 	ArthroplastyTemplatingStepsController *window = [self windowControllerForViewer:controller];
 	if (window)
 		return [window handleViewerEvent:event];
+    
 	return NO;
 }
 
 //- (void)viewerWillClose:(NSNotification *)notification;
 //{
-//	if(stepByStepController) [stepByStepController close];
+//	if (stepByStepController)
+//    [stepByStepController close];
 //}
 
 //- (void)windowWillClose:(NSNotification *)aNotification
 //{
 //	NSLog(@"windowWillClose ArthroplastyTemplatingsPluginFilter");
-//	if(stepByStepController)
-//	{
-//		if([[aNotification object] isEqualTo:[stepByStepController window]])
-//		{
+//	if (stepByStepController) {
+//		if ([[aNotification object] isEqualTo:[stepByStepController window]]) {
 //			[stepByStepController release];
 //			stepByStepController = nil;
 //		}

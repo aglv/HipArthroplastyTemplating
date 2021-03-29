@@ -508,12 +508,12 @@
 	// set the textual data
 	[newLayer setName:[templat name]];
 	NSArray *lines = [templat textualData];
-	if([lines objectAtIndex:0]) [newLayer setTextualBoxLine1:[lines objectAtIndex:0]];
-	if([lines objectAtIndex:1]) [newLayer setTextualBoxLine2:[lines objectAtIndex:1]];
-	if([lines objectAtIndex:2]) [newLayer setTextualBoxLine3:[lines objectAtIndex:2]];
-	if([lines objectAtIndex:3]) [newLayer setTextualBoxLine4:[lines objectAtIndex:3]];
-	if([lines objectAtIndex:4]) [newLayer setTextualBoxLine5:[lines objectAtIndex:4]];
-
+	if (lines[0]) [newLayer setTextualBoxLine1:lines[0]];
+	if (lines[1]) [newLayer setTextualBoxLine2:lines[1]];
+	if (lines[2]) [newLayer setTextualBoxLine3:lines[2]];
+	if (lines[3]) [newLayer setTextualBoxLine4:lines[3]];
+	if (lines[4]) [newLayer setTextualBoxLine5:lines[4]];
+ 
 	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:newLayer userInfo: nil];
 	
 	return newLayer;

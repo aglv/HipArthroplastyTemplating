@@ -13,6 +13,10 @@
 #pragma clang diagnostic pop
 #include <cmath>
 
+@interface DCMPix ()
+- (BOOL)isInverse;
+@end
+
 @implementation ArthroplastyTemplatingPoint
 
 @synthesize x = _x, y = _y;
@@ -70,24 +74,27 @@
 + (BOOL)growRegionFromPoint:(ArthroplastyTemplatingPoint *)p0 onDCMPix:(DCMPix *)pix outputPoints:(NSMutableArray<ArthroplastyTemplatingPoint *> *)points outputContour:(NSMutableArray<ArthroplastyTemplatingPoint *> *)contour {
     NSThread *thread = [NSThread currentThread];
     
-    const NSInteger w = pix.pwidth, h = pix.pheight, wh = w*h;
+    const NSInteger w = pix.pwidth, h = pix.pheight, size = w*h;
     float *data = pix.fImage;
     
-    float min = FLT_MAX, max = -FLT_MAX, mean = 0;
-    for (size_t i = 0; i < wh; ++i) {
-        if (thread.isCancelled)
-            return NO;
-        min = fminf(min, data[i]);
-        max = fmaxf(max, data[i]);
-        mean += data[i];
-    }
+    const float ww = pix.fullww;//, wl = pix.fullwl;
+//    const float ww2 = ww/2, min = wl - ww2, max = wl + ww2;
     
-    mean /= wh;
+    float mean = 0;
+    for (size_t i = 0; i < size; ++i)
+        mean += data[i];
+    mean /= size;
+
+#warning: just use pix.inverseVal if possible
+    const BOOL inverse = (([pix respondsToSelector:@selector(inverseVal)] && [pix inverseVal]) || ([pix respondsToSelector:@selector(isInverse)] && [pix isInverse])) && mean > 0;
 
 #define data(p) data[p.x+p.y*w]
 #define mask(p) mask[p.x+p.y*w]
 
-    float threshold = (data(p0)+mean)/2 - fabs(max-min)/20;
+    float threshold;
+    if (!inverse) // TODO: test on OsiriX with both MONOCHROME1 and MONOCHROME2 images
+        threshold = (data(p0)+mean)/2 - ww/20;
+    else threshold = (data(p0)+mean)/2 + ww/20;
     
     uint8 *mask = (uint8 *)[[NSMutableData dataWithLength:sizeof(uint8)*w*h] mutableBytes];
     NSMutableArray *toBeVisited = [NSMutableArray arrayWithObject:p0];
@@ -100,7 +107,8 @@
         for (ArthroplastyTemplatingPoint *t in p.neighbors)
             if (t.x >= 0 && t.y >= 0 && t.x < w && t.y < h && !mask(t)) {
                 mask(t) = 1;
-                if (data(t) >= threshold)
+                float datat = data(t);
+                if ((!inverse && datat >= threshold) || (inverse && datat <= threshold))
                     [toBeVisited addObject:t];
                 else if (mask(p) != 2) {
                     [contour addObject:p];

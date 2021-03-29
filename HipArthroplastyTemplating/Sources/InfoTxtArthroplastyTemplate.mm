@@ -29,8 +29,8 @@ static id First(id a, id b) {
 	NSString *fileContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
 	if (!fileContent) {
 		fileContent = [NSString stringWithContentsOfFile:path encoding:NSISOLatin1StringEncoding error:&error];
-		if(!fileContent) {
-			NSLog(@"[ZimmerTemplate propertiesFromFileInfoAtPath]: %@", error);
+		if (!fileContent) {
+			NSLog(@"[InfoTxtArthroplastyTemplate propertiesFromFileInfoAtPath]: %@", error);
 			return NULL;
 		}
 	}
@@ -63,20 +63,21 @@ static id First(id a, id b) {
 	return properties;
 }
 
-- (id)initFromFileAtPath:(NSString *)path {
+- (instancetype)initFromFileAtPath:(NSString *)path {
+    NSDictionary *properties = [[self class] propertiesFromInfoFileAtPath:path];
+    if (!properties)
+        return nil;
+    
 	if (!(self = [super initWithPath:path]))
         return nil;
 	
-	// properties
-	_properties = [[[self class] propertiesFromInfoFileAtPath:path] retain];
-	if (!_properties)
-		return NULL; // TODO: is self released?
-
+    _properties = [properties retain];
+	
 	return self;
 }
 
 - (void)dealloc {
-	[_properties release]; _properties = NULL;
+	[_properties release]; _properties = nil;
 	[super dealloc];
 }
 
@@ -115,8 +116,8 @@ static id First(id a, id b) {
 	return [self point:point forEntry:@"PRODUCT_FAMILY_CSYS" projection:projection];
 }
 
-- (NSArray *)headRotationPointsForProjection:(ArthroplastyTemplateProjection)projection {
-	NSMutableArray *points = [NSMutableArray arrayWithCapacity:5];
+- (NSArray<NSValue *> *)headRotationPointsForProjection:(ArthroplastyTemplateProjection)projection {
+	NSMutableArray<NSValue *> *points = [NSMutableArray arrayWithCapacity:5];
 	
 	NSPoint origin; [self origin:&origin forProjection:projection];
 //	NSPoint csys; BOOL hasCsys = [self csys:&csys forProjection:projection];
@@ -136,8 +137,8 @@ static id First(id a, id b) {
 	return points;
 }
 
-- (NSArray *)matingPointsForProjection:(ArthroplastyTemplateProjection)projection {
-	NSMutableArray *points = [NSMutableArray arrayWithCapacity:5];
+- (NSArray<NSValue *> *)matingPointsForProjection:(ArthroplastyTemplateProjection)projection {
+	NSMutableArray<NSValue *> *points = [NSMutableArray arrayWithCapacity:5];
 	
 	NSPoint origin; [self origin:&origin forProjection:projection];
 	

@@ -1,5 +1,5 @@
 //
-//  ZimmerTemplate.h
+//  InfoTxtArthroplastyTemplate.h
 //  HipArthroplastyTemplating
 //  Created by Joris Heuberger on 19/03/07.
 //  Copyright 2007-2016 OsiriX Team
@@ -13,6 +13,6 @@
 	NSDictionary *_properties;
 }
 
-- (id)initFromFileAtPath:(NSString *)path;
+- (instancetype)initFromFileAtPath:(NSString *)path;
 
 @end
