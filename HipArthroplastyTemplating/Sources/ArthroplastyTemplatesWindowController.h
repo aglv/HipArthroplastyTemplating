@@ -11,16 +11,16 @@
 #import "ArthroplastyTemplate.h"
 
 @class ArthroplastyTemplatingTableView, N2Image, ROI, ViewerController;
-@class ArthroplastyTemplateFamily, HipArthroplastyTemplating;
+@class ArthroplastyTemplate, ArthroplastyTemplateFamily, HipArthroplastyTemplating;
 @class ArthroplastyTemplatesWindowControllerTemplatesHelper;
 @class ArthroplastyTemplatingTemplateView;
 
 @interface ArthroplastyTemplatesWindowController : NSWindowController<PDFViewDelegate> {
 	__unsafe_unretained HipArthroplastyTemplating *_plugin;
 
-    NSMutableArray *_templates;
+    NSMutableArray<ArthroplastyTemplate *> *_templates;
 
-    NSMutableDictionary *_selections;
+    NSMutableDictionary<NSString *, NSData *> *_selections;
 
     ArthroplastyTemplateSide _side;
     ArthroplastyTemplateProjection _projection;

@@ -93,6 +93,41 @@
 	return self;
 }
 
++ (NSArray<NSString *> *)sizeComponents:(NSString *)str set:(NSCharacterSet *)cset {
+    NSMutableArray<NSString *> *r = [NSMutableArray array];
+    NSRange range = NSMakeRange(0, str.length);
+//    NSUInteger zerolengths = 0;
+    
+    NSCharacterSet *icset = cset.invertedSet;
+    
+    while (range.length > 0) {
+        NSCharacterSet *set = (r.count%2 == 0)? cset : icset;
+        
+        NSRange rr = NSMakeRange(range.location, 0);
+        while (rr.location+rr.length < str.length && [set characterIsMember:[str characterAtIndex:rr.location+rr.length]])
+            ++rr.length;
+        
+        if (rr.length == 0) {
+            [r addObject:@""];
+//            ++zerolengths;
+        }
+        else {
+            [r addObject:[str substringWithRange:rr]];
+            range.location += rr.length;
+            range.length -= rr.length;
+//            zerolengths = 0;
+        }
+        
+//        if (zerolengths >= 2)
+//            break;
+    }
+    
+    if (range.length > 0)
+        [r addObject:[str substringWithRange:range]];
+    
+    return r;
+}
+
 - (void)awakeFromNib {
 //    [_pdfView setDisplayMode:kPDFDisplaySinglePage];
 //    _pdfView.autoScales = YES;
@@ -102,17 +137,30 @@
     
     self.familiesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] ];
     
+    NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"0123456789."];
+//    NSArray<NSCharacterSet *> *sets = = @[ set, set.invertedSet ];
+    
     self.offsetsArrayController.sortDescriptors = self.sizesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES comparator:^NSComparisonResult(NSString *s1, NSString *s2) {
-        unichar c10 = [s1 characterAtIndex:0];
-        if (c10 >= '0' && c10 <= '9' && s1.floatValue == s2.floatValue) { // same numeric value, sort '00' before '0'
-            if (s1.length > s2.length)
-                return NSOrderedAscending;
-             if (s1.length < s2.length)
-                return NSOrderedDescending;
-            return NSOrderedSame;
+        NSArray<NSString *> *a1 = [ArthroplastyTemplatesWindowController sizeComponents:s1 set:set];
+        NSArray<NSString *> *a2 = [ArthroplastyTemplatesWindowController sizeComponents:s2 set:set];
+        
+        for (NSUInteger i = 0; i < a1.count && i < a2.count; ++i) {
+            if (a1[i].length && a2[i].length) {
+                unichar c0 = [a1[i] characterAtIndex:0];
+                if ([set characterIsMember:c0] && a1[i].floatValue == a2[i].floatValue) { // same numeric value, sort '00' before '0'
+                    if (a1[i].length > a2[i].length)
+                        return NSOrderedAscending;
+                    if (s1.length < s2.length)
+                        return NSOrderedDescending;
+                }
+            }
+            
+            NSComparisonResult r = [a1[i] compare:a2[i] options:NSNumericSearch|NSLiteralSearch|NSCaseInsensitiveSearch];
+            if (r != NSOrderedSame)
+                return r;
         }
         
-        return [s1 compare:s2 options:NSNumericSearch|NSLiteralSearch|NSCaseInsensitiveSearch];
+        return NSOrderedSame;
     }] ];
     
     

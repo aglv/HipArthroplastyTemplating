@@ -27,10 +27,13 @@
 	[_templates removeAllObjects];
     
     NSMutableArray<NSString *> *paths = [NSMutableArray array];
-    NSString *temp;
-    if ((temp = [[NSBundle bundleForClass:self.class] resourcePath])) [paths addObject:temp];
-    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kUserDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"])) [paths addObject:temp];
-    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kLocalDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"])) [paths addObject:temp];
+    NSString *temp, *name = @"HipArthroplastyTemplating";
+    if ((temp = [[NSBundle bundleForClass:self.class] resourcePath]))
+        [paths addObject:temp];
+    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kUserDomain] stringByAppendingPathComponent:name]))
+        [paths addObject:temp];
+    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kLocalDomain] stringByAppendingPathComponent:name]))
+        [paths addObject:temp];
 
 	for (NSString *path in paths) {
         for (NSString *sub in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL])
@@ -44,8 +47,8 @@
     }
 	
 	// fill _families from _templates
-	for (unsigned i = 0; i < [_templates count]; ++i) {
-		ArthroplastyTemplate *templat = [_templates objectAtIndex:i];
+	for (unsigned i = 0; i < _templates.count; ++i) {
+		ArthroplastyTemplate *templat = _templates[i];
 		BOOL included = NO;
 		
 		for (unsigned i = 0; i < [[_familiesArrayController content] count]; ++i) {

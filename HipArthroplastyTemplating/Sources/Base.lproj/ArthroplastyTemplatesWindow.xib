@@ -44,7 +44,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="472"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
-                                    <pdfView autoresizesSubviews="NO" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="15" customClass="SelectablePDFView">
+                                    <pdfView autoresizesSubviews="NO" displayMode="singlePage" displaysPageBreaks="NO" autoScales="YES" translatesAutoresizingMaskIntoConstraints="NO" id="15" customClass="ArthroplastyTemplatingTemplateView">
                                         <rect key="frame" x="0.0" y="32" width="393" height="440"/>
                                         <connections>
                                             <outlet property="delegate" destination="-2" id="rWi-BR-9cJ"/>
