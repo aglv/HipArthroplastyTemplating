@@ -11,7 +11,6 @@
 		711AE6D1260A24B000E5FE8A /* ArthroplastyTemplatesWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6B7260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController.mm */; };
 		711AE6D2260A24B000E5FE8A /* ArthroplastyTemplatesWindowController+Color.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6B8260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Color.mm */; };
 		711AE6D3260A24B000E5FE8A /* ArthroplastyTemplate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6BB260A24AF00E5FE8A /* ArthroplastyTemplate.mm */; };
-		711AE6D4260A24B000E5FE8A /* HipArthroplastyTemplating+Versions.m in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6BD260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.m */; };
 		711AE6D5260A24B000E5FE8A /* HipArthroplastyTemplating.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6BF260A24AF00E5FE8A /* HipArthroplastyTemplating.mm */; };
 		711AE6D6260A24B000E5FE8A /* ArthroplastyTemplatingUserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C1260A24AF00E5FE8A /* ArthroplastyTemplatingUserDefaults.mm */; };
 		711AE6D7260A24B000E5FE8A /* ArthroplastyTemplatingTemplateView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 711AE6C2260A24AF00E5FE8A /* ArthroplastyTemplatingTemplateView.mm */; };
@@ -35,7 +34,6 @@
 		711AE6B0260A24AF00E5FE8A /* ArthroplastyTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplate.h; sourceTree = "<group>"; };
 		711AE6B1260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatesWindowController+Color.h"; sourceTree = "<group>"; };
 		711AE6B2260A24AF00E5FE8A /* ArthroplastyTemplatingTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingTableView.h; sourceTree = "<group>"; };
-		711AE6B3260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HipArthroplastyTemplating+Versions.h"; sourceTree = "<group>"; };
 		711AE6B4260A24AF00E5FE8A /* ArthroplastyTemplatingUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingUserDefaults.h; sourceTree = "<group>"; };
 		711AE6B5260A24AF00E5FE8A /* ArthroplastyTemplatingSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingSplitView.h; sourceTree = "<group>"; };
 		711AE6B6260A24AF00E5FE8A /* NSBitmapImageRep+ArthroplastyTemplating.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSBitmapImageRep+ArthroplastyTemplating.mm"; sourceTree = "<group>"; };
@@ -45,7 +43,6 @@
 		711AE6BA260A24AF00E5FE8A /* ArthroplastyTemplatingStepsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingStepsController.h; sourceTree = "<group>"; };
 		711AE6BB260A24AF00E5FE8A /* ArthroplastyTemplate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplate.mm; sourceTree = "<group>"; };
 		711AE6BC260A24AF00E5FE8A /* ArthroplastyTemplatesWindowController+Templates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ArthroplastyTemplatesWindowController+Templates.h"; sourceTree = "<group>"; };
-		711AE6BD260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "HipArthroplastyTemplating+Versions.m"; sourceTree = "<group>"; };
 		711AE6BE260A24AF00E5FE8A /* ArthroplastyTemplatingTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingTemplateView.h; sourceTree = "<group>"; };
 		711AE6BF260A24AF00E5FE8A /* HipArthroplastyTemplating.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HipArthroplastyTemplating.mm; sourceTree = "<group>"; };
 		711AE6C0260A24AF00E5FE8A /* ArthroplastyTemplateFamily.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplateFamily.h; sourceTree = "<group>"; };
@@ -110,10 +107,8 @@
 			children = (
 				711AE6CF260A24AF00E5FE8A /* HipArthroplastyTemplating.h */,
 				711AE6BF260A24AF00E5FE8A /* HipArthroplastyTemplating.mm */,
-				711AE6B3260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.h */,
-				711AE6BD260A24AF00E5FE8A /* HipArthroplastyTemplating+Versions.m */,
-				711AE6E3260A255000E5FE8A /* Templates Window */,
 				711AE6F3260A26EA00E5FE8A /* Steps */,
+				711AE6E3260A255000E5FE8A /* Templates Window */,
 				711AE6C4260A24AF00E5FE8A /* ArthroplastyTemplatingGeometry.h */,
 				711AE6CB260A24AF00E5FE8A /* ArthroplastyTemplatingGeometry.mm */,
 				711AE6B0260A24AF00E5FE8A /* ArthroplastyTemplate.h */,
@@ -323,7 +318,6 @@
 				711AE6D9260A24B000E5FE8A /* ArthroplastyTemplatingTableView.mm in Sources */,
 				711AE6DC260A24B000E5FE8A /* ArthroplastyTemplatingStepsController.mm in Sources */,
 				711AE6D2260A24B000E5FE8A /* ArthroplastyTemplatesWindowController+Color.mm in Sources */,
-				711AE6D4260A24B000E5FE8A /* HipArthroplastyTemplating+Versions.m in Sources */,
 				711AE6D7260A24B000E5FE8A /* ArthroplastyTemplatingTemplateView.mm in Sources */,
 				711AE6D6260A24B000E5FE8A /* ArthroplastyTemplatingUserDefaults.mm in Sources */,
 				711AE6DA260A24B000E5FE8A /* ArthroplastyTemplatesWindowController+Templates.mm in Sources */,

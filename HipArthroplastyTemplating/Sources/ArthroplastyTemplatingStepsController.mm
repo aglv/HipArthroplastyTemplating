@@ -29,6 +29,7 @@
 #import <OsiriXAPI/ThreadModalForWindowController.h>
 #import <OsiriXAPI/Notifications.h>
 #import <OsiriXAPI/DicomStudy.h>
+#import <OsiriXAPI/N2StepView.h>
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
@@ -40,7 +41,9 @@
 NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 @interface ArthroplastyTemplatingROI : ROI
+
 @end
+
 @implementation ArthroplastyTemplatingROI
 
 - (BOOL)valid {
@@ -49,10 +52,20 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 @end
 
-@interface ArthroplastyTemplatingStepsController (Private)
-- (void)adjustStemToCup:(NSInteger)index;
+@interface N2DisclosureBox (ArthroplastyTemplating)
+
+- (void)ArthroplastyTemplating_magic;
+
 @end
+
+@interface ArthroplastyTemplatingStepsController (Private)
+
+- (void)adjustStemToCup:(NSInteger)index;
+
+@end
+
 @implementation ArthroplastyTemplatingStepsController
+
 @synthesize viewerController = _viewerController;
 
 
@@ -104,6 +117,9 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	[_steps addObject: _stepSave = [[N2Step alloc] initWithTitle:@"Save" enclosedView:_viewSave]];
 	[_steps enableDisableSteps];
 	
+    for (N2StepView *sv in _stepsView.subviews)
+        [sv ArthroplastyTemplating_magic];
+    
 	if ([N2Step instancesRespondToSelector:@selector(setDefaultButton:)]) {
 		[_stepCalibration setDefaultButton:doneCalibration];
 		[_stepAxes setDefaultButton:doneAxes];
@@ -205,15 +221,17 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 - (void)removeRoiFromViewer:(ROI *)roi {
 	if (!roi) return;
-	[_viewerController.roiList[0] removeObject:roi];
-	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixRemoveROINotification object:roi userInfo:nil];
+//    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:OsirixRemoveROINotification object:roi userInfo:nil];
+        [_viewerController.roiList[0] removeObject:roi];
+//    });
 }
 
 // landmark OR horizontal axis has changed
 - (ROI *)axisChange:(ROI *)axis landmarks:(ROI *)landmark :(ROI *)otherLandmark changed:(BOOL *)changed {
 	if (!landmark || landmark.points.count != 1 || !_horizontalAxis) {
 		if (axis)
-			[self removeRoiFromViewer:axis];
+            [self removeRoiFromViewer:axis];
         
 		return nil;
 	}
@@ -227,8 +245,10 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		NSTimeInterval group = [NSDate timeIntervalSinceReferenceDate];
 		[landmark setGroupID:group];
 		[axis setGroupID:group];
-        [_viewerController.imageView roiSet:axis]; // [*axis setCurView: _viewerController.imageView]; is not available in horos
-		[_viewerController.roiList[_viewerController.imageView.curImage] addObject:axis];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_viewerController.imageView roiSet:axis]; // [*axis setCurView: _viewerController.imageView]; is not available in horos
+            [_viewerController.roiList[_viewerController.imageView.curImage] addObject:axis];
+        });
 	}
 	
 	NSPoint horizontalAxisD = [_horizontalAxis.points[0] point] - [_horizontalAxis.points[1] point];
@@ -256,11 +276,21 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 - (void)updateLegInequality {
-	ROI *lm1 = _femurLandmarkOther? ((_femurLandmarkOther==_landmark1)? _landmark2 : _landmark1) : _landmark1, *lm2 = _femurLandmarkOther? _femurLandmarkOther : _landmark2;
-   
-//    _originalLegInequality = [self updateInequality:@"Original leg inequality" from:lm1 to:lm2 positioning:.5 axis:_originalLegInequality value:&_originalLegInequalityValue];
-//
-//    _legInequality = [self updateInequality:@"Leg inequality" from:_femurLandmark to:_femurLandmarkOther positioning:1 axis:_legInequality value:&_legInequalityValue];
+    ROI *lm1, *lm2;// = _femurLandmarkOther? ((_femurLandmarkOther==_landmark1)? _landmark2 : _landmark1) : _landmark1, *lm2 = _femurLandmarkOther? _femurLandmarkOther : _landmark2;
+    if (_femurLandmarkOther) {
+        if (_femurLandmarkOther == _landmark1)
+            lm1 = _landmark2;
+        else lm1 = _landmark1;
+        lm2 = _femurLandmarkOther;
+    }
+    else {
+        lm1 = _landmark1;
+        lm2 = _landmark2;
+    }
+    
+    _originalLegInequality = [self updateInequality:@"Original leg inequality" from:lm1 to:lm2 positioning:.5 axis:_originalLegInequality value:&_originalLegInequalityValue];
+
+    _legInequality = [self updateInequality:@"Leg inequality" from:_femurLandmark to:_femurLandmarkOther positioning:1 axis:_legInequality value:&_legInequalityValue];
 	
     if (_horizontalAxis && _femurLandmarkOriginal && _femurLandmarkAxis) {
 		NSVector horizontalDir = NSMakeVector([_horizontalAxis.points[0] point], [_horizontalAxis.points[1] point]);
@@ -277,6 +307,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 //    if (axis == nil)
 //        return;
     
+//    NSLog(@"updateInequality:%@\n%@\n%@\n%@\n%@", name, roiFrom, roiTo, NSStringFromRect(roiFrom.rect), NSStringFromRect(roiTo.rect));
+    
     if (!_horizontalAxis || [[_horizontalAxis points] count] < 2) {
         if (axis)
             [self removeRoiFromViewer:axis];
@@ -287,20 +319,22 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     NSLine lineFrom; if (roiFrom) lineFrom = NSMakeLine([roiFrom.points[0] point], horizontalVector);
     NSLine lineTo; if (roiTo) lineTo = NSMakeLine([roiTo.points[0] point], horizontalVector);
     
-    if (roiFrom && roiTo) {
-        if (!axis) {
-            axis = [[[ArthroplastyTemplatingROI alloc] initWithType:tMesure :_horizontalAxis.pixelSpacingX :_horizontalAxis.pixelSpacingY :_horizontalAxis.imageOrigin] autorelease];
-            [axis setThickness:1]; [axis setOpacity:.5];
-            [axis setSelectable:NO];
-            axis.name = name;
-            [_viewerController.imageView roiSet:axis]; // [axis setCurView: _viewerController.imageView]; is not available in horos
-            [_viewerController.roiList[_viewerController.imageView.curImage] addObject:axis];
-        }
-    } else {
+    if (!roiFrom || !roiTo || NSEqualRects(roiFrom.rect, NSZeroRect) || NSEqualRects(roiTo.rect, NSZeroRect)) {
         if (axis)
             [self removeRoiFromViewer:axis];
         
         return nil;
+    }
+    
+    if (!axis) {
+        axis = [[[ArthroplastyTemplatingROI alloc] initWithType:tMesure :_horizontalAxis.pixelSpacingX :_horizontalAxis.pixelSpacingY :_horizontalAxis.imageOrigin] autorelease];
+        [axis setThickness:1]; [axis setOpacity:.5];
+        [axis setSelectable:NO];
+        axis.name = name;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_viewerController.imageView roiSet:axis]; // [axis setCurView: _viewerController.imageView]; is not available in horos
+            [_viewerController.roiList[_viewerController.imageView.curImage] addObject:axis];
+        });
     }
     
     NSLine inequalityLine = NSMakeLine([roiFrom.points[0] point]*(1.0-positioning)+[roiTo.points[0] point]*positioning, !horizontalVector);
@@ -308,10 +342,13 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     
     if (axis.points.count)
         [axis.points removeAllObjects];
-    [axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:pointFrom], [MyPoint point:pointTo], nil]];
+    [axis setPoints:[NSMutableArray arrayWithObjects: [MyPoint point:pointFrom], [MyPoint point:pointTo], nil]];
     
-    if (value)
-        *value = [axis MesureLength:NULL] * NSSign((pointTo-pointFrom).y)*(-1);
+    if (value) {
+        NSPoint delta = pointTo - pointFrom;
+        CGFloat sign = (delta.y < 0)? -1 : 1;
+        *value = [axis MesureLength:NULL] * sign * (-1);
+    }
     
 //    [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_legInequality userInfo:nil];
     
@@ -1242,7 +1279,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	NSMutableString *str = [[[NSMutableString alloc] initWithCapacity:512] autorelease];
 	
-	[str appendString:@"OsiriX Hip Arthroplasty Templating"];
+	[str appendString:@"Hip Arthroplasty Templating"];
 	
 	if (_originalLegInequality || _legInequality) {
 		[str appendFormat:@"\nLeg length discrepancy:\n"];
@@ -1301,6 +1338,20 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		[str appendFormat:@"Date: %@\n", _planningDate];
 
 	[_infoBox setName:str];
+}
+
+@end
+
+@implementation N2DisclosureBox (ArthroplastyTemplating)
+
+- (void)ArthroplastyTemplating_magic {
+    id tc = [self valueForKey:@"titleCell"];
+    id _tc = [self valueForKey:@"_titleCell"];
+    if (tc != _tc) {
+        [self setValue:tc forKey:@"_titleCell"];
+//        id ntc = ;
+//        [self setValue:ntc forKey:@"titleCell"];
+    }
 }
 
 @end

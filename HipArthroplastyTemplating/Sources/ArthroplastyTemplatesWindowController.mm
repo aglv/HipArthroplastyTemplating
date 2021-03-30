@@ -160,6 +160,11 @@
                 return r;
         }
         
+        if (a1.count < a2.count)
+            return NSOrderedAscending;
+        if (a1.count > a2.count)
+            return NSOrderedDescending;
+        
         return NSOrderedSame;
     }] ];
     
