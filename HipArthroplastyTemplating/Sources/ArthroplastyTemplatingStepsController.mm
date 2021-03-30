@@ -35,6 +35,7 @@
 #import "ArthroplastyTemplateFamily.h"
 #import "ArthroplastyTemplatingGeometry.h"
 #include <vector>
+#import <objc/runtime.h>
 
 #define kInvalidAngle 666
 #define kInvalidMagnification 0
@@ -54,7 +55,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 @interface N2DisclosureBox (ArthroplastyTemplating)
 
-- (void)ArthroplastyTemplating_magic;
+//- (void)ArthroplastyTemplating_magic;
 
 @end
 
@@ -117,8 +118,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	[_steps addObject: _stepSave = [[N2Step alloc] initWithTitle:@"Save" enclosedView:_viewSave]];
 	[_steps enableDisableSteps];
 	
-    for (N2StepView *sv in _stepsView.subviews)
-        [sv ArthroplastyTemplating_magic];
+//    for (N2StepView *sv in _stepsView.subviews)
+//        [sv ArthroplastyTemplating_magic];
     
 	if ([N2Step instancesRespondToSelector:@selector(setDefaultButton:)]) {
 		[_stepCalibration setDefaultButton:doneCalibration];
@@ -872,7 +873,26 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		[_femurLayer roiMove:NSMakePoint(-10,10)]; // when the layer is created it is shifted, but we don't want this so we move it back
 		[_femurLayer setOpacity:1];
 		[_femurLayer setDisplayTextualData:NO];
-		
+        
+        if (_viewerController.imageView.curDCM.inverseVal && _viewerController.imageView.curDCM.fullwl > 0) {
+            NSImage *image = _femurLayer.layerImage; //[[_femurLayer.layerImage copy] autorelease];
+            NSBitmapImageRep *rep = (id) image.representations.firstObject;
+            if ([rep isKindOfClass:NSBitmapImageRep.class] && rep.bitsPerSample == 8 && rep.samplesPerPixel == 4 && rep.hasAlpha) {
+                size_t max = rep.samplesPerPixel * rep.pixelsWide * rep.pixelsHigh;
+                unsigned char *data = rep.bitmapData;
+                for (size_t i = 0, j = 3; i < max; ++i) {
+                    if (i%4 != 3) { // RGBA, only act on RGB
+                        if (*(data + j) != 0) // only act if alpha != 0
+                            *(data + i) = 255 - *(data + i);
+                    }
+                    else j = i+4;
+                }
+            }
+            
+            //NSBitmapImageRep *inv = [[rep mutableCopy] autorelease];
+            
+            //_femurLayer.layerImage = [NSImage imageW];
+        }
 		
 		_femurLandmarkOriginal = [self closestROIFromSet:[NSSet setWithObjects:_landmark1, _landmark2, nil] toPoints:[_femurRoi points]];
 		_femurLandmark = [[ROI alloc] initWithType:t2DPoint :_femurLandmarkOriginal.pixelSpacingX :_femurLandmarkOriginal.pixelSpacingY :_femurLandmarkOriginal.imageOrigin];
@@ -1333,7 +1353,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     }
  
 	if ([[_plannersNameTextField stringValue] length])
-		[str appendFormat:@"\nPlanified by: %@\n", [_plannersNameTextField stringValue]];
+		[str appendFormat:@"\nPlanned by: %@\n", [_plannersNameTextField stringValue]];
 	if (_planningDate)
 		[str appendFormat:@"Date: %@\n", _planningDate];
 
@@ -1344,14 +1364,33 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 @implementation N2DisclosureBox (ArthroplastyTemplating)
 
-- (void)ArthroplastyTemplating_magic {
-    id tc = [self valueForKey:@"titleCell"];
-    id _tc = [self valueForKey:@"_titleCell"];
-    if (tc != _tc) {
-        [self setValue:tc forKey:@"_titleCell"];
-//        id ntc = ;
-//        [self setValue:ntc forKey:@"titleCell"];
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        method_exchangeImplementations(class_getInstanceMethod(N2DisclosureBox.class, @selector(initWithTitle:content:)),
+                                       class_getInstanceMethod(N2DisclosureBox.class, @selector(ArthroplastyTemplating_initWithTitle:content:)));
+    });
+}
+
+/**
+ We replace the constructor for this class because in certain conditions (recent macOS APIs) the original NSBox titleCell replacement wouldn't work properly.
+ */
+- (instancetype)ArthroplastyTemplating_initWithTitle:(NSString *)title content:(NSView *)content {
+    if (!(self = [self ArthroplastyTemplating_initWithTitle:title content:content]))
+        return nil;
+    
+    @try {
+        id tc = [self valueForKey:@"titleCell"];
+        id _tc = [self valueForKey:@"_titleCell"];
+        if (tc != _tc) {
+            [self setValue:tc forKey:@"_titleCell"];
+        }
     }
+    @catch (NSException *e) {
+        // do nothing
+    }
+    
+    return self;
 }
 
 @end

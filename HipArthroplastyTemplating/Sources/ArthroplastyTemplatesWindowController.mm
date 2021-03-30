@@ -418,7 +418,7 @@
 	N2Image *temp = [[N2Image alloc] initWithSize:[image size] inches:[image inchSize] portion:[image portion]];
 	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
 
-	[bitmap detectAndApplyBorderTransparency:8];
+	[bitmap ArthroplastyTemplating_detectAndApplyBorderTransparency:8];
 	if (color)
 		[[self class] bitmap:bitmap setColor:color]; // [bitmap setColor:color];
 

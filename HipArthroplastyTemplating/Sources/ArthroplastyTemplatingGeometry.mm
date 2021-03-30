@@ -85,16 +85,19 @@
         mean += data[i];
     mean /= size;
 
-#warning: just use pix.inverseVal if possible
-    const BOOL inverse = (([pix respondsToSelector:@selector(inverseVal)] && [pix inverseVal]) || ([pix respondsToSelector:@selector(isInverse)] && [pix isInverse])) && mean > 0;
+    const BOOL inverse = pix.inverseVal && mean > 0;
+    
+//    NSLog(@"===== inverse: %d (%d, %f)", inverse, pix.inverseVal, mean);
 
 #define data(p) data[p.x+p.y*w]
 #define mask(p) mask[p.x+p.y*w]
 
     float threshold;
-    if (!inverse) // TODO: test on OsiriX with both MONOCHROME1 and MONOCHROME2 images
+    if (!inverse)
         threshold = (data(p0)+mean)/2 - ww/20;
     else threshold = (data(p0)+mean)/2 + ww/20;
+    
+//    NSLog(@"===== threashold: %f", threshold);
     
     uint8 *mask = (uint8 *)[[NSMutableData dataWithLength:sizeof(uint8)*w*h] mutableBytes];
     NSMutableArray *toBeVisited = [NSMutableArray arrayWithObject:p0];
