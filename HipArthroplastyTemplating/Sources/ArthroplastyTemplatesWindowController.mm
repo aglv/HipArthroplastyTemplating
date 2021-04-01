@@ -390,7 +390,7 @@
 }
 
 - (N2Image *)templateImage:(ArthroplastyTemplate *)templat entirePageSizePixels:(NSSize)size color:(NSColor *)color {
-	N2Image *image = [[N2Image alloc] initWithContentsOfFile:[templat pdfPathForProjection:_projection]];
+	N2Image *image = [[[N2Image alloc] initWithContentsOfFile:[templat pdfPathForProjection:_projection]] autorelease];
 //    image.size *= templat.scale;
     
 	NSSize imageSize = [image size];
@@ -407,28 +407,30 @@
 	// extract selected part
 	NSRect sel; if ([self selectionForTemplate:templat into:&sel]) {
 		sel = NSMakeRect(std::floor(sel.origin.x*size.width), std::floor(sel.origin.y*size.height), std::ceil(sel.size.width*size.width), std::ceil(sel.size.height*size.height));
-		N2Image *temp = [image crop:sel];
-		[image release];
-		image = [temp retain];
+		image = [image crop:sel];
 	}
 	
 	if ([self mustFlipHorizontally:templat])
 		[[self class] flipHorizontallyImage:image];
 
-	N2Image *temp = [[N2Image alloc] initWithSize:[image size] inches:[image inchSize] portion:[image portion]];
-	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
+	N2Image *temp = [[[N2Image alloc] initWithSize:[image size] inches:[image inchSize] portion:[image portion]] autorelease];
+    
+//	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
+    NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height
+                                                                     bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO
+                                                                    colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:0 bitsPerPixel:0] autorelease];
+    [NSGraphicsContext saveGraphicsState];
+    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:bitmap]];
+    [image drawInRect:NSMakeRect(0, 0, size.width, size.height)];
+    [NSGraphicsContext restoreGraphicsState];
 
 	[bitmap ArthroplastyTemplating_detectAndApplyBorderTransparency:8];
 	if (color)
 		[[self class] bitmap:bitmap setColor:color]; // [bitmap setColor:color];
 
 	[temp addRepresentation:bitmap];
-	[bitmap release];
 	
-	[image release];
-	image = temp;
-
-	return [image autorelease];
+	return temp;
 }
 
 - (N2Image *)templateImage:(ArthroplastyTemplate *)templat entirePageSizePixels:(NSSize)size {
