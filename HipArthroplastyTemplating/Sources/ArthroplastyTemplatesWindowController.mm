@@ -593,9 +593,10 @@
 		[[newLayer points] addObject:[MyPoint point:point]];
 	}
 	
-	// proximal-distal magnets, indexes 11, 12, 13, 14 for A, A2, B, B2; currently only A and A2 seem to be used
-	for (NSValue *value in [templat matingPointsForProjection:_projection]) {
-		NSPoint point = [value pointValue];
+	// proximal-distal magnets, index 11 for STEM_DISTAL_TO_PROXIMAL_COMP
+	{
+        NSPoint point = NSZeroPoint;
+        [templat stemDistalToProximalComp:&point forProjection:_projection];
 		point = [image convertPointFromPageInches:point];
 		if ([self mustFlipHorizontally:templat])
 			point.x = imageSize.width-point.x;

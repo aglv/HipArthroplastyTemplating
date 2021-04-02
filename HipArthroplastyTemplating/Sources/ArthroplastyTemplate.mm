@@ -73,6 +73,11 @@
     return nil;
 }
 
+- (NSString *)innerDiameter {
+    [NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate innerDiameter] must be implemented"];
+    return nil;
+}
+
 - (NSString *)offset {
     [NSException raise:NSInternalInconsistencyException format:@"[ArthroplastyTemplate offset] must be implemented"];
     return nil;

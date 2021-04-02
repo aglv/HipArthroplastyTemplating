@@ -131,8 +131,8 @@
 		711AE6CC260A24AF00E5FE8A /* TemplateTypes */ = {
 			isa = PBXGroup;
 			children = (
-				711AE6CD260A24AF00E5FE8A /* InfoTxtArthroplastyTemplate.mm */,
 				711AE6CE260A24AF00E5FE8A /* InfoTxtArthroplastyTemplate.h */,
+				711AE6CD260A24AF00E5FE8A /* InfoTxtArthroplastyTemplate.mm */,
 			);
 			name = TemplateTypes;
 			sourceTree = "<group>";

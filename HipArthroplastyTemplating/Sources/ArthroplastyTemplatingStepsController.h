@@ -101,4 +101,6 @@
 - (void)computeValues;
 - (void)updateInfo;
 
+- (NSString *)info;
+
 @end

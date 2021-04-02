@@ -1174,7 +1174,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 - (void)adjustDistalToProximal {
-	if (!_stemLayer || !_distalStemLayer || [[_distalStemLayer points] count] < 13)
+	if (!_stemLayer || !_distalStemLayer || [[_distalStemLayer points] count] < 12)
         return;
     
     // mating is done based on point A (and A2)... The purpose of points B and B2 is unknown (we only were able to check this on Revitan stems)
@@ -1188,7 +1188,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     if (dr)
         [_distalStemLayer rotate:dr/M_PI*180 :[_distalStemLayer pointAtIndex:4]];
     
-    NSPoint dp = [_stemLayer pointAtIndex:11]-[_distalStemLayer pointAtIndex:11]; // 11 is A, 13 is B
+    NSPoint dp = [_stemLayer pointAtIndex:11]-[_distalStemLayer pointAtIndex:11]; // 11 is STEM_DISTAL_TO_PROXIMAL_COMP
     if (dp != NSZeroPoint) {
         ROI_mode m = [_distalStemLayer ROImode];
         [_distalStemLayer setROIMode:ROI_selected];
@@ -1282,7 +1282,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			pt /= [[_femurRoi points] count];
 			BOOL left = pt.x < [[[_viewerController imageView] curDCM] pwidth]/2;
 			_infoBox = [[ROI alloc] initWithType:tText :[[_viewerController imageView] pixelSpacingX] :[[_viewerController imageView] pixelSpacingY] :[[_viewerController imageView] origin]];
-			[_infoBox setROIRect:NSMakeRect([[[_viewerController imageView] curDCM] pwidth]/4*(left?3:1), [[[_viewerController imageView] curDCM] pheight]/3*2, 0.0, 0.0)];
+			[_infoBox setROIRect:NSMakeRect([[[_viewerController imageView] curDCM] pwidth]/4*(left?3:1), [[[_viewerController imageView] curDCM] pheight]/3*2, 0, 0)];
             [_viewerController.imageView roiSet:_infoBox]; // [_infoBox setCurView: _viewerController.imageView]; is not available in horos
 			[_viewerController.roiList[_viewerController.imageView.curImage] addObject:_infoBox];
 			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_infoBox userInfo:nil];
@@ -1296,68 +1296,71 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 - (void)updateInfo {
 	[self createInfoBox];
 	if (!_infoBox) return;
-	
-	NSMutableString *str = [[[NSMutableString alloc] initWithCapacity:512] autorelease];
-	
-	[str appendString:@"Hip Arthroplasty Templating"];
-	
-	if (_originalLegInequality || _legInequality) {
-		[str appendFormat:@"\nLeg length discrepancy:\n"];
-		if (_originalLegInequality)
-			[str appendFormat:@"\tOriginal: %.2f cm\n", _originalLegInequalityValue];
-		if (_legInequality)
-			[str appendFormat:@"\tFinal: %.2f cm\n", _legInequalityValue];
-		if (_originalLegInequality && _legInequality) {
-			CGFloat change = fabs(_originalLegInequalityValue - _legInequalityValue);
-			[str appendFormat:@"\tVariation: %.2f cm\n", change];
-			[_verticalOffsetTextField setStringValue:[NSString stringWithFormat:@"Vertical offset variation: %.2f cm", change]];
-		}
-		
-		if (_horizontalAxis && _femurLandmarkOriginal && _femurLandmarkAxis) {
-			[str appendFormat:@"Lateral offset variation: %.2f cm\n", _lateralOffsetValue];
-			[_horizontalOffsetTextField setStringValue:[NSString stringWithFormat:@"Lateral offset variation: %.2f cm", _lateralOffsetValue]];
-		}
-	}
-	
-	if (_cupLayer) {
-		[str appendFormat:@"\nCup: %@\n", [_cupTemplate name]];
-		[str appendFormat:@"\tManufacturer: %@\n", [_cupTemplate manufacturer]];
+	[_infoBox setName:self.info];
+}
+
+- (NSString *)info {
+    NSMutableString *str = [[[NSMutableString alloc] initWithCapacity:512] autorelease];
+    
+    [str appendString:@"Hip Arthroplasty Templating"];
+    
+    if (_originalLegInequality || _legInequality) {
+        [str appendFormat:@"\nLeg length discrepancy:\n"];
+        if (_originalLegInequality)
+            [str appendFormat:@"\tOriginal: %.2f cm\n", _originalLegInequalityValue];
+        if (_legInequality)
+            [str appendFormat:@"\tFinal: %.2f cm\n", _legInequalityValue];
+        if (_originalLegInequality && _legInequality) {
+            CGFloat change = fabs(_originalLegInequalityValue - _legInequalityValue);
+            [str appendFormat:@"\tVariation: %.2f cm\n", change];
+            [_verticalOffsetTextField setStringValue:[NSString stringWithFormat:@"Vertical offset variation: %.2f cm", change]];
+        }
+        
+        if (_horizontalAxis && _femurLandmarkOriginal && _femurLandmarkAxis) {
+            [str appendFormat:@"Lateral offset variation: %.2f cm\n", _lateralOffsetValue];
+            [_horizontalOffsetTextField setStringValue:[NSString stringWithFormat:@"Lateral offset variation: %.2f cm", _lateralOffsetValue]];
+        }
+    }
+    
+    if (_cupLayer) {
+        [str appendFormat:@"\nCup: %@\n", [_cupTemplate name]];
+        [str appendFormat:@"\tManufacturer: %@\n", [_cupTemplate manufacturer]];
         NSString *dimInfo = nil;
         if (!_cupTemplate.offset)
             dimInfo = [NSString stringWithFormat:@"Size: %@", _cupTemplate.size];
         else dimInfo = [NSString stringWithFormat:@"Offset/Size: %@/%@", _cupTemplate.offset, _cupTemplate.size];
         [str appendFormat:@"\t%@\n", dimInfo];
-		[str appendFormat:@"\tRotation: %.2f°\n", _cupAngle];
-		[str appendFormat:@"\tReference: %@\n", [_cupTemplate referenceNumber]];
-	}
-	
-	if (_stemTemplate) {
-		[str appendFormat:@"\n%@: %@\n", ([_stemTemplate isProximal]? @"Stem Proximal Component" : @"Stem"), [_stemTemplate name]];
-		[str appendFormat:@"\tManufacturer: %@\n", [_stemTemplate manufacturer]];
+        [str appendFormat:@"\tRotation: %.2f°\n", _cupAngle];
+        [str appendFormat:@"\tReference: %@\n", [_cupTemplate referenceNumber]];
+    }
+    
+    if (_stemTemplate) {
+        [str appendFormat:@"\n%@: %@\n", ([_stemTemplate isProximal]? @"Stem Proximal Component" : @"Stem"), [_stemTemplate name]];
+        [str appendFormat:@"\tManufacturer: %@\n", [_stemTemplate manufacturer]];
         NSString *dimInfo = nil;
         if (!_stemTemplate.offset)
             dimInfo = [NSString stringWithFormat:@"Size: %@", _stemTemplate.size];
         else dimInfo = [NSString stringWithFormat:@"Offset/Size: %@/%@", _stemTemplate.offset, _stemTemplate.size];
-		[str appendFormat:@"\t%@\n", dimInfo];
-		[str appendFormat:@"\tReference: %@\n", [_stemTemplate referenceNumber]];
-	}
+        [str appendFormat:@"\t%@\n", dimInfo];
+        [str appendFormat:@"\tReference: %@\n", [_stemTemplate referenceNumber]];
+    }
     
-	if ([_neckSizePopUpButton isEnabled])
-		[str appendFormat:@"\tNeck size: %@\n", [[_neckSizePopUpButton selectedItem] title]];
+    if ([_neckSizePopUpButton isEnabled])
+        [str appendFormat:@"\tNeck size: %@\n", [[_neckSizePopUpButton selectedItem] title]];
 
     if (_distalStemTemplate) {
-		[str appendFormat:@"Stem Distal Component: %@\n", [_distalStemTemplate name]];
-		[str appendFormat:@"\tManufacturer: %@\n", [_distalStemTemplate manufacturer]];
-		[str appendFormat:@"\tSize: %@\n", [_distalStemTemplate size]];
-		[str appendFormat:@"\tReference: %@\n", [_distalStemTemplate referenceNumber]];
+        [str appendFormat:@"Stem Distal Component: %@\n", [_distalStemTemplate name]];
+        [str appendFormat:@"\tManufacturer: %@\n", [_distalStemTemplate manufacturer]];
+        [str appendFormat:@"\tSize: %@\n", [_distalStemTemplate size]];
+        [str appendFormat:@"\tReference: %@\n", [_distalStemTemplate referenceNumber]];
     }
  
-	if ([[_plannersNameTextField stringValue] length])
-		[str appendFormat:@"\nPlanned by: %@\n", [_plannersNameTextField stringValue]];
-	if (_planningDate)
-		[str appendFormat:@"Date: %@\n", _planningDate];
-
-	[_infoBox setName:str];
+    if ([[_plannersNameTextField stringValue] length])
+        [str appendFormat:@"\nPlanned by: %@\n", [_plannersNameTextField stringValue]];
+    if (_planningDate)
+        [str appendFormat:@"Date: %@\n", _planningDate];
+    
+    return str;
 }
 
 @end

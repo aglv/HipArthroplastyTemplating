@@ -112,8 +112,19 @@ static id First(id a, id b) {
 	return [self point:point forEntry:@"ORIGIN" projection:projection];
 }
 
-- (BOOL)csys:(NSPoint *)point forProjection:(ArthroplastyTemplateProjection)projection {
-	return [self point:point forEntry:@"PRODUCT_FAMILY_CSYS" projection:projection];
+//- (BOOL)csys:(NSPoint *)point forProjection:(ArthroplastyTemplateProjection)projection {
+//    return [self point:point forEntry:@"PRODUCT_FAMILY_CSYS" projection:projection];
+//}
+
+- (BOOL)stemDistalToProximalComp:(NSPoint *)point forProjection:(ArthroplastyTemplateProjection)projection {
+    if (![self point:point forEntry:@"STEM_DISTAL_TO_PROXIMAL_COMP" projection:projection])
+        return NO;
+    
+    NSPoint origin = NSZeroPoint;
+    if ([self origin:&origin forProjection:projection])
+        *point += origin;
+    
+    return YES;
 }
 
 - (NSArray<NSValue *> *)headRotationPointsForProjection:(ArthroplastyTemplateProjection)projection {
@@ -137,31 +148,31 @@ static id First(id a, id b) {
 	return points;
 }
 
-- (NSArray<NSValue *> *)matingPointsForProjection:(ArthroplastyTemplateProjection)projection {
-	NSMutableArray<NSValue *> *points = [NSMutableArray arrayWithCapacity:5];
-	
-	NSPoint origin; [self origin:&origin forProjection:projection];
-	
-	for (unsigned i = 0; i < 4; ++i) {
-		NSString *ki = NULL;
-		switch (i) {
-			case 0: ki = @"A"; break;
-			case 1: ki = @"A2"; break;
-			case 2: ki = @"B"; break;
-			case 3: ki = @"B2"; break;
-		}
-        
-		NSPoint point = {0,0};
-        
-        BOOL hasPoint = [self point:&point forEntry:[NSString stringWithFormat:@"MATING_POINT_%@", ki] projection:projection];
-        if (hasPoint)
-            point += origin;
-        
-		[points addObject:[NSValue valueWithPoint:point]];
-	}
-	
-	return points;
-}
+//- (NSArray<NSValue *> *)matingPointsForProjection:(ArthroplastyTemplateProjection)projection {
+//	NSMutableArray<NSValue *> *points = [NSMutableArray arrayWithCapacity:5];
+//
+//	NSPoint origin; [self origin:&origin forProjection:projection];
+//
+//	for (unsigned i = 0; i < 4; ++i) {
+//		NSString *ki = NULL;
+//		switch (i) {
+//			case 0: ki = @"A"; break;
+//			case 1: ki = @"A2"; break;
+//			case 2: ki = @"B"; break;
+//			case 3: ki = @"B2"; break;
+//		}
+//
+//		NSPoint point = {0,0};
+//
+//        BOOL hasPoint = [self point:&point forEntry:[NSString stringWithFormat:@"MATING_POINT_%@", ki] projection:projection];
+//        if (hasPoint)
+//            point += origin;
+//
+//		[points addObject:[NSValue valueWithPoint:point]];
+//	}
+//
+//	return points;
+//}
 
 - (NSArray *)textualData {
     NSString *dimInfo = nil;
@@ -220,6 +231,20 @@ static id First(id a, id b) {
 
 - (NSString *)size {
     return [_properties objectForKey:@"SIZE"];
+}
+
+- (NSString *)catalogDimension:(NSString *)key {
+    for (NSString *pair in [_properties[@"CATALOG_DIMENSIONS"] componentsSeparatedByString:@";"]) {
+        NSArray<NSString *> *keyval = [pair.stringByTrimmingStartAndEnd componentsSeparatedByString:@"="];
+        if ([keyval[0] isEqualToString:key])
+            return keyval[1];
+    }
+    
+    return nil;
+}
+
+- (NSString *)innerDiameter {
+    return [self catalogDimension:@"Inner Diameter"];
 }
 
 - (NSString *)offset {

@@ -146,31 +146,34 @@ static HipArthroplastyTemplating *_Plugin = nil;
 		return 0;
 	}
     
-    if (![NSUserDefaults.standardUserDefaults boolForKey:@"CarelessHipArthroplastyTemplating"]) {
-        NSString *disclaimer = NSLocalizedString(@"THE SOFTWARE IS PROVIDED AS IS. USE THE SOFTWARE AT YOUR OWN RISK. THE AUTHORS MAKE NO WARRANTIES AS TO PERFORMANCE OR FITNESS FOR A PARTICULAR PURPOSE, OR ANY OTHER WARRANTIES WHETHER EXPRESSED OR IMPLIED. NO ORAL OR WRITTEN COMMUNICATION FROM OR INFORMATION PROVIDED BY THE AUTHORS SHALL CREATE A WARRANTY. UNDER NO CIRCUMSTANCES SHALL THE AUTHORS BE LIABLE FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES RESULTING FROM THE USE, MISUSE, OR INABILITY TO USE THE SOFTWARE, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THESE EXCLUSIONS AND LIMITATIONS MAY NOT APPLY IN ALL JURISDICTIONS. YOU MAY HAVE ADDITIONAL RIGHTS AND SOME OF THESE LIMITATIONS MAY NOT APPLY TO YOU.\n\nTHIS SOFTWARE IS NOT INTENDED FOR PRIMARY DIAGNOSTIC, ONLY FOR SCIENTIFIC USAGE.\n\nTHE VERSION OF OSIRIX USED MAY NOT BE CERTIFIED AS A MEDICAL DEVICE FOR PRIMARY DIAGNOSIS. IF YOUR VERSION IS NOT CERTIFIED, YOU CAN ONLY USE OSIRIX AS A REVIEWING AND SCIENTIFIC SOFTWARE, NOT FOR PRIMARY DIAGNOSTIC.\n\nAll calculations, measurements and images provided by this software are intended only for scientific research. Any other use is entirely at the discretion and risk of the user. If you do use this software for scientific research please give appropriate credit in publications. This software may not be redistributed, sold or commercially used in any other way without prior approval of the author.", nil);
-        
-        NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-        
-        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-        alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Hip Arthroplasty Templating %@", nil), [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
-        alert.informativeText = disclaimer;
-        [alert addButtonWithTitle:NSLocalizedString(@"Stop", nil)];
-        [alert addButtonWithTitle:NSLocalizedString(@"Accept", nil)];
-        alert.icon = [[[NSImage alloc] initWithContentsOfFile:[bundle pathForResource:@"HipArthroplastyTemplating" ofType:@"tiff"]] autorelease];
-//        alert.showsSuppressionButton = NO;
-        
-        [alert beginSheetModalForWindow:viewerController.window completionHandler:^(NSModalResponse returnCode) {
-            [alert.window orderOut:self];
-            
-            if (returnCode == NSAlertFirstButtonReturn) // Stop
-                return;
-
-            [self proceedAfterDisclaimer];
-        }];
-    } else
-        [self proceedAfterDisclaimer];
+    if (![NSUserDefaults.standardUserDefaults boolForKey:@"CarelessHipArthroplastyTemplating"])
+        [self showDisclaimer];
+    else [self proceedAfterDisclaimer];
     
 	return 0;
+}
+
+- (void)showDisclaimer {
+    NSString *disclaimer = NSLocalizedString(@"THE SOFTWARE IS PROVIDED AS IS. USE THE SOFTWARE AT YOUR OWN RISK. THE AUTHORS MAKE NO WARRANTIES AS TO PERFORMANCE OR FITNESS FOR A PARTICULAR PURPOSE, OR ANY OTHER WARRANTIES WHETHER EXPRESSED OR IMPLIED. NO ORAL OR WRITTEN COMMUNICATION FROM OR INFORMATION PROVIDED BY THE AUTHORS SHALL CREATE A WARRANTY. UNDER NO CIRCUMSTANCES SHALL THE AUTHORS BE LIABLE FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES RESULTING FROM THE USE, MISUSE, OR INABILITY TO USE THE SOFTWARE, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THESE EXCLUSIONS AND LIMITATIONS MAY NOT APPLY IN ALL JURISDICTIONS. YOU MAY HAVE ADDITIONAL RIGHTS AND SOME OF THESE LIMITATIONS MAY NOT APPLY TO YOU.\n\nTHIS SOFTWARE IS NOT INTENDED FOR PRIMARY DIAGNOSTIC, ONLY FOR SCIENTIFIC USAGE.\n\nTHE VERSION OF OSIRIX USED MAY NOT BE CERTIFIED AS A MEDICAL DEVICE FOR PRIMARY DIAGNOSIS. IF YOUR VERSION IS NOT CERTIFIED, YOU CAN ONLY USE OSIRIX AS A REVIEWING AND SCIENTIFIC SOFTWARE, NOT FOR PRIMARY DIAGNOSTIC.\n\nAll calculations, measurements and images provided by this software are intended only for scientific research. Any other use is entirely at the discretion and risk of the user. If you do use this software for scientific research please give appropriate credit in publications. This software may not be redistributed, sold or commercially used in any other way without prior approval of the author.", nil);
+    
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Hip Arthroplasty Templating %@", nil), [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
+    alert.informativeText = disclaimer;
+    [alert addButtonWithTitle:NSLocalizedString(@"Stop", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Accept", nil)];
+    alert.icon = [[[NSImage alloc] initWithContentsOfFile:[bundle pathForResource:@"HipArthroplastyTemplating" ofType:@"tiff"]] autorelease];
+//    alert.showsSuppressionButton = NO;
+    
+    [alert beginSheetModalForWindow:viewerController.window completionHandler:^(NSModalResponse returnCode) {
+        [alert.window orderOut:self];
+        
+        if (returnCode == NSAlertFirstButtonReturn) // Stop
+            return;
+
+        [self proceedAfterDisclaimer];
+    }];
 }
 
 - (void)proceedAfterDisclaimer {
