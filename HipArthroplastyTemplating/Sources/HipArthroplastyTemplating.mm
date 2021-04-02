@@ -26,6 +26,7 @@
 #import "ArthroplastyTemplatingUserDefaults.h"
 
 #import <objc/runtime.h>
+#include <dlfcn.h>
 
 @interface DCMView (HipArthroplastyTemplating)
 
@@ -40,6 +41,20 @@
 @end
 
 @implementation HipArthroplastyTemplating
+
++ (void)load {
+    NSBundle *bundle = [NSBundle bundleForClass:self.class];
+    NSURL *frameworks = bundle.privateFrameworksURL;
+    NSString *suffix = @".hiparthroplastytemplating.dylib";
+    if ([frameworks checkResourceIsReachableAndReturnError:NULL])
+        for (NSURL *item in [[NSFileManager defaultManager] contentsOfDirectoryAtURL:frameworks includingPropertiesForKeys:nil options:0 error:NULL])
+            if ([item.lastPathComponent hasSuffix:suffix]) {
+                NSString *lpc = item.lastPathComponent, *name = [lpc substringToIndex:lpc.length-suffix.length];
+                if (dlopen(item.fileSystemRepresentation, RTLD_NOW|RTLD_LOCAL|RTLD_NODELETE))
+                    NSLog(@"HipArthroplastyTemplating loaded %@", name);
+                else NSLog(@"HipArthroplastyTemplating couldn't load %@: %s", name, dlerror());
+            }
+}
 
 static HipArthroplastyTemplating *_Plugin = nil;
 

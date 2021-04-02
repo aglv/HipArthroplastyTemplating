@@ -343,25 +343,69 @@
 	[[HipArthroplastyTemplating userDefaults] setRect:rect forKey:[self idForTemplate:self.templat]];
 }
 
-+ (void)flipHorizontallyImage:(NSImage *)image {
-	// bitmap init
-	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
-	// flip
-	vImage_Buffer src, dest;
-	src.height = dest.height = bitmap.pixelsHigh;
-	src.width = dest.width = bitmap.pixelsWide;
-	src.rowBytes = dest.rowBytes = [bitmap bytesPerRow];
-	src.data = dest.data = [bitmap bitmapData];
-	vImageHorizontalReflect_ARGB8888(&src, &dest, 0L);
-	// draw
-	[image lockFocus];
-	[bitmap draw];
-	[image unlockFocus];
-	// release
-	[bitmap release];
++ (N2Image *)flipHorizontally:(N2Image *)image {
+    N2Image *oimage = [N2Image imageWithSize:image.size flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
+        [NSGraphicsContext saveGraphicsState];
+        
+        NSAffineTransform *t = [NSAffineTransform transform];
+        [t translateXBy:image.size.width yBy:0];
+        [t scaleXBy:-1 yBy:1];
+        [t concat];
+        
+        [image drawInRect:dstRect];
+
+        [NSGraphicsContext restoreGraphicsState];
+        
+        return YES;
+    }];
+    
+    oimage.inchSize = image.inchSize;
+    oimage.portion = image.portion;
+    
+    return oimage;
+    
+//    NSBitmapImageRep *irep = (id) [[image.representations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSImageRep *rep, NSDictionary *bindings) {
+//        return [rep isKindOfClass:NSBitmapImageRep.class];
+//    }]] firstObject];
+//
+//    if (!irep) {
+//        NSLog(@"Warning: unexpected input image format");
+//        return;
+//    }
+//
+////    NSBitmapImageRep *rep = [[rep copy] autorelease];
+//
+//	// flip
+//
+//    vImage_Buffer buff = { irep.bitmapData, (size_t) irep.pixelsHigh, (size_t) irep.pixelsWide, (size_t) irep.bytesPerRow };
+//    vImageHorizontalReflect_ARGB8888(&buff, &buff, 0L);
+//
+////	vImage_Buffer src, dest;
+////	src.height = dest.height = bitmap.pixelsHigh;
+////	src.width = dest.width = bitmap.pixelsWide;
+////	src.rowBytes = dest.rowBytes = [bitmap bytesPerRow];
+////	src.data = dest.data = [bitmap bitmapData];
+////	vImageHorizontalReflect_ARGB8888(&src, &dest, 0L);
+//
+////    [image removeRepresentation:irep];
+////    [image addRepresentation:rep];
 }
 
-+ (void)bitmap:(NSBitmapImageRep *)bitmap setColor:(NSColor *)color {
++ (void)rgbaCharsBitmap:(NSBitmapImageRep *)bitmap setColor:(NSColor *)color {
+//    size_t pixelsCount = bitmap.pixelsHigh*bitmap.pixelsWide;
+//    uint8_t *pixels = bitmap.bitmapData, *pixel = pixels;
+//
+//
+//
+//    for (size_t i = 0; i < pixelsCount; ++i) {
+//        if (pixel[0] != 0) { // RGBA
+//            uint8 val = ((uint16_t)pixel[0] + (uint16_t)pixel[1] + (uint16_t)pixel[2])/3;
+//            int pixel[1]
+//        }
+//
+//        pixel += 4;
+//    }
+    
     NSColorSpace *colorSpace = [bitmap colorSpace];
     size_t spp = [bitmap samplesPerPixel];
     NSUInteger samples[spp];
@@ -411,14 +455,14 @@
 	}
 	
 	if ([self mustFlipHorizontally:templat])
-		[[self class] flipHorizontallyImage:image];
+		image = [self.class flipHorizontally:image];
 
-	N2Image *temp = [[[N2Image alloc] initWithSize:[image size] inches:[image inchSize] portion:[image portion]] autorelease];
+	N2Image *temp = [[[N2Image alloc] initWithSize:image.size inches:image.inchSize portion:image.portion] autorelease];
     
 //	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
     NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height
                                                                      bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO
-                                                                    colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:0 bitsPerPixel:0] autorelease];
+                                                                    colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:4*size.width bitsPerPixel:32] autorelease];
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:bitmap]];
     [image drawInRect:NSMakeRect(0, 0, size.width, size.height)];
@@ -426,7 +470,7 @@
 
 	[bitmap ArthroplastyTemplating_detectAndApplyBorderTransparency:8];
 	if (color)
-		[[self class] bitmap:bitmap setColor:color]; // [bitmap setColor:color];
+		[[self class] rgbaCharsBitmap:bitmap setColor:color]; // [bitmap setColor:color];
 
 	[temp addRepresentation:bitmap];
 	
@@ -498,6 +542,8 @@
 
 - (ROI *)createROIFromTemplate:(ArthroplastyTemplate *)templat inViewer:(ViewerController *)destination centeredAt:(NSPoint)p {
 	N2Image *image = [self templateImage:templat entirePageSizePixels:NSMakeSize(0,1000)]; // TODO: N -> adapted size
+    
+
     
    // NSBitmapImageRep *bitmap = [[image representations] objectAtIndex:0];
 //    NSSize pixelSize = NSMakeSize(bitmap.pixelsWide, bitmap.pixelsHigh);
@@ -588,9 +634,10 @@
     [[[operation draggingPasteboard] dataForType:@"ArthroplastyTemplate*"] getBytes:&templat length:sizeof(ArthroplastyTemplate *)];
 
 	// find the location of the mouse in the OpenGL view
-	NSPoint openGLLocation = [[destination imageView] ConvertFromNSView2GL:[[destination imageView] convertPoint: [destination.imageView convertPoint: [NSEvent mouseLocation] fromView: nil] fromView:NULL]];
-	
-	[self createROIFromTemplate:templat inViewer:destination centeredAt:openGLLocation];
+//	NSPoint openGLLocation = [[destination imageView] ConvertFromNSView2GL:[[destination imageView] convertPoint: [destination.imageView convertPoint: [NSEvent mouseLocation] fromView: nil] fromView:NULL]];
+    NSPoint dcmMousePoint = [destination.imageView ConvertFromNSView2GL:[destination.imageView convertPoint:[destination.imageView.window convertRectFromScreen:NSMakeRect([NSEvent mouseLocation], NSZeroSize)].origin fromView:NULL]];
+
+	[self createROIFromTemplate:templat inViewer:destination centeredAt:dcmMousePoint];
 	
 	[[destination window] makeKeyWindow];
 	
