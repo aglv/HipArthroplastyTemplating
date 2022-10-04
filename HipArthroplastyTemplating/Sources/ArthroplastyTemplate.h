@@ -49,9 +49,10 @@ typedef NS_OPTIONS(NSUInteger, ArthroplastyTemplateSide) {
 
 - (NSString *)pdfPathForProjection:(ArthroplastyTemplateProjection)projection;
 - (BOOL)origin:(NSPoint *)point forProjection:(ArthroplastyTemplateProjection)projection;
+- (BOOL)stemDistalToProximalComp:(NSPoint *)point forProjection:(ArthroplastyTemplateProjection)projection;
 - (NSArray *)textualData;
 - (NSArray *)headRotationPointsForProjection:(ArthroplastyTemplateProjection)projection;
-- (NSArray *)matingPointsForProjection:(ArthroplastyTemplateProjection)projection;
+//- (NSArray *)matingPointsForProjection:(ArthroplastyTemplateProjection)projection;
 
 - (BOOL)isProximal;
 - (BOOL)isDistal;

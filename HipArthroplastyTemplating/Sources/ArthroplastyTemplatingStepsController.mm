@@ -1093,6 +1093,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	[_neckSizePopUpButton selectItemAtIndex:index];
     
     --_isMyRoiManupulation;
+    
+    [self computeValues];
 }
 
 - (void)adjustDistalToProximal {
@@ -1110,7 +1112,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     if (dr)
         [_distalStemLayer rotate:dr/M_PI*180 :[_distalStemLayer pointAtIndex:4]];
     
-    NSPoint dp = [_stemLayer pointAtIndex:11]-[_distalStemLayer pointAtIndex:11]; // 11 is A, 13 is B
+    NSPoint dp = [_stemLayer pointAtIndex:11]-[_distalStemLayer pointAtIndex:11]; // 11 is STEM_DISTAL_TO_PROXIMAL_COMP
     if (dp != NSZeroPoint) {
         long m = [_distalStemLayer ROImode];
         [_distalStemLayer setROIMode:ROI_selected];
