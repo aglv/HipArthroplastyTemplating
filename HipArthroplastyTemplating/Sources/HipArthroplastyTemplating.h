@@ -18,7 +18,6 @@
 @interface HipArthroplastyTemplating : PluginFilter {
 	ArthroplastyTemplatesWindowController *_templatesWindowController;
 	NSMutableArray *_windows;
-	BOOL _initialized;
 }
 
 @property (readonly) ArthroplastyTemplatesWindowController *templatesWindowController;

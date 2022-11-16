@@ -70,11 +70,11 @@ static HipArthroplastyTemplating *_Plugin = nil;
 }
 
 - (void)initialize {
-	if (_initialized) return;
-	_initialized = YES;
-	
-	_templatesWindowController = [[ArthroplastyTemplatesWindowController alloc] initWithPlugin:self];
-	[_templatesWindowController window]; // force nib loading
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _templatesWindowController = [[ArthroplastyTemplatesWindowController alloc] initWithPlugin:self];
+        [_templatesWindowController window]; // force nib loading
+    });
 }
 
 #if VALIDATE_OSIRIX == 1
@@ -116,6 +116,9 @@ static HipArthroplastyTemplating *_Plugin = nil;
     method_exchangeImplementations(class_getInstanceMethod(DCMView.class, @selector(acceptsFirstMouse:)), class_getInstanceMethod(DCMView.class, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
     
     method_exchangeImplementations(class_getInstanceMethod(ViewerController.class, @selector(changeImageData::::)), class_getInstanceMethod(ViewerController.class, @selector(HipArthroplastyTemplating_changeImageData::::)));
+    
+    // we removed the HATROI class and OsiriX doesn't like it
+    [NSUnarchiver decodeClassName:@"HATROI" asClassName:@"ROI"];
 }
 
 - (long)filterImage:(NSString *)menuName {
@@ -126,6 +129,7 @@ static HipArthroplastyTemplating *_Plugin = nil;
 //	}
 	
 	[self initialize];
+    
 	ArthroplastyTemplatingStepsController *window = [self windowControllerForViewer:viewerController];
 	if (window) {
 		[window showWindow:self];

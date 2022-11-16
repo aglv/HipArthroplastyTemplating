@@ -41,17 +41,30 @@
 #define kInvalidMagnification 0
 NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
-@interface ArthroplastyTemplatingROI : ROI
+/*
+@interface ROI (HipArthroplastyTemplating)
 
 @end
 
-@implementation ArthroplastyTemplatingROI
+@implementation ROI (HipArthroplastyTemplating)
 
-- (BOOL)valid {
-    return YES;
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        method_exchangeImplementations(class_getInstanceMethod(ROI.class, @selector(valid)), class_getInstanceMethod(ROI.class, @selector(HipArthroplastyTemplating_valid)));
+    });
+}
+
+- (BOOL)HipArthroplastyTemplating_valid {
+    ArthroplastyTemplatingStepsController *controller = [ArthroplastyTemplatingStepsController controllerForROI:self];
+    if (controller && [controller...])
+        return YES;
+
+    return [self HipArthroplastyTemplating_valid];
 }
 
 @end
+ */
 
 @interface N2DisclosureBox (ArthroplastyTemplating)
 
@@ -340,7 +353,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     
     ROI *axis = *axis_ref;
     if (!axis) {
-        *axis_ref = axis = [[[ArthroplastyTemplatingROI alloc] initWithType:tMesure :_horizontalAxis.pixelSpacingX :_horizontalAxis.pixelSpacingY :_horizontalAxis.imageOrigin] autorelease];
+        *axis_ref = axis = [[[ROI alloc] initWithType:tMesure :_horizontalAxis.pixelSpacingX :_horizontalAxis.pixelSpacingY :_horizontalAxis.imageOrigin] autorelease];
         [axis setThickness:1]; [axis setOpacity:.5];
         [axis setSelectable:NO];
         axis.name = name;
