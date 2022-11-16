@@ -40,6 +40,13 @@
 
 @end
 
+@interface HipArthroplastyTemplating () {
+    ArthroplastyTemplatesWindowController *_templatesWindowController;
+    NSMutableArray<NSWindow *> *_windows;
+}
+
+@end
+
 @implementation HipArthroplastyTemplating
 
 static HipArthroplastyTemplating *_Plugin = nil;
@@ -56,6 +63,10 @@ static HipArthroplastyTemplating *_Plugin = nil;
     }
     
     return nil;
+}
+
++ (HipArthroplastyTemplating *)plugin {
+    return _Plugin;
 }
 
 + (ArthroplastyTemplatingUserDefaults *)userDefaults {
@@ -201,10 +212,10 @@ static HipArthroplastyTemplating *_Plugin = nil;
 }
 
 - (ArthroplastyTemplatingStepsController *)windowControllerForViewer:(ViewerController *)viewer {
-	for (NSWindow *window in _windows)
-		if ([(ArthroplastyTemplatingStepsController *)[window delegate] viewerController] == viewer)
-			return (ArthroplastyTemplatingStepsController *)[window delegate];
-	return NULL;
+    for (NSWindow *window in _windows)
+        if ([(ArthroplastyTemplatingStepsController *)[window delegate] viewerController] == viewer)
+            return (ArthroplastyTemplatingStepsController *)[window delegate];
+    return nil;
 }
 
 - (void)viewerWillClose:(NSNotification *)notification {

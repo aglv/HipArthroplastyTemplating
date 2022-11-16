@@ -148,7 +148,7 @@ NSString * const ArthroplastyTemplatingTemplateViewDocumentDidChangeNotification
     [[NSNotificationCenter defaultCenter] postNotificationName:ArthroplastyTemplatingTemplateViewDocumentDidChangeNotification object:self];
 }
 
-// this is for macOS versions up to 10.11, now deprecated in PDFView
+// this is for macOS versions since 10.12
 - (void)drawPage:(PDFPage *)page toContext:(CGContextRef)context {
     if (_drawing)
         return [super drawPage:page toContext:context];

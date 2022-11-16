@@ -13,16 +13,17 @@
 #import <OsiriXAPI/PluginFilter.h>
 #pragma clang diagnostic pop
 
-@class ArthroplastyTemplatesWindowController, ArthroplastyTemplatingStepsController, ArthroplastyTemplatingUserDefaults;
+@class ArthroplastyTemplatesWindowController;
+@class ArthroplastyTemplatingStepsController;
+@class ArthroplastyTemplatingUserDefaults;
 
-@interface HipArthroplastyTemplating : PluginFilter {
-	ArthroplastyTemplatesWindowController *_templatesWindowController;
-	NSMutableArray *_windows;
-}
+@interface HipArthroplastyTemplating : PluginFilter
 
 @property (readonly) ArthroplastyTemplatesWindowController *templatesWindowController;
 
 @property (class, readonly) ArthroplastyTemplatingUserDefaults *userDefaults;
+
++ (HipArthroplastyTemplating *)plugin;
 
 + (NSString *)findSystemFolderOfType:(OSType)folderType forDomain:(FSVolumeRefNum)domain;
 

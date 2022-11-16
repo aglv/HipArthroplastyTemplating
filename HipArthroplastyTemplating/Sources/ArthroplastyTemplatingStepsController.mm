@@ -41,7 +41,15 @@
 #define kInvalidMagnification 0
 NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
-/*
+@interface ArthroplastyTemplatingStepsController ()
+
+- (void)adjustStemToCup:(NSInteger)index;
++ (ArthroplastyTemplatingStepsController *)controllerForROI:(ROI *)roi;
+
+- (ROI *)originalLegInequality;
+
+@end
+
 @interface ROI (HipArthroplastyTemplating)
 
 @end
@@ -57,22 +65,15 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 - (BOOL)HipArthroplastyTemplating_valid {
     ArthroplastyTemplatingStepsController *controller = [ArthroplastyTemplatingStepsController controllerForROI:self];
-    if (controller && [controller...])
+    if (controller && self == controller.originalLegInequality)
         return YES;
 
     return [self HipArthroplastyTemplating_valid];
 }
 
 @end
- */
 
 @interface N2DisclosureBox (ArthroplastyTemplating)
-
-@end
-
-@interface ArthroplastyTemplatingStepsController (Private)
-
-- (void)adjustStemToCup:(NSInteger)index;
 
 @end
 
@@ -1381,11 +1382,25 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     }
  
     if ([[_plannersNameTextField stringValue] length])
-        [str appendFormat:@"\nPlanified by: %@\n", [_plannersNameTextField stringValue]];
+        [str appendFormat:@"\nPlanned by: %@\n", [_plannersNameTextField stringValue]];
     if (_planningDate)
         [str appendFormat:@"Date: %@\n", _planningDate];
 
     return str;
+}
+
++ (ArthroplastyTemplatingStepsController *)controllerForROI:(ROI *)roi {
+    for (ViewerController *viewer in [ViewerController get2DViewers]) {
+        id controller = [[HipArthroplastyTemplating plugin] windowControllerForViewer:viewer];
+        if (controller && [viewer containsROI:roi])
+            return controller;
+    }
+    
+    return nil;
+}
+
+- (ROI *)originalLegInequality {
+    return _originalLegInequality;
 }
 
 @end
