@@ -29,19 +29,23 @@
 #import <OsiriXAPI/ThreadModalForWindowController.h>
 #import <OsiriXAPI/Notifications.h>
 #import <OsiriXAPI/DicomStudy.h>
+#import <OsiriXAPI/N2DisclosureBox.h>
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
-#import "HipAT2D.h"
+#import "ArthroplastyTemplatingGeometry.h"
 #include <vector>
+#import <objc/runtime.h>
 
 #define kInvalidAngle 666
 #define kInvalidMagnification 0
 NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
-@interface HATROI : ROI
+@interface ArthroplastyTemplatingROI : ROI
+
 @end
-@implementation HATROI
+
+@implementation ArthroplastyTemplatingROI
 
 - (BOOL)valid {
     return YES;
@@ -49,17 +53,27 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 @end
 
-@interface ArthroplastyTemplatingStepsController (Private)
-- (void)adjustStemToCup:(NSInteger)index;
+@interface N2DisclosureBox (ArthroplastyTemplating)
+
 @end
+
+@interface ArthroplastyTemplatingStepsController (Private)
+
+- (void)adjustStemToCup:(NSInteger)index;
+
+@end
+
 @implementation ArthroplastyTemplatingStepsController
+
 @synthesize viewerController = _viewerController;
 
 
 #pragma mark Initialization
 
 - (id)initWithPlugin:(HipArthroplastyTemplating *)plugin viewerController:(ViewerController *)viewerController {
-	self = [self initWithWindowNibName:@"HipArthroplastyTemplatingSteps"];
+	if (!(self = [self initWithWindowNibName:@"ArthroplastyTemplatingSteps" owner:self]))
+        return nil;
+    
 	_plugin = [plugin retain];
 	_viewerController = [viewerController retain];
 	_appliedMagnification = 1;
@@ -75,15 +89,15 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	[_viewerController roiDeleteAll:self];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roiChanged:) name:OsirixROIChangeNotification object:NULL];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roiRemoved:) name:OsirixRemoveROINotification object:NULL];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeROIChangedNotification:) name:OsirixROIChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeROIRemovedNotification:) name:OsirixRemoveROINotification object:nil];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowWillClose:) name:NSWindowWillCloseNotification object:[self window]];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerDidChangeKeyStatus:) name:NSWindowDidBecomeKeyNotification object:[_viewerController window]];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerDidChangeKeyStatus:) name:NSWindowDidResignKeyNotification object:[_viewerController window]];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidChangeKeyStatus:) name:NSWindowDidBecomeKeyNotification object:[self window]];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidChangeKeyStatus:) name:NSWindowDidResignKeyNotification object:[self window]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sendToPACS:) name:OsirixAddToDBNotification object:NULL];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewerWillClose:) name:OsirixCloseViewerNotification object:NULL];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeDatabaseAddNotification:) name:OsirixAddToDBNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeViewerWillCloseNotification:) name:OsirixCloseViewerNotification object:nil];
 	
 	return self;
 }
@@ -114,7 +128,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 	
     for (NSButtonCell *cell in _magnificationRadio.cells)
-        [cell setAttributedTitle:[[[NSAttributedString alloc] initWithString:[cell title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor whiteColor], NSForegroundColorAttributeName, [cell font], NSFontAttributeName, NULL]] autorelease]];
+        [cell setAttributedTitle:[[[NSAttributedString alloc] initWithString:[cell title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor whiteColor], NSForegroundColorAttributeName, [cell font], NSFontAttributeName, nil]] autorelease]];
 	[_magnificationCustomFactor setBackgroundColor:[self.window backgroundColor]];
     [_magnificationCustomFactor setDrawsBackground:YES];
 	[_magnificationCalibrateLength setBackgroundColor:[self.window backgroundColor]];
@@ -177,15 +191,15 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 #pragma mark Windows
 
-- (void)windowWillClose:(NSNotification *)aNotification { // this window is closing
+- (void)windowWillClose:(NSNotification *)note { // this window is closing
     [self autorelease];
 }
 
-- (void)viewerWillClose:(NSNotification *)notification {
+- (void)observeViewerWillCloseNotification:(NSNotification *)note {
 	[self close];
 }
 
-- (void)viewerDidChangeKeyStatus:(NSNotification *)notif {
+- (void)viewerDidChangeKeyStatus:(NSNotification *)note {
 	if ([[_viewerController window] isKeyWindow])
 		;//[[self window] orderFront:self];
 	else { 
@@ -203,106 +217,96 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 - (void)removeRoiFromViewer:(ROI *)roi {
 	if (!roi) return;
-	[[[_viewerController roiList] objectAtIndex:0] removeObject:roi];
-	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixRemoveROINotification object:roi userInfo:NULL];
+    [[NSNotificationCenter defaultCenter] postNotificationName:OsirixRemoveROINotification object:roi userInfo:nil];
+    [_viewerController.roiList[0] removeObject:roi];
 }
 
 // landmark OR horizontal axis has changed
-- (BOOL)landmarkChanged:(ROI *)landmark axis:(ROI **)axis other:(ROI *)otherLandmark {
-	if (!landmark || [[landmark points] count] != 1 || !_horizontalAxis) {
-		if (*axis) {
-			[self removeRoiFromViewer:*axis];
-			*axis = NULL;
-		} return NO;	
+- (ROI *)axisChange:(ROI *)axis landmarks:(ROI *)landmark :(ROI *)otherLandmark changed:(BOOL *)changed {
+	if (!landmark || landmark.points.count != 1 || !_horizontalAxis) {
+		if (axis)
+            [self removeRoiFromViewer:axis];
+        
+		return nil;
 	}
 	
-	BOOL newAxis = !*axis;
+	BOOL newAxis = !axis;
 	if (newAxis) {
-		*axis = [[[ROI alloc] initWithType:tMesure :[_horizontalAxis pixelSpacingX] :[_horizontalAxis pixelSpacingY] :[_horizontalAxis imageOrigin]] autorelease];
-		[*axis setDisplayTextualData:NO];
-		[*axis setThickness:1]; [*axis setOpacity:.5];
-		[*axis setSelectable:NO];
+		axis = [[[ROI alloc] initWithType:tMesure :[_horizontalAxis pixelSpacingX] :[_horizontalAxis pixelSpacingY] :[_horizontalAxis imageOrigin]] autorelease];
+		[axis setDisplayTextualData:NO];
+		[axis setThickness:1]; [axis setOpacity:.5];
+		[axis setSelectable:NO];
 		NSTimeInterval group = [NSDate timeIntervalSinceReferenceDate];
 		[landmark setGroupID:group];
-		[*axis setGroupID:group];
-        [_viewerController.imageView roiSet:*axis]; // [*axis setCurView: _viewerController.imageView]; is not available in horos
-		[[[_viewerController roiList] objectAtIndex:[[_viewerController imageView] curImage]] addObject:*axis];
+		[axis setGroupID:group];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_viewerController.imageView roiSet:axis]; // [*axis setCurView: _viewerController.view]; is not available in horos
+            [_viewerController.roiList[_viewerController.imageView.curImage] addObject:axis];
+        });
 	}
 	
-	NSPoint horizontalAxisD = [[[_horizontalAxis points] objectAtIndex:0] point] - [[[_horizontalAxis points] objectAtIndex:1] point];
-	NSPoint axisPM = [[[landmark points] objectAtIndex:0] point];
+	NSPoint horizontalAxisD = [_horizontalAxis.points[0] point] - [_horizontalAxis.points[1] point];
+	NSPoint axisPM = [landmark.points[0] point];
 	NSPoint axisP0 = axisPM+horizontalAxisD/2;
 	NSPoint axisP1 = axisPM-horizontalAxisD/2;
 	
 	if (otherLandmark) {
-		NSPoint otherPM = [[[otherLandmark points] objectAtIndex:0] point];
+		NSPoint otherPM = [otherLandmark.points[0] point];
 		axisP1 = NSMakeLine(axisP0, axisP1) * NSMakeLine(otherPM, !NSMakeVector(axisP0, axisP1));
 		axisP0 = axisPM;
 	}
-	
-	if (!newAxis)
-		if (axisP0 != [[[*axis points] objectAtIndex:0] point] || axisP1 != [[[*axis points] objectAtIndex:1] point]) {
-			[[*axis points] removeAllObjects];
-			newAxis = YES;
-		}
-	
-	if (newAxis) {
-		[*axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:axisP0], [MyPoint point:axisP1], NULL]];
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:*axis userInfo:NULL];
-//		[_viewerController bringToFrontROI:landmark]; // TODO: this makes the landmark disappear!
-	}
-	
-	return newAxis; // returns YES if the axis was changed
-}
-
-- (void)updateInequality:(ROI **)axis from:(ROI *)roiFrom to:(ROI *)roiTo name:(NSString *)name positioning:(CGFloat)positioning value:(CGFloat *)value
-{
-    if( axis == nil)
-        return;
     
-	if (!_horizontalAxis || [[_horizontalAxis points] count] < 2) {
-		if (*axis)
-			[self removeRoiFromViewer:*axis];
-		return;
+	if (newAxis || (axisP0 != [axis.points[0] point] || axisP1 != [axis.points[1] point])) {
+        [axis setPoints:[NSMutableArray arrayWithObjects: [MyPoint point:axisP0], [MyPoint point:axisP1], nil]];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:axis userInfo:nil];
+        
+//        [_viewerController bringToFrontROI:landmark]; // TODO: this makes the landmark disappear!
+        
+        if (changed)
+            *changed = YES;
 	}
 	
-	NSVector horizontalVector = NSMakeVector([[[_horizontalAxis points] objectAtIndex:0] point], [[[_horizontalAxis points] objectAtIndex:1] point]);
-	NSLine lineFrom; if (roiFrom) lineFrom = NSMakeLine([[[roiFrom points] objectAtIndex:0] point], horizontalVector);
-	NSLine lineTo; if (roiTo) lineTo = NSMakeLine([[[roiTo points] objectAtIndex:0] point], horizontalVector);
-	
-	if (roiFrom && roiTo) {
-		if (!*axis) {
-			*axis = [[[HATROI alloc] initWithType:tMesure :_horizontalAxis.pixelSpacingX :_horizontalAxis.pixelSpacingY :_horizontalAxis.imageOrigin] autorelease];
-			[*axis setThickness:1]; [*axis setOpacity:.5];
-			[*axis setSelectable:NO];
-            [_viewerController.imageView roiSet:*axis]; // [*axis setCurView: _viewerController.imageView]; is not available in horos
-			[[[_viewerController roiList] objectAtIndex:[[_viewerController imageView] curImage]] addObject:*axis];
-		}
-	} else {
-		if (*axis)
-			[self removeRoiFromViewer:*axis];
-		return;
-	}
-	
-	NSLine inequalityLine = NSMakeLine([[[roiFrom points] objectAtIndex:0] point]*(1.0-positioning)+[[[roiTo points] objectAtIndex:0] point]*positioning, !horizontalVector);
-	NSPoint pointFrom = lineFrom*inequalityLine, pointTo = lineTo*inequalityLine;
-	
-	if ([[*axis points] count]) [[*axis points] removeAllObjects];
-	[*axis setPoints:[NSMutableArray arrayWithObjects:[MyPoint point:pointFrom], [MyPoint point:pointTo], NULL]];
-	*value = [*axis MesureLength:NULL]*NSSign((pointTo-pointFrom).y)*(-1);
-	
-	[*axis setName:name];
-//	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_legInequality userInfo:NULL];
+	return axis; // returns YES if the axis was changed
 }
 
 - (void)updateLegInequality {
-	ROI *lm1 = _femurLandmarkOther? (_femurLandmarkOther==_landmark1?_landmark2:_landmark1) : _landmark1, *lm2 = _femurLandmarkOther? _femurLandmarkOther : _landmark2;
-	[self updateInequality:&_originalLegInequality from:lm1 to:lm2 name:@"Original leg inequality" positioning:.5 value:&_originalLegInequalityValue];
-	[self updateInequality:&_legInequality from:_femurLandmark to:_femurLandmarkOther name:@"Leg inequality" positioning:1 value:&_legInequalityValue];
-	if (_horizontalAxis && _femurLandmarkOriginal && _femurLandmarkAxis) {
-		NSVector horizontalDir = NSMakeVector([[[_horizontalAxis points] objectAtIndex:0] point], [[[_horizontalAxis points] objectAtIndex:1] point]);
-		NSLine horizontalAxis = NSMakeLine([[[_horizontalAxis points] objectAtIndex:0] point], horizontalDir);
-		_lateralOffsetValue = fabs([_horizontalAxis Length:horizontalAxis*NSMakeLine([[[_femurLandmarkOriginal points] objectAtIndex:0] point], !horizontalDir) :horizontalAxis*NSMakeLine([[[_femurLandmarkAxis points] objectAtIndex:0] point], !horizontalDir)]);
+    ROI *lm1, *lm2;// = _femurLandmarkOther? ((_femurLandmarkOther==_landmark1)? _landmark2 : _landmark1) : _landmark1, *lm2 = _femurLandmarkOther? _femurLandmarkOther : _landmark2;
+    if (_femurLandmarkOther) {
+        if (_femurLandmarkOther == _landmark1)
+            lm1 = _landmark2;
+        else lm1 = _landmark1;
+        lm2 = _femurLandmarkOther;
+    }
+    else {
+        lm1 = _landmark1;
+        lm2 = _landmark2;
+    }
+    
+    [self updateInequality:@"Original leg inequality" from:lm1 to:lm2 positioning:.5 roi:&_originalLegInequality length:&_originalLegInequalityLength];
+
+    [self updateInequality:@"Leg inequality" from:_femurLandmark to:_femurLandmarkOther positioning:1 roi:&_legInequality length:&_legInequalityLength];
+    
+//    _landmark1Axis = [self axisChange:_landmark1Axis landmarks:_landmark1:_landmark2 changed:NULL];
+//    _landmark2Axis = [self axisChange:_landmark2Axis landmarks:_landmark2:_landmark1 changed:NULL];
+    _femurLandmarkAxis = [self axisChange:_femurLandmarkAxis landmarks:_femurLandmark:_femurLandmarkOther changed:NULL];
+	
+    if (_horizontalAxis && _femurLandmarkOriginal && _femurLandmarkAxis) {
+		NSVector horizontalDir = NSMakeVector([_horizontalAxis.points[0] point], [_horizontalAxis.points[1] point]);
+		NSLine horizontalAxis = NSMakeLine([_horizontalAxis.points[0] point], horizontalDir);
+        NSPoint p1 = horizontalAxis*NSMakeLine(((MyPoint *)_femurLandmarkOriginal.points[0]).point, !horizontalDir), p2 = horizontalAxis*NSMakeLine(((MyPoint *)_femurLandmark.points[0]).point, !horizontalDir);
+        
+        CGFloat change = [_horizontalAxis Length:p1:p2]; // is an absolute value
+        
+        // should it be negative?
+        BOOL neg = p1.x < p2.x;
+        ArthroplastyTemplateSide side = (p1.x > [[_viewerController.imageView curDCM] pwidth]/2)? ArthroplastyTemplateLeftSide : ArthroplastyTemplateRightSide;
+        if (side == ArthroplastyTemplateLeftSide)
+            neg = !neg;
+        
+        if (neg)
+            change = -change;
+        
+		_lateralOffsetChange = change;
 	}
 	
 //	NSVector horizontalVector = NSMakeVector([[[_horizontalAxis points] objectAtIndex:0] point], [[[_horizontalAxis points] objectAtIndex:1] point]);
@@ -310,9 +314,63 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 //	[_verticalOffsetTextField setStringValue:[NSString stringWithFormat:@"Vertical offset: ", ]];
 }
 
-- (void)roiChanged:(NSNotification *)notification {
-	ROI *roi = [notification object];
-	if (!roi) return;
+- (void)updateInequality:(NSString *)name from:(ROI *)roiFrom to:(ROI *)roiTo positioning:(CGFloat)positioning roi:(ROI **)axis_ref length:(CGFloat *)value {
+//    if (axis == nil)
+//        return;
+    
+//    NSLog(@"updateInequality:%@\n%@\n%@\n%@\n%@", name, roiFrom, roiTo, NSStringFromRect(roiFrom.rect), NSStringFromRect(roiTo.rect));
+    
+    if (!_horizontalAxis || [[_horizontalAxis points] count] < 2) {
+        if (*axis_ref)
+            [self removeRoiFromViewer:*axis_ref];
+        *axis_ref = nil;
+        return;
+    }
+    
+    NSVector horizontalVector = NSMakeVector([_horizontalAxis.points[0] point], [_horizontalAxis.points[1] point]);
+    NSLine lineFrom; if (roiFrom) lineFrom = NSMakeLine([roiFrom.points[0] point], horizontalVector);
+    NSLine lineTo; if (roiTo) lineTo = NSMakeLine([roiTo.points[0] point], horizontalVector);
+    
+    if (!roiFrom || !roiTo || NSEqualRects(roiFrom.rect, NSZeroRect) || NSEqualRects(roiTo.rect, NSZeroRect)) {
+        if (*axis_ref)
+            [self removeRoiFromViewer:*axis_ref];
+        *axis_ref = nil;
+        return;
+    }
+    
+    ROI *axis = *axis_ref;
+    if (!axis) {
+        *axis_ref = axis = [[[ArthroplastyTemplatingROI alloc] initWithType:tMesure :_horizontalAxis.pixelSpacingX :_horizontalAxis.pixelSpacingY :_horizontalAxis.imageOrigin] autorelease];
+        [axis setThickness:1]; [axis setOpacity:.5];
+        [axis setSelectable:NO];
+        axis.name = name;
+        
+        [HipArthroplastyTemplating onMainThreadPerformOrDispatchSync:^{
+            [_viewerController.imageView roiSet:axis]; // [axis setCurView: _viewerController.view]; is not available in horos
+            [_viewerController.roiList[_viewerController.imageView.curImage] addObject:axis];
+        }];
+    }
+    
+    NSLine inequalityLine = NSMakeLine([roiFrom.points[0] point]*(1.0-positioning)+[roiTo.points[0] point]*positioning, !horizontalVector);
+    NSPoint pointFrom = lineFrom*inequalityLine, pointTo = lineTo*inequalityLine;
+    
+    if (axis.points.count)
+        [axis.points removeAllObjects];
+    [axis setPoints:[NSMutableArray arrayWithObjects: [MyPoint point:pointFrom], [MyPoint point:pointTo], nil]];
+    
+    if (value) {
+        NSPoint delta = pointTo - pointFrom;
+        CGFloat sign = (delta.y < 0)? -1 : 1;
+        *value = [axis MesureLength:NULL] * sign * (-1);
+    }
+    
+//    [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_legInequality userInfo:nil];
+}
+
+- (void)observeROIChangedNotification:(NSNotification *)note {
+	ROI *roi = note.object;
+	if (!roi)
+        return;
 	
     if (_isMyRoiManupulation) return;
     
@@ -377,9 +435,9 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			if (!_stemLayer && [roi type] == tLayerROI) {
 				_stemLayer = roi;
 				_stemTemplate = [[_plugin templatesWindowController] templateAtPath:[roi layerReferenceFilePath]];
-				NSArray *points = [_stemTemplate headRotationPointsForProjection:ArthroplastyTemplateAnteriorPosteriorProjection];
+				NSArray<NSValue *> *points = [_stemTemplate headRotationPointsForProjection:ArthroplastyTemplateAnteriorPosteriorProjection];
 				for (int i = 0; i < 5; ++i) // S = 0 to XXL = 4
-					[[_neckSizePopUpButton itemAtIndex:i] setHidden:NSEqualPoints([[points objectAtIndex:i] pointValue], NSZeroPoint)];
+					[[_neckSizePopUpButton itemAtIndex:i] setHidden:NSEqualPoints(points[i].pointValue, NSZeroPoint)];
                 if ([_stemTemplate isProximal] && !_distalStemLayer)
                     [[_plugin templatesWindowController] setFilter:@"Distal Stem"];
 			}
@@ -394,17 +452,17 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 	
 	if (roi == _landmark1 || roi == _landmark2 || roi == _horizontalAxis || roi == _femurLandmark) {
-		[self landmarkChanged:_landmark1 axis:&_landmark1Axis other:_landmark2];
-		[self landmarkChanged:_landmark2 axis:&_landmark2Axis other:_landmark1];
-		[self landmarkChanged:_femurLandmark axis:&_femurLandmarkAxis other:_femurLandmarkOther];
+        _landmark1Axis = [self axisChange:_landmark1Axis landmarks:_landmark1:_landmark2 changed:NULL];
+        _landmark2Axis = [self axisChange:_landmark2Axis landmarks:_landmark2:_landmark1 changed:NULL];
+        _femurLandmarkAxis = [self axisChange:_femurLandmarkAxis landmarks:_femurLandmark:_femurLandmarkOther changed:NULL];
 		[self updateLegInequality];
 	}
 
-	if (roi == _cupLayer && [[[_cupLayer points] objectAtIndex:0] point] != NSZeroPoint)
-		if (!_cupRotated && [[_cupLayer points] count] >= 6) {
+	if (roi == _cupLayer && [_cupLayer.points[0] point] != NSZeroPoint)
+		if (!_cupRotated && _cupLayer.points.count >= 6) {
 			_cupRotated = YES;
-			if ([_cupLayer pointAtIndex:4].x < [[[_viewerController imageView] curDCM] pwidth]/2)
-				[_cupLayer rotate:45 :[[[_cupLayer points] objectAtIndex:4] point]];
+			if ([_cupLayer pointAtIndex:4].x < [[_viewerController.imageView curDCM] pwidth]/2)
+				[_cupLayer rotate:45 :[_cupLayer.points[4] point]];
 			else [_cupLayer rotate:-45 :[_cupLayer pointAtIndex:4]];
 			[_cupLayer rotate:_horizontalAngle/M_PI*180 :[_cupLayer pointAtIndex:4]];
 		}
@@ -412,31 +470,41 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	if (roi == _stemLayer)
 		if (!_stemRotated && [[_stemLayer points] count] >= 6) {
 			_stemRotated = YES;
-			[_stemLayer rotate:(fabs(_femurAngle)-M_PI/2)/M_PI*180 :[[[_stemLayer points] objectAtIndex:4] point]];
+			[_stemLayer rotate:(fabs(_femurAngle)-M_PI/2)/M_PI*180 :[_stemLayer.points[4] point]];
 		}
     
     if (roi == _stemLayer || roi == _distalStemLayer)
         [self adjustDistalToProximal];
-
-	[self computeValues];
+    
+    if (!_computeValuesGuard) {
+        _computeValuesGuard = YES;
+        @try {
+            [self computeValues];
+        }
+        @finally {
+            _computeValuesGuard = NO;
+        }
+    }
 }
 
-- (void)roiRemoved:(NSNotification *)notification {
-	ROI *roi = [notification object];
+- (void)observeROIRemovedNotification:(NSNotification *)noti {
+	ROI *roi = noti.object;
+    
+//    NSLog(@"roiremoved %x %@", roi, roi);
 	
 	[_knownRois removeObject:roi];
 
     if (roi == _magnificationLine) {
-		_magnificationLine = NULL;
+		_magnificationLine = nil;
 		[_stepCalibration setDone:NO];
 		[_steps setCurrentStep:_stepCalibration];
-        NSArray *ps = [roi points];
+        NSArray<MyPoint *> *ps = [roi points];
         if (ps.count) {
             BOOL go = YES;
-            MyPoint *p = [ps objectAtIndex:0];
+//            MyPoint *p = ps[0];
             for (int i = 1; go && i < ps.count; ++i) {
-                MyPoint *q = [ps objectAtIndex:i];
-                if (p.x != q.x || p.y != q.y)
+//                MyPoint *q = [ps objectAtIndex:i];
+                if (ps[0].x != ps[i].x || ps[0].y != ps[i].y)
                     go = NO;
             }
             
@@ -447,21 +515,21 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
                     thread.status = NSLocalizedString(@"If you didn't click inside a calibration object, you better cancel this calculation.", nil);
                     thread.supportsCancel = YES;
                     
-                    NSMutableArray *contour = [NSMutableArray array];
-                    BOOL r = [HipAT2D growRegionFromPoint:[HipAT2DIntegerPoint pointWith:roundf(p.x):roundf(p.y)] onDCMPix:[self.viewerController.pixList objectAtIndex:self.viewerController.imageView.curImage] outputPoints:nil outputContour:contour];
-                    if (!r) return;
+                    NSMutableArray<ArthroplastyTemplatingPoint *> *contour = [NSMutableArray array];
+                    if (![ArthroplastyTemplatingGeometry growRegionFromPoint:[ArthroplastyTemplatingPoint pointWith:roundf(ps[0].x):roundf(ps[0].y)] onDCMPix:self.viewerController.pixList[self.viewerController.imageView.curImage] outputPoints:nil outputContour:contour])
+                        return;
                     
-                    NSArray *ps = [HipAT2D mostDistantPairOfPointsInArray:contour];
+                    NSArray<ArthroplastyTemplatingPoint *> *ps = [ArthroplastyTemplatingGeometry mostDistantPairOfPointsInArray:contour];
                     
                     if (ps)
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                             // create the ROI
                             ROI *nroi = [[[ROI alloc] initWithType:tMesure :roi.pixelSpacingX :roi.pixelSpacingY :roi.imageOrigin] autorelease];
-                            [nroi addPoint:[[ps objectAtIndex:0] nsPoint]];
-                            [nroi addPoint:[[ps objectAtIndex:1] nsPoint]];
-                            [_viewerController.imageView roiSet:nroi]; // [nroi setCurView: _viewerController.imageView]; is not available in horos
-                            [[[_viewerController roiList] objectAtIndex:[[_viewerController imageView] curImage]] addObject:nroi];
-                            [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:nroi userInfo:NULL];
+                            [nroi addPoint:ps[0].NSPoint];
+                            [nroi addPoint:ps[1].NSPoint];
+                            [_viewerController.imageView roiSet:nroi]; // [nroi setCurView: _viewerController.view]; is not available in horos
+                            [_viewerController.roiList[_viewerController.imageView.curImage] addObject:nroi];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:nroi userInfo:nil];
                         }];
                 }];
                 
@@ -479,26 +547,28 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 	
 	if (roi == _horizontalAxis) {
-		_horizontalAxis = NULL;
+		_horizontalAxis = nil;
 		[_stepAxes setDone:NO];
 		[_steps setCurrentStep:_stepAxes];
 		[self updateLegInequality];
 	}
 	
 	if (roi == _femurAxis) {
-		_femurAxis = NULL;
+		_femurAxis = nil;
 		[_steps setCurrentStep:_stepAxes];
 	}
 	
 	if (roi == _landmark1) {
-		_landmark1 = NULL;
-		[self landmarkChanged:_landmark1 axis:&_landmark1Axis other:_landmark2]; // removes _landmark1Axis
+		_landmark1 = nil;
+        _landmark1Axis = [self axisChange:_landmark1Axis landmarks:_landmark1:_landmark2 changed:NULL]; // removes _landmark1Axis
 		if (_landmark2) {
-			_landmark1 = _landmark2; _landmark2 = NULL;
-			_landmark1Axis = _landmark2Axis; _landmark2Axis = NULL;
+			_landmark1 = _landmark2; _landmark2 = nil;
+			_landmark1Axis = _landmark2Axis; _landmark2Axis = nil;
 			[_landmark1 setName:@"Landmark 1"];
-			if (![self landmarkChanged:_landmark1 axis:&_landmark1Axis other:_landmark2])
-				[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_landmark1 userInfo:NULL];
+            BOOL changed = NO;
+            _landmark1Axis = [self axisChange:_landmark1Axis landmarks:_landmark1:_landmark2 changed:&changed];
+			if (!changed)
+				[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_landmark1 userInfo:nil];
 		} else
 			[_stepLandmarks setDone:NO];
 		[_steps setCurrentStep:_stepLandmarks];
@@ -506,31 +576,31 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 	
 	if (roi == _landmark1Axis)
-		_landmark1Axis = NULL;
+		_landmark1Axis = nil;
 	
 	if (roi == _landmark2) {
-		_landmark2 = NULL;
-		[self landmarkChanged:_landmark1 axis:&_landmark1Axis other:_landmark2];
-		[self landmarkChanged:_landmark2 axis:&_landmark2Axis other:_landmark1];
+		_landmark2 = nil;
+        _landmark1Axis = [self axisChange:_landmark1Axis landmarks:_landmark1:_landmark2 changed:NULL];
+        _landmark2Axis = [self axisChange:_landmark2Axis landmarks:_landmark2:_landmark1 changed:NULL];
 		[self updateLegInequality];
 	}
 	
 	if (roi == _landmark2Axis)
-		_landmark2Axis = NULL;
+		_landmark2Axis = nil;
 
 	if (roi == _femurRoi)
-		_femurRoi = NULL;
+		_femurRoi = nil;
 	
 	if (roi == _femurLayer) {
-		_femurLayer = NULL; _femurLandmark = NULL;
+		_femurLayer = nil; _femurLandmark = nil;
 		[self removeRoiFromViewer:_originalFemurOpacityLayer];
 		[_stepCutting setDone:NO];
 		[_steps setCurrentStep:_stepCutting];
 	}
 	
 	if (roi == _cupLayer) {
-		_cupLayer = NULL;
-		_cupTemplate = NULL;
+		_cupLayer = nil;
+		_cupTemplate = nil;
 		[_stepCup setDone:NO];
 		[_steps setCurrentStep:_stepCup];
 		_cupRotated = NO;
@@ -538,7 +608,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	
 	if (roi == _stemLayer) {
 		_stemLayer = nil;
-		_stemTemplate = NULL;
+		_stemTemplate = nil;
         _distalStemLayer = nil;
         _distalStemTemplate = nil;
 		[_stepStem setDone:NO];
@@ -555,36 +625,35 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
     }
 	
 	if (roi == _infoBox)
-		_infoBox = NULL;
+		_infoBox = nil;
 	
 	if (roi == _femurLandmark) {
-		_femurLandmark = NULL;
+		_femurLandmark = nil;
 		[self removeRoiFromViewer:_femurLandmarkAxis];
 		[self updateLegInequality];
 	}
 	
 	if (roi == _femurLandmarkAxis)
-		_femurLandmarkAxis = NULL;
+		_femurLandmarkAxis = nil;
 	
 	if (roi == _femurLandmarkOther)
-		_femurLandmarkOther = NULL;
+		_femurLandmarkOther = nil;
 	
 	if (roi == _legInequality)
-		_legInequality = NULL;
+		_legInequality = nil;
 	
 	if (roi == _originalLegInequality)
-		_originalLegInequality = NULL;
+		_originalLegInequality = nil;
 	
 	if (roi == _originalFemurOpacityLayer)
-		 _originalFemurOpacityLayer = NULL;
+		 _originalFemurOpacityLayer = nil;
 		
 	if (roi == _femurLandmarkOriginal)
-		_femurLandmarkOriginal = NULL;
+		_femurLandmarkOriginal = nil;
 		
-	[self advanceAfterInput:NULL];
+	[self advanceAfterInput:nil];
 	[self computeValues];
 }
-
 
 #pragma mark General Methods
 
@@ -605,11 +674,11 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	[self removeRoiFromViewer:_infoBox];
 	[_viewerController roiDeleteAll:self];
 	
-	if (_planningDate) [_planningDate release]; _planningDate = NULL;
+	if (_planningDate) [_planningDate release]; _planningDate = nil;
 	
 	if (updateView) {
 		[_steps reset:self];
-		[[_viewerController imageView] display];
+		[_viewerController.imageView display];
 	}
 }
 
@@ -650,7 +719,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			[_femurRoi setOpacity:1];
 			[_femurRoi setSelectable:YES];
 			[_femurRoi setROIMode:ROI_selected];
-			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:NULL];
+			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:nil];
 		}
 	} else if (step == _stepCup) {
 		showTemplates = [[_plugin templatesWindowController] setFilter:@"Cup"];
@@ -658,12 +727,12 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		for (MyPoint *p in [_femurRoi points])
 			pt += [p point];
 		pt /= [[_femurRoi points] count];
-		[[_plugin templatesWindowController] setSide: (pt.x > [[[_viewerController imageView] curDCM] pwidth]/2)? ArthroplastyTemplateLeftSide : ArthroplastyTemplateRightSide ];
+		[[_plugin templatesWindowController] setSide: (pt.x > [[_viewerController.imageView curDCM] pwidth]/2)? ArthroplastyTemplateLeftSide : ArthroplastyTemplateRightSide ];
 	} else if (step == _stepStem) {
 		if (_stemLayer)
 			[_stemLayer setGroupID:0];
 		showTemplates = [[_plugin templatesWindowController] setFilter:@"Stem !Distal"];
-		[[_plugin templatesWindowController] setSide: ([_cupLayer pointAtIndex:4].x > [[[_viewerController imageView] curDCM] pwidth]/2)? ArthroplastyTemplateLeftSide : ArthroplastyTemplateRightSide ];
+		[[_plugin templatesWindowController] setSide: ([_cupLayer pointAtIndex:4].x > [[_viewerController.imageView curDCM] pwidth]/2)? ArthroplastyTemplateLeftSide : ArthroplastyTemplateRightSide ];
 	} else if (step == _stepPlacement)
 		[self adjustStemToCup];
 	else if (step == _stepSave)
@@ -685,7 +754,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	if (selfKey) {
 		if ([[self window] isVisible]) 
 			[[self window] makeKeyAndOrderFront:self];
-	} else if (!showTemplates) [[_viewerController window] makeKeyAndOrderFront:self];
+	} // else if (!showTemplates) [[_viewerController window] makeKeyAndOrderFront:self];
 }
 
 - (void)steps:(N2Steps *)steps valueChanged:(id)sender {
@@ -724,11 +793,11 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		else [_magnificationCustomFactor performClick:self];
 	}
 	
-	[_neckSizePopUpButton setEnabled: _stemLayer != NULL];
+	[_neckSizePopUpButton setEnabled: _stemLayer != nil];
 }
 
 - (BOOL)steps:(N2Steps *)steps shouldValidateStep:(N2Step *)step {
-	NSString *errorMessage = NULL;
+	NSString *errorMessage = nil;
 	
 	if (step == _stepCalibration) {
 		if (![_magnificationRadio selectedTag]) {
@@ -768,20 +837,20 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	}
 
 	if (errorMessage)
-		[[NSAlert alertWithMessageText:[step title] defaultButton:@"OK" alternateButton:NULL otherButton:NULL informativeTextWithFormat:@"%@", errorMessage] beginSheetModalForWindow:[self window] modalDelegate:NULL didEndSelector:NULL contextInfo:NULL];
-	return errorMessage == NULL;
+		[[NSAlert alertWithMessageText:[step title] defaultButton:@"OK" alternateButton:nil otherButton:nil informativeTextWithFormat:@"%@", errorMessage] beginSheetModalForWindow:[self window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	return errorMessage == nil;
 }
 
-- (ROI *)closestROIFromSet:(NSSet *)rois toPoints:(NSArray *)points {
-	NSArray *roisArray = [rois allObjects];
-	CGFloat distances[[rois count]];
+- (ROI *)closestROIFromSet:(NSSet<ROI *> *)rois toPoints:(NSArray<MyPoint *> *)points {
+	NSArray<ROI *> *roisArray = [rois allObjects];
+	CGFloat distances[rois.count];
 	// fill distances
-	for (unsigned i = 0; i < [rois count]; ++i) {
+	for (unsigned i = 0; i < rois.count; ++i) {
 		distances[i] = MAXFLOAT;
-		if (![roisArray objectAtIndex:i]) continue;
-		NSPoint roiPoint = [[[[roisArray objectAtIndex:i] points] objectAtIndex:0] point];
-		for (unsigned j = 0; j < [points count]; ++j)
-			distances[i] = std::min(distances[i], NSDistance(roiPoint, [[points objectAtIndex:j] point]));
+		if (!roisArray[i]) continue;
+		NSPoint roiPoint = [roisArray[i].points[0] point];
+		for (unsigned j = 0; j < points.count; ++j)
+			distances[i] = std::min(distances[i], NSDistance(roiPoint, points[j].point));
 	}
 	
 	unsigned minIndex = 0;
@@ -789,7 +858,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		if (distances[i] < distances[minIndex])
 			minIndex = i;
 	
-	return [roisArray objectAtIndex:minIndex];
+	return roisArray[minIndex];
 }
 
 - (void)steps:(N2Steps *)steps validateStep:(N2Step *)step {
@@ -802,11 +871,11 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		CGFloat magnificationValue = [_magnificationCustomFactor floatValue];
 		[self applyMagnification:magnificationValue];
 	}
-	else if(step == _stepAxes) {
+	else if (step == _stepAxes) {
 	}
-	else if(step == _stepLandmarks) {
+	else if (step == _stepLandmarks) {
 	}
-	else if(step == _stepCutting) {
+	else if (step == _stepCutting) {
 		if (_femurLayer)
 			[self removeRoiFromViewer:_femurLayer];
 			
@@ -814,18 +883,37 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		[_femurLayer roiMove:NSMakePoint(-10,10)]; // when the layer is created it is shifted, but we don't want this so we move it back
 		[_femurLayer setOpacity:1];
 		[_femurLayer setDisplayTextualData:NO];
+        
+        if (_viewerController.imageView.curDCM.inverseVal && _viewerController.imageView.curDCM.fullwl > 0) {
+            NSImage *image = _femurLayer.layerImage; //[[_femurLayer.layerImage copy] autorelease];
+            NSBitmapImageRep *rep = (id) image.representations.firstObject;
+            if ([rep isKindOfClass:NSBitmapImageRep.class] && rep.bitsPerSample == 8 && rep.samplesPerPixel == 4 && rep.hasAlpha) {
+                size_t max = rep.samplesPerPixel * rep.pixelsWide * rep.pixelsHigh;
+                unsigned char *data = rep.bitmapData;
+                for (size_t i = 0, j = 3; i < max; ++i) {
+                    if (i%4 != 3) { // RGBA, only act on RGB
+                        if (*(data + j) != 0) // only act if alpha != 0
+                            *(data + i) = 255 - *(data + i);
+                    }
+                    else j = i+4;
+                }
+            }
+            
+            //NSBitmapImageRep *inv = [[rep mutableCopy] autorelease];
+            
+            //_femurLayer.layerImage = [NSImage imageW];
+        }
 		
-		
-		_femurLandmarkOriginal = [self closestROIFromSet:[NSSet setWithObjects:_landmark1, _landmark2, NULL] toPoints:[_femurRoi points]];
+		_femurLandmarkOriginal = [self closestROIFromSet:[NSSet setWithObjects:_landmark1, _landmark2, nil] toPoints:[_femurRoi points]];
 		_femurLandmark = [[ROI alloc] initWithType:t2DPoint :_femurLandmarkOriginal.pixelSpacingX :_femurLandmarkOriginal.pixelSpacingY :_femurLandmarkOriginal.imageOrigin];
 		[_femurLandmark setROIRect:[_femurLandmarkOriginal rect]];
 		[_femurLandmark setName:[NSString stringWithFormat:@"%@'",[_femurLandmarkOriginal name]]]; // same name + prime
 		[_femurLandmark setDisplayTextualData:NO];
 		
 		_femurLandmarkOther = _femurLandmarkOriginal == _landmark1? _landmark2 : _landmark1;
-        [_viewerController.imageView roiSet:_femurLandmark]; // [_femurLandmark setCurView:_viewerController.imageView]; is not available in horos
-		[[[_viewerController roiList] objectAtIndex:[[_viewerController imageView] curImage]] addObject:_femurLandmark];
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurLandmark userInfo:NULL];
+        [_viewerController.imageView roiSet:_femurLandmark]; // [_femurLandmark setCurView:_viewerController.view]; is not available in horos
+		[_viewerController.roiList[_viewerController.imageView.curImage] addObject:_femurLandmark];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurLandmark userInfo:nil];
 		
 		// bring the point to front (we don't want it behind the layer)
 		[_viewerController bringToFrontROI:_femurLandmark];
@@ -856,18 +944,18 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		NSBitmapImageRep *temp = [bitmap smoothen:kernelSize];
 		[image addRepresentation:temp];
 		
-		_originalFemurOpacityLayer = [_viewerController addLayerRoiToCurrentSliceWithImage:[image autorelease] referenceFilePath:@"none" layerPixelSpacingX:[[[_viewerController imageView] curDCM] pixelSpacingX] layerPixelSpacingY:[[[_viewerController imageView] curDCM] pixelSpacingY]];
+		_originalFemurOpacityLayer = [_viewerController addLayerRoiToCurrentSliceWithImage:[image autorelease] referenceFilePath:@"none" layerPixelSpacingX:[[_viewerController.imageView curDCM] pixelSpacingX] layerPixelSpacingY:[[_viewerController.imageView curDCM] pixelSpacingY]];
 		[_originalFemurOpacityLayer setSelectable:NO];
 		[_originalFemurOpacityLayer setDisplayTextualData:NO];
-		[_originalFemurOpacityLayer roiMove:[[[_femurLayer points] objectAtIndex:0] point]-[[[_originalFemurOpacityLayer points] objectAtIndex:0] point]-([temp size]-[bitmap size])/2];
+		[_originalFemurOpacityLayer roiMove:[_femurLayer.points[0] point]-[_originalFemurOpacityLayer.points[0] point]-(temp.size-bitmap.size)/2];
 		[_originalFemurOpacityLayer setNSColor:[[NSColor redColor] colorWithAlphaComponent:.5]];
         [_viewerController.imageView roiSet:_originalFemurOpacityLayer]; // [_originalFemurOpacityLayer setCurView: _viewerController.imageView]; is not available in horos
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_originalFemurOpacityLayer userInfo:NULL];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_originalFemurOpacityLayer userInfo:nil];
 
 		[_femurRoi setROIMode:ROI_sleep];
 		[_femurRoi setSelectable:NO];
 		[_femurRoi setOpacity:0.2];
-		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:NULL];
+		[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:nil];
 		
 		[_viewerController selectROI:_femurLayer deselectingOther:YES];
 		[_viewerController bringToFrontROI:_femurLayer];
@@ -887,14 +975,14 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		_planningDate = [[NSDate date] retain];
 		[self updateInfo];
 
-		NSManagedObject *study = [[[_viewerController fileList:0] objectAtIndex:[[_viewerController imageView] curImage]] valueForKeyPath:@"series.study"];
-		NSArray *seriesArray = [[study valueForKey:@"series"] allObjects];
+		DicomStudy *study = [[[_viewerController fileList:0] objectAtIndex:[_viewerController.imageView curImage]] valueForKeyPath:@"series.study"];
+		NSArray<DicomSeries *> *seriesArray = [study.series allObjects];
 
 		NSString *namePrefix = @"Planning";
 
 		int n = 1, m;
-		for (unsigned i = 0; i < [seriesArray count]; i++) {
-			NSString *currentSeriesName = [[seriesArray objectAtIndex:i] valueForKey:@"name"];
+		for (unsigned i = 0; i < seriesArray.count; i++) {
+			NSString *currentSeriesName = seriesArray[i].name;
 			if ([currentSeriesName hasPrefix:namePrefix]) {
 				m = [[currentSeriesName substringFromIndex:[namePrefix length]+1] intValue];
 				if (n <= m) n = m+1;
@@ -919,17 +1007,17 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			_imageToSendName = [name retain];
 		else {
 			[_imageToSendName release];
-			_imageToSendName = NULL;
+			_imageToSendName = nil;
 		}
 	}
 }
 
 - (CGFloat)estimateRotationOfROI:(ROI *)roi {
-	return NSAngle(NSMakeVector([[[roi points] objectAtIndex:4] point], [[[roi points] objectAtIndex:5] point]));
+	return NSAngle(NSMakeVector([roi.points[4] point], [roi.points[5] point]));
 }
 
 - (void)replaceLayer:(ROI *)roi with:(ArthroplastyTemplate *)t {
-	NSPoint center = [[[roi points] objectAtIndex:4] point];
+	NSPoint center = [roi.points[4] point];
 	CGFloat angle = [self estimateRotationOfROI:roi];
 	NSTimeInterval group = [roi groupID];
 	[self removeRoiFromViewer:roi];
@@ -939,18 +1027,18 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 - (void)rotateLayer:(ROI *)roi by:(float)degs {
-	NSPoint center = [[[roi points] objectAtIndex:4] point];
+	NSPoint center = [roi.points[4] point];
 	if (roi == _stemLayer && [_stemLayer groupID] == [_femurLayer groupID])
-		center = [[[roi points] objectAtIndex:4+_stemNeckSizeIndex] point];
+		center = [roi.points[4+_stemNeckSizeIndex] point];
 	[roi rotate:degs :center];
 }
 
 - (void)rotateLayer:(ROI *)roi byTrackingMouseFrom:(NSPoint)wp1 to:(NSPoint)wp2 {
-	wp1 = [[_viewerController imageView] ConvertFromNSView2GL:[[_viewerController imageView] convertPoint:wp1 fromView:NULL]];
-	wp2 = [[_viewerController imageView] ConvertFromNSView2GL:[[_viewerController imageView] convertPoint:wp2 fromView:NULL]];
-	NSPoint center = [[[roi points] objectAtIndex:4] point];
+	wp1 = [_viewerController.imageView ConvertFromNSView2GL:[_viewerController.imageView convertPoint:wp1 fromView:nil]];
+	wp2 = [_viewerController.imageView ConvertFromNSView2GL:[_viewerController.imageView convertPoint:wp2 fromView:nil]];
+	NSPoint center = [roi.points[4] point];
 	if (roi == _stemLayer && [_stemLayer groupID] == [_femurLayer groupID])
-		center = [[[roi points] objectAtIndex:4+_stemNeckSizeIndex] point];
+		center = [roi.points[4+_stemNeckSizeIndex] point];
 	CGFloat angle = NSAngle(center, wp2)-NSAngle(center, wp1);
 	[self rotateLayer:roi by:angle/M_PI*180];
 }
@@ -1025,8 +1113,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	if ([event type] == NSLeftMouseDown || [event type] == NSRightMouseDown || [event type] == NSOtherMouseDown) {
 		if ((_cupLayer && [_cupLayer ROImode] == ROI_selected) || (_stemLayer && [_stemLayer ROImode] == ROI_selected)) {
 			NSUInteger modifiers = [event modifierFlags]&0xffff0000;
-			_isMyMouse = (modifiers == NSCommandKeyMask+NSAlternateKeyMask)? [event retain] : NULL;
-			return _isMyMouse != NULL;
+			_isMyMouse = (modifiers == NSCommandKeyMask+NSAlternateKeyMask)? [event retain] : nil;
+			return _isMyMouse != nil;
 		}
 	} else if (_isMyMouse && ([event type] == NSLeftMouseDragged || [event type] == NSRightMouseDragged || [event type] == NSOtherMouseDragged)) {
 		if (_cupLayer && [_cupLayer ROImode] == ROI_selected)
@@ -1039,7 +1127,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	} else if ([event type] == NSLeftMouseUp || [event type] == NSRightMouseUp || [event type] == NSOtherMouseUp) {
 		if ([_femurLayer groupID] == [_stemLayer groupID])
 			[self adjustStemToCup];
-		if (_isMyMouse) [_isMyMouse release]; _isMyMouse = NULL;
+		if (_isMyMouse) [_isMyMouse release]; _isMyMouse = nil;
 	}
 	
 	return NO;
@@ -1052,13 +1140,13 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	if (!_cupLayer || !_stemLayer)
 		return;
     
-	NSPoint cupCenter = [[[_cupLayer points] objectAtIndex:4] point];
+	NSPoint cupCenter = [_cupLayer.points[4] point];
 	
 	unsigned magnetsCount = 5;
 	NSPoint magnets[magnetsCount];
 	CGFloat distances[magnetsCount];
 	for (unsigned i = 0; i < magnetsCount; ++i) {
-		magnets[i] = [[[_stemLayer points] objectAtIndex:6+i] point];
+		magnets[i] = [_stemLayer.points[6+i] point];
 		distances[i] = NSDistance(cupCenter, magnets[i]);
 	}
 	
@@ -1078,14 +1166,14 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
 	_stemNeckSizeIndex = index;
 	
-	NSPoint cupCenter = [[[_cupLayer points] objectAtIndex:4] point];
+	NSPoint cupCenter = [_cupLayer.points[4] point];
 	
 	NSUInteger magnetsCount = [[_stemLayer points] count]-6;
 	NSPoint magnets[magnetsCount];
 	for (unsigned i = 0; i < magnetsCount; ++i)
-		magnets[i] = [[[_stemLayer points] objectAtIndex:i+6] point];
+		magnets[i] = [_stemLayer.points[i+6] point];
 	
-	for (id loopItem in [[_viewerController roiList:[_viewerController curMovieIndex]] objectAtIndex:[[_viewerController imageView] curImage]])
+	for (id loopItem in [[_viewerController roiList:[_viewerController curMovieIndex]] objectAtIndex:[_viewerController.imageView curImage]])
 		if ([loopItem groupID] == [_stemLayer groupID])
 			[loopItem roiMove:cupCenter-magnets[index]];
 	
@@ -1098,7 +1186,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 - (void)adjustDistalToProximal {
-	if (!_stemLayer || !_distalStemLayer || [[_distalStemLayer points] count] < 13)
+	if (!_stemLayer || !_distalStemLayer || [[_distalStemLayer points] count] < 12)
         return;
     
     // mating is done based on point A (and A2)... The purpose of points B and B2 is unknown (we only were able to check this on Revitan stems)
@@ -1124,25 +1212,23 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 // dicom was added to database, send it to PACS
-- (void)sendToPACS:(NSNotification *)notification {
+- (void)observeDatabaseAddNotification:(NSNotification *)note {
 	if ([_sendToPACSButton state] && _imageToSendName) {
 		[_sendToPACSButton setState:NSOffState];
 		
 //		NSLog(@"send to PACS");
 		DicomStudy *study = _viewerController.imageView.studyObj;
-		NSArray	*seriesArray = [study.series allObjects];
+		NSArray<DicomSeries *>	*seriesArray = [study.series allObjects];
 //		NSLog(@"[seriesArray count] : %d", [seriesArray count]);
 //		NSString *pathOfImageToSend;
 		
-		NSManagedObject *imageToSend = NULL;
+		DicomImage *imageToSend = nil;
 		
-		for (unsigned i = 0; i < [seriesArray count]; i++)
-		{
-			NSString *currentSeriesName = [[seriesArray objectAtIndex:i] valueForKey:@"name"];
+		for (unsigned i = 0; i < [seriesArray count]; i++) {
+			NSString *currentSeriesName = seriesArray[i].name;
 //			NSLog(@"currentSeriesName : %@", currentSeriesName);
-			if([currentSeriesName isEqualToString:_imageToSendName])
-			{
-				NSArray *images = [[[seriesArray objectAtIndex:i] valueForKey:@"images"] allObjects];
+			if ([currentSeriesName isEqualToString:_imageToSendName]) {
+				NSArray<DicomImage *> *images = seriesArray[i].sortedImages;
 //				NSLog(@"[images count] : %d", [images count]);
 //				NSLog(@"images : %@", images);
 				imageToSend = images.firstObject;
@@ -1156,7 +1242,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		//[file2Send addObject:pathOfImageToSend];
 //		[file2Send addObject:imageToSend];
         if (imageToSend)
-            [SendController sendFiles:@[imageToSend]];
+            [SendController sendFiles:@[ imageToSend ]];
 	}
 }
 
@@ -1164,37 +1250,37 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 #pragma mark Result
 
 - (void)computeValues {
-	// horizontal angle
-	_horizontalAngle = kInvalidAngle;
-	if (_horizontalAxis && [[_horizontalAxis points] count] == 2)
-		_horizontalAngle = [_horizontalAxis pointAtIndex:0].x < [_horizontalAxis pointAtIndex:1].x?
-			NSAngle([_horizontalAxis pointAtIndex:0], [_horizontalAxis pointAtIndex:1]) :
-			NSAngle([_horizontalAxis pointAtIndex:1], [_horizontalAxis pointAtIndex:0]) ;
-	
-	// femur angle
-	_femurAngle = kInvalidAngle;
-	if (_femurAxis && [[_femurAxis points] count] == 2)
-		_femurAngle = [_femurAxis pointAtIndex:0].y < [_femurAxis pointAtIndex:1].y?
-			NSAngle([_femurAxis pointAtIndex:0], [_femurAxis pointAtIndex:1]) :
-			NSAngle([_femurAxis pointAtIndex:1], [_femurAxis pointAtIndex:0]) ;
-	else if (_horizontalAngle != kInvalidAngle)
-		_femurAngle = _horizontalAngle+M_PI/2;
-	
-	// cup inclination
-	if (_cupLayer && [[_cupLayer points] count] >= 6) {
-		_cupAngle = -([self estimateRotationOfROI:_cupLayer]-_horizontalAngle)/M_PI*180;
-		[_cupAngleTextField setStringValue:[NSString stringWithFormat:@"Rotation angle: %.2f°", _cupAngle]];
-	}
-	
-	// stem inclination
-	if (_stemLayer && [[_stemLayer points] count] >= 6) {
-		_stemAngle = -([self estimateRotationOfROI:_stemLayer]+M_PI/2-_femurAngle)/M_PI*180;
-		[_stemAngleTextField setStringValue:[NSString stringWithFormat:@"Rotation angle: %.2f°", _stemAngle]];
- 	}
-	
+    // horizontal angle
+    _horizontalAngle = kInvalidAngle;
+    if (_horizontalAxis && [[_horizontalAxis points] count] == 2)
+        _horizontalAngle = [_horizontalAxis pointAtIndex:0].x < [_horizontalAxis pointAtIndex:1].x?
+            NSAngle([_horizontalAxis pointAtIndex:0], [_horizontalAxis pointAtIndex:1]) :
+            NSAngle([_horizontalAxis pointAtIndex:1], [_horizontalAxis pointAtIndex:0]) ;
+    
+    // femur angle
+    _femurAngle = kInvalidAngle;
+    if (_femurAxis && [[_femurAxis points] count] == 2)
+        _femurAngle = [_femurAxis pointAtIndex:0].y < [_femurAxis pointAtIndex:1].y?
+            NSAngle([_femurAxis pointAtIndex:0], [_femurAxis pointAtIndex:1]) :
+            NSAngle([_femurAxis pointAtIndex:1], [_femurAxis pointAtIndex:0]) ;
+    else if (_horizontalAngle != kInvalidAngle)
+        _femurAngle = _horizontalAngle+M_PI/2;
+    
+    // cup inclination
+    if (_cupLayer && [[_cupLayer points] count] >= 6) {
+        _cupAngle = -([self estimateRotationOfROI:_cupLayer]-_horizontalAngle)/M_PI*180;
+        [_cupAngleTextField setStringValue:[NSString stringWithFormat:@"Rotation angle: %.2f°", _cupAngle]];
+    }
+    
+    // stem inclination
+    if (_stemLayer && [[_stemLayer points] count] >= 6) {
+        _stemAngle = -([self estimateRotationOfROI:_stemLayer]+M_PI/2-_femurAngle)/M_PI*180;
+        [_stemAngleTextField setStringValue:[NSString stringWithFormat:@"Rotation angle: %.2f°", _stemAngle]];
+    }
+    
     [self updateLegInequality];
     
-	[self updateInfo];
+    [self updateInfo];
 }
 
 - (void)createInfoBox {
@@ -1206,12 +1292,12 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			for (MyPoint *p in [_femurRoi points])
 				pt += [p point];
 			pt /= [[_femurRoi points] count];
-			BOOL left = pt.x < [[[_viewerController imageView] curDCM] pwidth]/2;
-			_infoBox = [[ROI alloc] initWithType:tText :[[_viewerController imageView] pixelSpacingX] :[[_viewerController imageView] pixelSpacingY] :[[_viewerController imageView] origin]];
-			[_infoBox setROIRect:NSMakeRect([[[_viewerController imageView] curDCM] pwidth]/4*(left?3:1), [[[_viewerController imageView] curDCM] pheight]/3*2, 0.0, 0.0)];
+			BOOL left = pt.x < [[_viewerController.imageView curDCM] pwidth]/2;
+			_infoBox = [[ROI alloc] initWithType:tText :[_viewerController.imageView pixelSpacingX] :[_viewerController.imageView pixelSpacingY] :[_viewerController.imageView origin]];
+			[_infoBox setROIRect:NSMakeRect([[_viewerController.imageView curDCM] pwidth]/4*(left?3:1), [[_viewerController.imageView curDCM] pheight]/3*2, 0, 0)];
             [_viewerController.imageView roiSet:_infoBox]; // [_infoBox setCurView: _viewerController.imageView]; is not available in horos
-			[[[_viewerController roiList] objectAtIndex:[[_viewerController imageView] curImage]] addObject:_infoBox];
-			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_infoBox userInfo:NULL];
+			[_viewerController.roiList[_viewerController.imageView.curImage] addObject:_infoBox];
+			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_infoBox userInfo:nil];
 			[_infoBox release];
 		}
 	else
@@ -1222,68 +1308,104 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 - (void)updateInfo {
 	[self createInfoBox];
 	if (!_infoBox) return;
-	
-	NSMutableString *str = [[[NSMutableString alloc] initWithCapacity:512] autorelease];
-	
-	[str appendString:@"OsiriX Hip Arthroplasty Templating"];
-	
-	if (_originalLegInequality || _legInequality) {
-		[str appendFormat:@"\nLeg length discrepancy:\n"];
-		if (_originalLegInequality)
-			[str appendFormat:@"\tOriginal: %.2f cm\n", _originalLegInequalityValue];
-		if (_legInequality)
-			[str appendFormat:@"\tFinal: %.2f cm\n", _legInequalityValue];
-		if (_originalLegInequality && _legInequality) {
-			CGFloat change = fabs(_originalLegInequalityValue - _legInequalityValue);
-			[str appendFormat:@"\tVariation: %.2f cm\n", change];
-			[_verticalOffsetTextField setStringValue:[NSString stringWithFormat:@"Vertical offset variation: %.2f cm", change]];
-		}
-		
-		if (_horizontalAxis && _femurLandmarkOriginal && _femurLandmarkAxis) {
-			[str appendFormat:@"Lateral offset variation: %.2f cm\n", _lateralOffsetValue];
-			[_horizontalOffsetTextField setStringValue:[NSString stringWithFormat:@"Lateral offset variation: %.2f cm", _lateralOffsetValue]];
-		}
-	}
-	
-	if (_cupLayer) {
-		[str appendFormat:@"\nCup: %@\n", [_cupTemplate name]];
-		[str appendFormat:@"\tManufacturer: %@\n", [_cupTemplate manufacturer]];
+	[_infoBox setName:self.info];
+}
+
+- (NSString *)info {
+    NSMutableString *str = [[[NSMutableString alloc] initWithCapacity:512] autorelease];
+    
+    [str appendString:@"Hip Arthroplasty Templating"];
+    
+    if (_originalLegInequality || _legInequality) {
+        [str appendFormat:@"\nLeg length discrepancy:\n"];
+        if (_originalLegInequality)
+            [str appendFormat:@"\tOriginal: %.2f cm\n", _originalLegInequalityLength];
+        if (_legInequality)
+            [str appendFormat:@"\tFinal: %.2f cm\n", _legInequalityLength];
+        if (_originalLegInequality && _legInequality) {
+            CGFloat change = fabs(_originalLegInequalityLength - _legInequalityLength);
+            [str appendFormat:@"\tVariation: %.2f cm\n", change];
+            [_verticalOffsetTextField setStringValue:[NSString stringWithFormat:@"Vertical offset variation: %.2f cm", change]];
+        }
+        
+        if (_horizontalAxis && _femurLandmarkOriginal && _femurLandmarkAxis) {
+            [str appendFormat:@"Lateral offset variation: %.2f cm\n", _lateralOffsetChange];
+            [_horizontalOffsetTextField setStringValue:[NSString stringWithFormat:@"Lateral offset variation: %.2f cm", _lateralOffsetChange]];
+        }
+    }
+    
+    if (_cupLayer) {
+        [str appendFormat:@"\nCup: %@\n", [_cupTemplate name]];
+        [str appendFormat:@"\tManufacturer: %@\n", [_cupTemplate manufacturer]];
         NSString *dimInfo = nil;
         if (!_cupTemplate.offset)
             dimInfo = [NSString stringWithFormat:@"Size: %@", _cupTemplate.size];
         else dimInfo = [NSString stringWithFormat:@"Offset/Size: %@/%@", _cupTemplate.offset, _cupTemplate.size];
         [str appendFormat:@"\t%@\n", dimInfo];
-		[str appendFormat:@"\tRotation: %.2f°\n", _cupAngle];
-		[str appendFormat:@"\tReference: %@\n", [_cupTemplate referenceNumber]];
-	}
-	
-	if (_stemTemplate) {
-		[str appendFormat:@"\n%@: %@\n", ([_stemTemplate isProximal]? @"Stem Proximal Component" : @"Stem"), [_stemTemplate name]];
-		[str appendFormat:@"\tManufacturer: %@\n", [_stemTemplate manufacturer]];
+        [str appendFormat:@"\tRotation: %.2f°\n", _cupAngle];
+        [str appendFormat:@"\tReference: %@\n", [_cupTemplate referenceNumber]];
+    }
+    
+    if (_stemTemplate) {
+        [str appendFormat:@"\n%@: %@\n", ([_stemTemplate isProximal]? @"Stem Proximal Component" : @"Stem"), [_stemTemplate name]];
+        [str appendFormat:@"\tManufacturer: %@\n", [_stemTemplate manufacturer]];
         NSString *dimInfo = nil;
         if (!_stemTemplate.offset)
             dimInfo = [NSString stringWithFormat:@"Size: %@", _stemTemplate.size];
         else dimInfo = [NSString stringWithFormat:@"Offset/Size: %@/%@", _stemTemplate.offset, _stemTemplate.size];
-		[str appendFormat:@"\t%@\n", dimInfo];
-		[str appendFormat:@"\tReference: %@\n", [_stemTemplate referenceNumber]];
-	}
+        [str appendFormat:@"\t%@\n", dimInfo];
+        [str appendFormat:@"\tReference: %@\n", [_stemTemplate referenceNumber]];
+    }
     
-	if ([_neckSizePopUpButton isEnabled])
-		[str appendFormat:@"\tNeck size: %@\n", [[_neckSizePopUpButton selectedItem] title]];
+    if ([_neckSizePopUpButton isEnabled])
+        [str appendFormat:@"\tNeck size: %@\n", [[_neckSizePopUpButton selectedItem] title]];
 
     if (_distalStemTemplate) {
-		[str appendFormat:@"Stem Distal Component: %@\n", [_distalStemTemplate name]];
-		[str appendFormat:@"\tManufacturer: %@\n", [_distalStemTemplate manufacturer]];
-		[str appendFormat:@"\tSize: %@\n", [_distalStemTemplate size]];
-		[str appendFormat:@"\tReference: %@\n", [_distalStemTemplate referenceNumber]];
+        [str appendFormat:@"Stem Distal Component: %@\n", [_distalStemTemplate name]];
+        [str appendFormat:@"\tManufacturer: %@\n", [_distalStemTemplate manufacturer]];
+        [str appendFormat:@"\tSize: %@\n", [_distalStemTemplate size]];
+        [str appendFormat:@"\tReference: %@\n", [_distalStemTemplate referenceNumber]];
     }
  
-	if ([[_plannersNameTextField stringValue] length])
-		[str appendFormat:@"\nPlanified by: %@\n", [_plannersNameTextField stringValue]];
-	if (_planningDate)
-		[str appendFormat:@"Date: %@\n", _planningDate];
+    if ([[_plannersNameTextField stringValue] length])
+        [str appendFormat:@"\nPlanified by: %@\n", [_plannersNameTextField stringValue]];
+    if (_planningDate)
+        [str appendFormat:@"Date: %@\n", _planningDate];
 
-	[_infoBox setName:str];
+    return str;
+}
+
+@end
+
+@implementation N2DisclosureBox (ArthroplastyTemplating)
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        method_exchangeImplementations(class_getInstanceMethod(N2DisclosureBox.class, @selector(initWithTitle:content:)),
+                                       class_getInstanceMethod(N2DisclosureBox.class, @selector(ArthroplastyTemplating_initWithTitle:content:)));
+    });
+}
+
+/**
+ We replace the constructor for this class because in certain conditions (recent macOS APIs) the original NSBox titleCell replacement wouldn't work properly.
+ */
+- (instancetype)ArthroplastyTemplating_initWithTitle:(NSString *)title content:(NSView *)content {
+    if (!(self = [self ArthroplastyTemplating_initWithTitle:title content:content]))
+        return nil;
+    
+    @try {
+        id tc = [self valueForKey:@"titleCell"];
+        id _tc = [self valueForKey:@"_titleCell"];
+        if (tc != _tc) {
+            [self setValue:tc forKey:@"_titleCell"];
+        }
+    }
+    @catch (NSException *e) {
+        // do nothing
+    }
+    
+    return self;
 }
 
 @end

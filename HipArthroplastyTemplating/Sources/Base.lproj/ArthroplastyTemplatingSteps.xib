@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -45,7 +45,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES" HUD="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="200" height="70"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1097"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3360" height="1393"/>
             <view key="contentView" id="316" customClass="N2StepsView">
                 <rect key="frame" x="0.0" y="0.0" width="200" height="70"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -56,6 +56,7 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="322"/>
             </connections>
+            <point key="canvasLocation" x="139" y="-42"/>
         </window>
         <customObject id="130" userLabel="Steps" customClass="N2Steps">
             <connections>
@@ -66,7 +67,7 @@
             <rect key="frame" x="0.0" y="0.0" width="180" height="95"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <matrix verticalHuggingPriority="750" allowsEmptySelection="NO" id="528">
+                <matrix verticalHuggingPriority="750" fixedFrame="YES" allowsEmptySelection="NO" translatesAutoresizingMaskIntoConstraints="NO" id="528">
                     <rect key="frame" x="16" y="67" width="158" height="24"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -91,7 +92,7 @@
                         <action selector="stepValueChanged:" target="130" id="533"/>
                     </connections>
                 </matrix>
-                <textField verticalHuggingPriority="750" id="429">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="429">
                     <rect key="frame" x="145" y="24" width="18" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="cm" id="430">
@@ -100,7 +101,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="379">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="379">
                     <rect key="frame" x="17" y="24" width="68" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Line length:" id="380">
@@ -109,7 +110,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="375">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="375">
                     <rect key="frame" x="0.0" y="41" width="180" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Draw a line on the calibration object and specify its length below:" id="376">
@@ -118,7 +119,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="377">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="377">
                     <rect key="frame" x="90" y="21" width="50" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" id="378">
@@ -132,7 +133,7 @@
                         <outlet property="formatter" destination="431" id="433"/>
                     </connections>
                 </textField>
-                <textField verticalHuggingPriority="750" id="369">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="369">
                     <rect key="frame" x="110" y="76" width="50" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="1.15" id="370">
@@ -146,7 +147,7 @@
                         <outlet property="formatter" destination="431" id="432"/>
                     </connections>
                 </textField>
-                <button verticalHuggingPriority="750" id="353">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="353">
                     <rect key="frame" x="124" y="-1" width="50" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Done" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="358" customClass="N2ButtonCell">
@@ -166,7 +167,7 @@ DQ
             <rect key="frame" x="0.0" y="0.0" width="180" height="58"/>
             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
             <subviews>
-                <button verticalHuggingPriority="750" id="158">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="158">
                     <rect key="frame" x="124" y="-1" width="50" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Done" bezelStyle="recessed" alignment="center" controlSize="mini" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="286" customClass="N2ButtonCell">
@@ -180,7 +181,7 @@ DQ
                         <action selector="nextStep:" target="130" id="503"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="153">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="153">
                     <rect key="frame" x="0.0" y="21" width="180" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Draw the horizontal axis based on the pelvic bone and, optionally, the axis of the femoral shaft to be replaced." id="285">
@@ -195,7 +196,7 @@ DQ
             <rect key="frame" x="0.0" y="0.0" width="180" height="47"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button verticalHuggingPriority="750" id="171">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="171">
                     <rect key="frame" x="124" y="-1" width="50" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Done" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="290" customClass="N2ButtonCell">
@@ -209,7 +210,7 @@ DQ
                         </connections>
                     </buttonCell>
                 </button>
-                <textField verticalHuggingPriority="750" id="170">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="170">
                     <rect key="frame" x="0.0" y="11" width="180" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Place 1 or 2 landmarks on the proximal femur (e.g. tip of the greater trochanter)." id="289">
@@ -224,7 +225,7 @@ DQ
             <rect key="frame" x="0.0" y="0.0" width="180" height="47"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button verticalHuggingPriority="750" id="179">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="179">
                     <rect key="frame" x="124" y="-1" width="50" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Done" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="292" customClass="N2ButtonCell">
@@ -238,7 +239,7 @@ DQ
                         </connections>
                     </buttonCell>
                 </button>
-                <textField verticalHuggingPriority="750" id="178">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="178">
                     <rect key="frame" x="0.0" y="22" width="180" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Encircle the proximal femur (exclude the head and neck)." id="291">
@@ -253,7 +254,7 @@ DQ
             <rect key="frame" x="0.0" y="0.0" width="180" height="72"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button verticalHuggingPriority="750" id="265">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="265">
                     <rect key="frame" x="44" y="-1" width="72" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Templates" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="297" customClass="N2ButtonCell">
@@ -264,7 +265,7 @@ DQ
                         <action selector="showTemplatesPanel:" target="-2" id="410"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="255">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="255">
                     <rect key="frame" x="0.0" y="22" width="180" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="To rotate, hold command+option" id="296">
@@ -273,7 +274,7 @@ DQ
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="226">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="226">
                     <rect key="frame" x="0.0" y="33" width="180" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Rotation angle: -" id="295">
@@ -282,7 +283,7 @@ DQ
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </textFieldCell>
                 </textField>
-                <button verticalHuggingPriority="750" id="183">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="183">
                     <rect key="frame" x="124" y="-1" width="50" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Done" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="294" customClass="N2ButtonCell">
@@ -296,7 +297,7 @@ DQ
                         <action selector="nextStep:" target="130" id="504"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="182">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="182">
                     <rect key="frame" x="0.0" y="46" width="180" height="23"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Select the acetabular component, rotate and insert into the acetabulum." id="293">
@@ -311,7 +312,7 @@ DQ
             <rect key="frame" x="0.0" y="0.0" width="180" height="72"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <button verticalHuggingPriority="750" id="267">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="267">
                     <rect key="frame" x="44" y="-1" width="72" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Templates" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="301" customClass="N2ButtonCell">
@@ -322,7 +323,7 @@ DQ
                         <action selector="showTemplatesPanel:" target="-2" id="411"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="333">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="333">
                     <rect key="frame" x="0.0" y="33" width="180" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Rotation angle: -" id="334">
@@ -334,7 +335,7 @@ DQ
                         <action selector="showTemplatesPanel:" target="-2" id="437"/>
                     </connections>
                 </textField>
-                <textField verticalHuggingPriority="750" id="262">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="262">
                     <rect key="frame" x="0.0" y="22" width="180" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="To rotate, hold command+option" id="300">
@@ -343,7 +344,7 @@ DQ
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button verticalHuggingPriority="750" id="189">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="189">
                     <rect key="frame" x="124" y="-1" width="50" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Done" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="299" customClass="N2ButtonCell">
@@ -357,7 +358,7 @@ DQ
                         <action selector="nextStep:" target="130" id="505"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="188">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="188">
                     <rect key="frame" x="0.0" y="47" width="180" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Select the femoral component, rotate and insert into the extracted femur." id="298">
@@ -372,7 +373,7 @@ DQ
             <rect key="frame" x="0.0" y="0.0" width="180" height="83"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <popUpButton verticalHuggingPriority="750" id="344">
+                <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="344">
                     <rect key="frame" x="70" y="49" width="91" height="15"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="push" title="M" bezelStyle="rounded" alignment="left" controlSize="mini" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="348" id="345">
@@ -392,7 +393,7 @@ DQ
                         <action selector="stepValueChanged:" target="130" id="424"/>
                     </connections>
                 </popUpButton>
-                <textField verticalHuggingPriority="750" id="236">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="236">
                     <rect key="frame" x="17" y="51" width="49" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" alignment="left" title="Neck size:" id="308">
@@ -401,7 +402,7 @@ DQ
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="230">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="230">
                     <rect key="frame" x="0.0" y="22" width="180" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Lateral offset: 0" id="305">
@@ -410,7 +411,7 @@ DQ
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" id="229">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="229">
                     <rect key="frame" x="0.0" y="33" width="180" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Vertical offset: 0" id="304">
@@ -419,7 +420,7 @@ DQ
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button verticalHuggingPriority="750" id="193">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="193">
                     <rect key="frame" x="124" y="-1" width="50" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Done" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="303" customClass="N2ButtonCell">
@@ -433,7 +434,7 @@ DQ
                         <action selector="nextStep:" target="130" id="506"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="192">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="192">
                     <rect key="frame" x="0.0" y="69" width="180" height="11"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Reduce femur and stem into the cup." id="302">
@@ -448,7 +449,7 @@ DQ
             <rect key="frame" x="0.0" y="0.0" width="180" height="57"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <textField verticalHuggingPriority="750" id="416">
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="416">
                     <rect key="frame" x="92" y="22" width="68" height="16"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" id="417">
@@ -460,7 +461,7 @@ DQ
                         <action selector="stepValueChanged:" target="130" id="427"/>
                     </connections>
                 </textField>
-                <textField verticalHuggingPriority="750" id="415">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="415">
                     <rect key="frame" x="0.0" y="14" width="87" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" alignment="right" title="Planner's name:" id="418">
@@ -469,7 +470,7 @@ DQ
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <button id="269">
+                <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="269">
                     <rect key="frame" x="16" y="0.0" width="80" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="check" title="Send to PACS" bezelStyle="regularSquare" imagePosition="left" alignment="left" controlSize="mini" inset="2" id="314">
@@ -477,7 +478,7 @@ DQ
                         <font key="font" metaFont="miniSystem"/>
                     </buttonCell>
                 </button>
-                <button verticalHuggingPriority="750" id="198">
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="198">
                     <rect key="frame" x="124" y="-1" width="50" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <buttonCell key="cell" type="recessed" title="Save" bezelStyle="recessed" alignment="center" controlSize="mini" borderStyle="border" inset="2" id="313" customClass="N2ButtonCell">
@@ -491,7 +492,7 @@ DQ
                         <action selector="nextStep:" target="130" id="508"/>
                     </connections>
                 </button>
-                <textField verticalHuggingPriority="750" id="197">
+                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="197">
                     <rect key="frame" x="0.0" y="31" width="180" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" title="Save the result into a DICOM image." id="312">

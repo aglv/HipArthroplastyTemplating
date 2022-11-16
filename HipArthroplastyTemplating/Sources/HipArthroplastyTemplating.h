@@ -29,4 +29,9 @@
 
 - (ArthroplastyTemplatingStepsController *)windowControllerForViewer:(ViewerController *)viewer;
 
+- (void)showDisclaimer;
+- (void)proceedAfterDisclaimer;
+
++ (void)onMainThreadPerformOrDispatchSync:(void(^)(void))block;
+
 @end

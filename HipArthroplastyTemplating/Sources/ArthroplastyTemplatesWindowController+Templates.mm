@@ -10,7 +10,7 @@
 #import "ArthroplastyTemplatesWindowController+Private.h"
 
 #import "ArthroplastyTemplateFamily.h"
-#import "InfoTxtTemplate.h"
+#import "InfoTxtArthroplastyTemplate.h"
 #import "HipArthroplastyTemplating.h"
 
 #pragma clang diagnostic push
@@ -28,9 +28,12 @@
     
     NSMutableArray<NSString *> *paths = [NSMutableArray array];
     NSString *temp;
-    if ((temp = [[NSBundle bundleForClass:self.class] resourcePath])) [paths addObject:temp];
-    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kUserDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"])) [paths addObject:temp];
-    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kLocalDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"])) [paths addObject:temp];
+    if ((temp = [[NSBundle bundleForClass:self.class] resourcePath]))
+        [paths addObject:temp];
+    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kUserDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"]))
+        [paths addObject:temp];
+    if ((temp = [[HipArthroplastyTemplating findSystemFolderOfType:kApplicationSupportFolderType forDomain:kLocalDomain] stringByAppendingPathComponent:@"OsiriX/HipArthroplastyTemplating"]))
+        [paths addObject:temp];
 
 	for (NSString *path in paths) {
         for (NSString *sub in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL])
@@ -44,8 +47,8 @@
     }
 	
 	// fill _families from _templates
-	for (unsigned i = 0; i < [_templates count]; ++i) {
-		ArthroplastyTemplate *templat = [_templates objectAtIndex:i];
+	for (unsigned i = 0; i < _templates.count; ++i) {
+		ArthroplastyTemplate *templat = _templates[i];
 		BOOL included = NO;
 		
 		for (unsigned i = 0; i < [[_familiesArrayController content] count]; ++i) {
@@ -64,7 +67,7 @@
 	}
 	
 	//	[_familiesArrayController rearrangeObjects];
-	[self.familiesTableView reloadData];
+	[_familiesTableView reloadData];
 }
 
 - (void)deallocTemplates {
@@ -74,7 +77,7 @@
     NSMutableArray *templates = [NSMutableArray array];
     
     NSDictionary *classes = [NSDictionary dictionaryWithObjectsAndKeys:
-                             [InfoTxtTemplate class], @"txt",
+                             [InfoTxtArthroplastyTemplate class], @"txt",
                              nil];
     
     BOOL isDirectory, exists = [[NSFileManager defaultManager] fileExistsAtPath:dirpath isDirectory:&isDirectory];
@@ -114,7 +117,7 @@
 - (void)filterTemplates {
     NSMutableArray *subpredicates = [NSMutableArray arrayWithObject:[NSPredicate predicateWithValue:YES]];
     
-    for (NSString *str in [self.searchField.stringValue componentsSeparatedByString:@" "]) {
+    for (NSString *str in [_searchField.stringValue componentsSeparatedByString:@" "]) {
         str = [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if (str.length) {
             BOOL no = NO;
@@ -134,14 +137,14 @@
     [_familiesArrayController setFilterPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:subpredicates]];
 
 	//	[_familiesArrayController rearrangeObjects];
-    [self.familiesTableView noteNumberOfRowsChanged];
+    [_familiesTableView noteNumberOfRowsChanged];
 	//	[self.familiesTableView reloadData];
 
     [self.window orderFront:self];
 }
 
 - (BOOL)setFilter:(NSString *)string {
-	self.searchField.stringValue = string;
+	_searchField.stringValue = string;
 	[self filterTemplates];
 	return [_familiesArrayController.arrangedObjects count] > 0;
 }

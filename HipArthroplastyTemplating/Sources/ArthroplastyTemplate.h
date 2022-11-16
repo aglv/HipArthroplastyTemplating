@@ -35,7 +35,7 @@ typedef NS_OPTIONS(NSUInteger, ArthroplastyTemplateSide) {
 
 @property (readonly) NSString *path;
 @property (assign) ArthroplastyTemplateFamily *family;
-@property (readonly) NSString *fixation, *group, *manufacturer, *modularity, *name, *patientSide, *surgery, *type, *size, *offset, *referenceNumber;
+@property (readonly) NSString *fixation, *group, *manufacturer, *modularity, *name, *patientSide, *surgery, *type, *size, *offset, *referenceNumber, *innerDiameter;
 @property (readonly) CGFloat scale, rotation;
 @property (readonly) ArthroplastyTemplateSide side;
 

@@ -10,7 +10,21 @@
 
 #import "ArthroplastyTemplatesWindowController.h"
 
-@interface ArthroplastyTemplatesWindowController ()
+@class ArthroplastyTemplatingTemplateView;
+@class ArthroplastyTemplatingTableView;
+
+@interface ArthroplastyTemplatesWindowController () {
+    // IBOutlets
+    __unsafe_unretained NSArrayController *_familiesArrayController, *_offsetsArrayController, *_sizesArrayController;
+    __unsafe_unretained ArthroplastyTemplatingTableView *_familiesTableView;
+    __unsafe_unretained ArthroplastyTemplatingTemplateView *_pdfView;
+    __unsafe_unretained NSPopUpButton *_sizesPopUp, *_offsetsPopUp;
+    __unsafe_unretained NSView *_offsetsView;
+    __unsafe_unretained NSButton *_shouldTransformColor;
+    __unsafe_unretained NSColorWell *_transformColor;
+    __unsafe_unretained NSSegmentedControl *_projectionButtons, *_sideButtons;
+    __unsafe_unretained NSSearchField *_searchField;
+}
 
 //@property (assign) ArthroplastyTemplateFamily *family;
 

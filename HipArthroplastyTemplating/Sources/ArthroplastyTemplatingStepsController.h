@@ -26,7 +26,7 @@
 	ROI *_landmark1Axis, *_landmark2Axis, *_legInequality, *_originalLegInequality, *_originalFemurOpacityLayer, *_femurLayer, *_cupLayer, *_stemLayer, *_distalStemLayer, *_infoBox;
 	ROI *_femurLandmark, *_femurLandmarkAxis, *_femurLandmarkOther, *_femurLandmarkOriginal;
 	
-	CGFloat _legInequalityValue, _originalLegInequalityValue, _lateralOffsetValue;
+	CGFloat _legInequalityLength, _originalLegInequalityLength, _lateralOffsetChange;
 	
 	// calibration
 	IBOutlet NSMatrix *_magnificationRadio;
@@ -63,6 +63,8 @@
 	NSString *_imageToSendName;
 	NSEvent *_isMyMouse;
     NSInteger _isMyRoiManupulation;
+    
+    BOOL _computeValuesGuard;
 }
 
 
@@ -98,5 +100,7 @@
 
 - (void)computeValues;
 - (void)updateInfo;
+
+- (NSString *)info;
 
 @end

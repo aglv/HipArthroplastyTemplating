@@ -20,6 +20,7 @@
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
+#import "ArthroplastyTemplatingTemplateView.h"
 #import "HipArthroplastyTemplating.h"
 #include <cmath>
 #include <algorithm>
@@ -29,20 +30,36 @@
 
 #import "ArthroplastyTemplatingUserDefaults.h"
 
+@interface ArthroplastyTemplatesWindowController ()
+
+@property (assign) IBOutlet NSArrayController *familiesArrayController, *offsetsArrayController, *sizesArrayController;
+
+@property (weak) IBOutlet ArthroplastyTemplatingTableView *familiesTableView;
+@property (weak) IBOutlet ArthroplastyTemplatingTemplateView *pdfView;
+@property (weak) IBOutlet NSSegmentedControl *projectionButtons, *sideButtons;
+@property (weak) IBOutlet NSPopUpButton *sizesPopUp, *offsetsPopUp;
+@property (weak) IBOutlet NSView *offsetsView;
+@property (weak) IBOutlet NSSearchField *searchField;
+@property (weak) IBOutlet NSButton *shouldTransformColor;
+@property (weak) IBOutlet NSColorWell *transformColor;
+
+@end
+
 @implementation ArthroplastyTemplatesWindowController
 
 @synthesize plugin = _plugin;
 
-//@synthesize side = _side;
+@synthesize side = _side;
 
 @synthesize projection = _projection, projectionButtons = _projectionButtons;
 @synthesize familiesArrayController = _familiesArrayController, offsetsArrayController = _offsetsArrayController, sizesArrayController = _sizesArrayController;
 @synthesize family = _family;
 @synthesize familiesTableView = _familiesTableView, searchField = _searchField;
 @synthesize sizesPopUp = _sizesPopUp, offsetsPopUp = _offsetsPopUp, offsetsView = _offsetsView;
+@synthesize shouldTransformColor = _shouldTransformColor, transformColor = _transformColor;
 
 - (id)initWithPlugin:(HipArthroplastyTemplating *)plugin {
-	if (!(self = [self initWithWindowNibName:@"ArthroplastyTemplatesWindow"]))
+	if (!(self = [self initWithWindowNibName:@"ArthroplastyTemplatesWindow" owner:self]))
         return nil;
     
 	_plugin = plugin;
@@ -51,7 +68,6 @@
     
 	_projection = ArthroplastyTemplateAnteriorPosteriorProjection;
 	
-//    _userDefaults = [[HipArthroplastyTemplating userDefaults] retain];
 	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     
 	_selections = [[NSMutableDictionary alloc] init];
@@ -77,30 +93,82 @@
 	return self;
 }
 
++ (NSArray<NSString *> *)sizeComponents:(NSString *)str set:(NSCharacterSet *)cset {
+    NSMutableArray<NSString *> *r = [NSMutableArray array];
+    NSRange range = NSMakeRange(0, str.length);
+//    NSUInteger zerolengths = 0;
+    
+    NSCharacterSet *icset = cset.invertedSet;
+    
+    while (range.length > 0) {
+        NSCharacterSet *set = (r.count%2 == 0)? cset : icset;
+        
+        NSRange rr = NSMakeRange(range.location, 0);
+        while (rr.location+rr.length < str.length && [set characterIsMember:[str characterAtIndex:rr.location+rr.length]])
+            ++rr.length;
+        
+        if (rr.length == 0) {
+            [r addObject:@""];
+//            ++zerolengths;
+        }
+        else {
+            [r addObject:[str substringWithRange:rr]];
+            range.location += rr.length;
+            range.length -= rr.length;
+//            zerolengths = 0;
+        }
+        
+//        if (zerolengths >= 2)
+//            break;
+    }
+    
+    if (range.length > 0)
+        [r addObject:[str substringWithRange:range]];
+    
+    return r;
+}
+
 - (void)awakeFromNib {
 //    [_pdfView setDisplayMode:kPDFDisplaySinglePage];
-    _pdfView.autoScales = YES;
+//    _pdfView.autoScales = YES;
     
 //    _pdfView.scaleFactor = _pdfView.scaleFactorForSizeToFit;
 	[self awakeColor];
     
     self.familiesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] ];
     
+    NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"0123456789."];
+//    NSArray<NSCharacterSet *> *sets = = @[ set, set.invertedSet ];
+    
     self.offsetsArrayController.sortDescriptors = self.sizesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES comparator:^NSComparisonResult(NSString *s1, NSString *s2) {
-        unichar c10 = [s1 characterAtIndex:0];
-        if (c10 >= '0' && c10 <= '9' && s1.floatValue == s2.floatValue) { // same numeric value, sort '00' before '0'
-            if (s1.length > s2.length)
-                return NSOrderedAscending;
-             if (s1.length < s2.length)
-                return NSOrderedDescending;
-            return NSOrderedSame;
+        NSArray<NSString *> *a1 = [ArthroplastyTemplatesWindowController sizeComponents:s1 set:set];
+        NSArray<NSString *> *a2 = [ArthroplastyTemplatesWindowController sizeComponents:s2 set:set];
+        
+        for (NSUInteger i = 0; i < a1.count && i < a2.count; ++i) {
+            if (a1[i].length && a2[i].length) {
+                unichar c0 = [a1[i] characterAtIndex:0];
+                if ([set characterIsMember:c0] && a1[i].floatValue == a2[i].floatValue) { // same numeric value, sort '00' before '0'
+                    if (a1[i].length > a2[i].length)
+                        return NSOrderedAscending;
+                    if (s1.length < s2.length)
+                        return NSOrderedDescending;
+                }
+            }
+            
+            NSComparisonResult r = [a1[i] compare:a2[i] options:NSNumericSearch|NSLiteralSearch|NSCaseInsensitiveSearch];
+            if (r != NSOrderedSame)
+                return r;
         }
         
-        return [s1 compare:s2 options:NSNumericSearch|NSLiteralSearch|NSCaseInsensitiveSearch];
+        if (a1.count < a2.count)
+            return NSOrderedAscending;
+        if (a1.count > a2.count)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
     }] ];
     
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfViewDocumentDidChange:) name:ArthroplastyTemplatingPDFViewDocumentDidChangeNotification object:_pdfView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfViewDocumentDidChange:) name:ArthroplastyTemplatingTemplateViewDocumentDidChangeNotification object:_pdfView];
     
 	[self awakeTemplates];
     
@@ -218,7 +286,7 @@
 }
 
 + (void)arrayController:(NSArrayController *)ac selectObjectClosestTo:(NSString *)value {
-#warning TODO
+//#warning TODO
 }
 
 - (NSString *)windowFrameAutosaveName {
@@ -274,25 +342,69 @@
 	[[HipArthroplastyTemplating userDefaults] setRect:rect forKey:[self idForTemplate:self.templat]];
 }
 
-+ (void)flipHorizontallyImage:(NSImage *)image {
-	// bitmap init
-	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
-	// flip
-	vImage_Buffer src, dest;
-	src.height = dest.height = bitmap.pixelsHigh;
-	src.width = dest.width = bitmap.pixelsWide;
-	src.rowBytes = dest.rowBytes = [bitmap bytesPerRow];
-	src.data = dest.data = [bitmap bitmapData];
-	vImageHorizontalReflect_ARGB8888(&src, &dest, 0L);
-	// draw
-	[image lockFocus];
-	[bitmap draw];
-	[image unlockFocus];
-	// release
-	[bitmap release];
++ (N2Image *)flipHorizontally:(N2Image *)image {
+    N2Image *oimage = [N2Image imageWithSize:image.size flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
+        [NSGraphicsContext saveGraphicsState];
+        
+        NSAffineTransform *t = [NSAffineTransform transform];
+        [t translateXBy:image.size.width yBy:0];
+        [t scaleXBy:-1 yBy:1];
+        [t concat];
+        
+        [image drawInRect:dstRect];
+
+        [NSGraphicsContext restoreGraphicsState];
+        
+        return YES;
+    }];
+    
+    oimage.inchSize = image.inchSize;
+    oimage.portion = image.portion;
+    
+    return oimage;
+    
+//    NSBitmapImageRep *irep = (id) [[image.representations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSImageRep *rep, NSDictionary *bindings) {
+//        return [rep isKindOfClass:NSBitmapImageRep.class];
+//    }]] firstObject];
+//
+//    if (!irep) {
+//        NSLog(@"Warning: unexpected input image format");
+//        return;
+//    }
+//
+////    NSBitmapImageRep *rep = [[rep copy] autorelease];
+//
+//	// flip
+//
+//    vImage_Buffer buff = { irep.bitmapData, (size_t) irep.pixelsHigh, (size_t) irep.pixelsWide, (size_t) irep.bytesPerRow };
+//    vImageHorizontalReflect_ARGB8888(&buff, &buff, 0L);
+//
+////	vImage_Buffer src, dest;
+////	src.height = dest.height = bitmap.pixelsHigh;
+////	src.width = dest.width = bitmap.pixelsWide;
+////	src.rowBytes = dest.rowBytes = [bitmap bytesPerRow];
+////	src.data = dest.data = [bitmap bitmapData];
+////	vImageHorizontalReflect_ARGB8888(&src, &dest, 0L);
+//
+////    [image removeRepresentation:irep];
+////    [image addRepresentation:rep];
 }
 
-+ (void)bitmap:(NSBitmapImageRep *)bitmap setColor:(NSColor *)color {
++ (void)rgbaCharsBitmap:(NSBitmapImageRep *)bitmap setColor:(NSColor *)color {
+//    size_t pixelsCount = bitmap.pixelsHigh*bitmap.pixelsWide;
+//    uint8_t *pixels = bitmap.bitmapData, *pixel = pixels;
+//
+//
+//
+//    for (size_t i = 0; i < pixelsCount; ++i) {
+//        if (pixel[0] != 0) { // RGBA
+//            uint8 val = ((uint16_t)pixel[0] + (uint16_t)pixel[1] + (uint16_t)pixel[2])/3;
+//            int pixel[1]
+//        }
+//
+//        pixel += 4;
+//    }
+    
     NSColorSpace *colorSpace = [bitmap colorSpace];
     size_t spp = [bitmap samplesPerPixel];
     NSUInteger samples[spp];
@@ -321,7 +433,7 @@
 }
 
 - (N2Image *)templateImage:(ArthroplastyTemplate *)templat entirePageSizePixels:(NSSize)size color:(NSColor *)color {
-	N2Image *image = [[N2Image alloc] initWithContentsOfFile:[templat pdfPathForProjection:_projection]];
+	N2Image *image = [[[N2Image alloc] initWithContentsOfFile:[templat pdfPathForProjection:_projection]] autorelease];
 //    image.size *= templat.scale;
     
 	NSSize imageSize = [image size];
@@ -338,28 +450,30 @@
 	// extract selected part
 	NSRect sel; if ([self selectionForTemplate:templat into:&sel]) {
 		sel = NSMakeRect(std::floor(sel.origin.x*size.width), std::floor(sel.origin.y*size.height), std::ceil(sel.size.width*size.width), std::ceil(sel.size.height*size.height));
-		N2Image *temp = [image crop:sel];
-		[image release];
-		image = [temp retain];
+		image = [image crop:sel];
 	}
 	
 	if ([self mustFlipHorizontally:templat])
-		[[self class] flipHorizontallyImage:image];
+		image = [self.class flipHorizontally:image];
 
-	N2Image *temp = [[N2Image alloc] initWithSize:[image size] inches:[image inchSize] portion:[image portion]];
-	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
+	N2Image *temp = [[[N2Image alloc] initWithSize:image.size inches:image.inchSize portion:image.portion] autorelease];
+    
+//	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
+    NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height
+                                                                     bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO
+                                                                    colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:4*size.width bitsPerPixel:32] autorelease];
+    [NSGraphicsContext saveGraphicsState];
+    [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:bitmap]];
+    [image drawInRect:NSMakeRect(0, 0, size.width, size.height)];
+    [NSGraphicsContext restoreGraphicsState];
 
-	[bitmap detectAndApplyBorderTransparency:8];
+	[bitmap ArthroplastyTemplating_detectAndApplyBorderTransparency:8];
 	if (color)
-		[[self class] bitmap:bitmap setColor:color]; // [bitmap setColor:color];
+		[[self class] rgbaCharsBitmap:bitmap setColor:color]; // [bitmap setColor:color];
 
 	[temp addRepresentation:bitmap];
-	[bitmap release];
 	
-	[image release];
-	image = temp;
-
-	return [image autorelease];
+	return temp;
 }
 
 - (N2Image *)templateImage:(ArthroplastyTemplate *)templat entirePageSizePixels:(NSSize)size {
@@ -427,7 +541,7 @@
 
 - (ROI *)createROIFromTemplate:(ArthroplastyTemplate *)templat inViewer:(ViewerController *)destination centeredAt:(NSPoint)p {
 	N2Image *image = [self templateImage:templat entirePageSizePixels:NSMakeSize(0,1000)]; // TODO: N -> adapted size
-    
+
    // NSBitmapImageRep *bitmap = [[image representations] objectAtIndex:0];
 //    NSSize pixelSize = NSMakeSize(bitmap.pixelsWide, bitmap.pixelsHigh);
 	
@@ -476,30 +590,31 @@
 		[[newLayer points] addObject:[MyPoint point:point]];
 	}
 	
-    // proximal-distal magnets, index 11 for STEM_DISTAL_TO_PROXIMAL_COMP // was: proximal-distal magnets, indexes 11, 12, 13, 14 for A, A2, B, B2; currently only A and A2 seem to be used
-    {
+	// proximal-distal magnets, index 11 for STEM_DISTAL_TO_PROXIMAL_COMP
+	{
         NSPoint point = NSZeroPoint;
         [templat stemDistalToProximalComp:&point forProjection:_projection];
-        point = [image convertPointFromPageInches:point];
-        if ([self mustFlipHorizontally:templat])
-            point.x = imageSize.width-point.x;
-        point.y = imageSize.height-point.y;
-        point = point/imageSize*layerSize;
-        [[newLayer points] addObject:[MyPoint point:point]];
+		point = [image convertPointFromPageInches:point];
+		if ([self mustFlipHorizontally:templat])
+			point.x = imageSize.width-point.x;
+		point.y = imageSize.height-point.y;
+		point = point/imageSize*layerSize;
+		[[newLayer points] addObject:[MyPoint point:point]];
 	}
 	
 	[newLayer roiMove:p-layerCenter :YES];
 	
 	// set the textual data
 	[newLayer setName:[templat name]];
+    
 	NSArray *lines = [templat textualData];
-	if([lines objectAtIndex:0]) [newLayer setTextualBoxLine1:[lines objectAtIndex:0]];
-	if([lines objectAtIndex:1]) [newLayer setTextualBoxLine2:[lines objectAtIndex:1]];
-	if([lines objectAtIndex:2]) [newLayer setTextualBoxLine3:[lines objectAtIndex:2]];
-	if([lines objectAtIndex:3]) [newLayer setTextualBoxLine4:[lines objectAtIndex:3]];
-	if([lines objectAtIndex:4]) [newLayer setTextualBoxLine5:[lines objectAtIndex:4]];
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:newLayer userInfo: nil];
+	[newLayer setTextualBoxLine1:((lines.count > 0)? lines[0] : nil)];
+	[newLayer setTextualBoxLine2:((lines.count > 1)? lines[1] : nil)];
+	[newLayer setTextualBoxLine3:((lines.count > 2)? lines[2] : nil)];
+	[newLayer setTextualBoxLine4:((lines.count > 3)? lines[3] : nil)];
+	[newLayer setTextualBoxLine5:((lines.count > 4)? lines[4] : nil)];
+    
+	[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:newLayer userInfo:nil];
 	
 	return newLayer;
 }
@@ -518,9 +633,10 @@
     [[[operation draggingPasteboard] dataForType:@"ArthroplastyTemplate*"] getBytes:&templat length:sizeof(ArthroplastyTemplate *)];
 
 	// find the location of the mouse in the OpenGL view
-	NSPoint openGLLocation = [[destination imageView] ConvertFromNSView2GL:[[destination imageView] convertPoint: [destination.imageView convertPoint: [NSEvent mouseLocation] fromView: nil] fromView:NULL]];
-	
-	[self createROIFromTemplate:templat inViewer:destination centeredAt:openGLLocation];
+//	NSPoint openGLLocation = [[destination imageView] ConvertFromNSView2GL:[[destination imageView] convertPoint: [destination.view convertPoint: [NSEvent mouseLocation] fromView: nil] fromView:NULL]];
+    NSPoint dcmMousePoint = [destination.imageView ConvertFromNSView2GL:[destination.imageView convertPoint:[destination.imageView.window convertRectFromScreen:NSMakeRect([NSEvent mouseLocation], NSZeroSize)].origin fromView:NULL]];
+
+	[self createROIFromTemplate:templat inViewer:destination centeredAt:dcmMousePoint];
 	
 	[[destination window] makeKeyWindow];
 	

@@ -1,5 +1,5 @@
 //
-//  ZimmerTemplate.h
+//  InfoTxtArthroplastyTemplate.h
 //  HipArthroplastyTemplating
 //  Created by Joris Heuberger on 19/03/07.
 //  Copyright 2007-2016 OsiriX Team
@@ -9,10 +9,10 @@
 #import <Cocoa/Cocoa.h>
 #import "ArthroplastyTemplate.h"
 
-@interface InfoTxtTemplate : ArthroplastyTemplate {
+@interface InfoTxtArthroplastyTemplate : ArthroplastyTemplate {
 	NSDictionary *_properties;
 }
 
-- (id)initFromFileAtPath:(NSString *)path;
+- (instancetype)initFromFileAtPath:(NSString *)path;
 
 @end

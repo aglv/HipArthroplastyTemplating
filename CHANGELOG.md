@@ -1,3 +1,11 @@
+## 3.0
+- macOS 10.13 required
+- better suppoort for modular stem templates (proximal+distal)
+
+
+## 2.9.2
+- added Medacta M-Vizion Monobloc STD and LAT
+
 ## v2.9.1
 - added Medacta Quadra-P Collared
 
@@ -30,7 +38,8 @@
 ## v2.7.1
 - fixed Medacta Mpact & AMIStem H Collared templates
 - added Mathys templates
-## v2.7 (private release)
+
+## v2.7 (unreleased)
 - fixed some warnings
 - changed threshold calculation for assisted calibration
 - fixed wizard release bug
