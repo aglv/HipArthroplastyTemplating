@@ -17,6 +17,7 @@
 #import <OsiriXAPI/NSImage+N2.h>
 #import <OsiriXAPI/N2Operators.h>
 #import <OsiriXAPI/Notifications.h>
+#import <OsiriXAPI/N2Debug.h>
 #pragma clang diagnostic pop
 
 #import "ArthroplastyTemplateFamily.h"
@@ -206,6 +207,8 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     if (context != ArthroplastyTemplatesWindowController.class)
         return [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    
+    DLog(@"change in %@", keyPath);
     
     if (object == self.familiesArrayController && [keyPath isEqualToString:@"selection"]) {
         self.family = [self.familiesArrayController.selectedObjects.firstObject isKindOfClass:NSNull.class]? nil : self.familiesArrayController.selectedObjects.firstObject;

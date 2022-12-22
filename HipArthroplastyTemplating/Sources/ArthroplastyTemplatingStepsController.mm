@@ -41,7 +41,15 @@
 #define kInvalidMagnification 0
 NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 
-@interface ArthroplastyTemplatingStepsController ()
+typedef NSInteger ArthroplastyTemplatingLayerReplacementMode NS_TYPED_ENUM;
+static ArthroplastyTemplatingLayerReplacementMode const InvalidArthroplastyTemplatingLayerReplacementMode = 0;
+static ArthroplastyTemplatingLayerReplacementMode const ArthroplastyTemplatingLayerReplacementModeCup = 1;
+static ArthroplastyTemplatingLayerReplacementMode const ArthroplastyTemplatingLayerReplacementModeStem = 2;
+static ArthroplastyTemplatingLayerReplacementMode const ArthroplastyTemplatingLayerReplacementModeDistalStem = 3;
+
+@interface ArthroplastyTemplatingStepsController () {
+    ArthroplastyTemplatingLayerReplacementMode _replacingMode;
+}
 
 - (void)adjustStemToCup:(NSInteger)index;
 + (ArthroplastyTemplatingStepsController *)controllerForROI:(ROI *)roi;
@@ -228,6 +236,110 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 #pragma mark Link to OsiriX
+
+- (void)populateViewerContextualMenu:(NSMenu *)menu forROI:(ROI *)roi {
+    if (!roi)
+        return;
+    
+    NSInteger i = 1; // first item (index 0) is the ROI NAME
+    
+    if (roi == _cupLayer) {
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:i++];
+        [menu insertItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@: %@", nil), NSLocalizedString(@"Cup", nil), _cupTemplate.name] action:nil keyEquivalent:@"" atIndex:i++];
+        [self insertOtherItemsMenu:menu mode:ArthroplastyTemplatingLayerReplacementModeCup atIndex:&i];
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:i++];
+    }
+    else if (roi == _stemLayer) {
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:i++];
+        NSString *component = _stemTemplate.isProximal? NSLocalizedString(@"Proximal Body", nil) : NSLocalizedString(@"Stem", nil);
+        [menu insertItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@: %@", nil), component, _stemTemplate.name] action:nil keyEquivalent:@"" atIndex:i++];
+        [self insertOtherItemsMenu:menu mode:ArthroplastyTemplatingLayerReplacementModeStem atIndex:&i];
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:i++];
+    }
+    else if (roi == _distalStemLayer) {
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:i++];
+        [menu insertItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@: %@", nil), NSLocalizedString(@"Stem", nil), _distalStemTemplate.name] action:nil keyEquivalent:@"" atIndex:i++];
+        [self insertOtherItemsMenu:menu mode:ArthroplastyTemplatingLayerReplacementModeDistalStem atIndex:&i];
+        [menu insertItem:[NSMenuItem separatorItem] atIndex:i++];
+    }
+}
+
+- (void)insertOtherItemsMenu:(NSMenu *)menu mode:(ArthroplastyTemplatingLayerReplacementMode)mode atIndex:(NSInteger *)index {
+    NSMenuItem *mi = [menu insertItemWithTitle:NSLocalizedString(@"Switch Sizes", nil) action:nil keyEquivalent:@"" atIndex:*index];
+    if (![self populateOtherSizesMenu:(mi.submenu = [[[NSMenu alloc] initWithTitle:@""] autorelease]) mode:mode])
+        [menu removeItem:mi];
+    else ++(*index);
+//    if ([self insertOtherFamiliesMenu:menu item:item atIndex:*i])
+//        ++(*i);
+//    if ([self insertOtherBrandsMenu:menu item:item atIndex:*i])
+//        ++(*i);
+}
+
+- (ArthroplastyTemplate *)itemForViewerContextualMenuMode:(ArthroplastyTemplatingLayerReplacementMode)mode {
+    switch (mode) {
+        case ArthroplastyTemplatingLayerReplacementModeCup: return _cupTemplate;
+        case ArthroplastyTemplatingLayerReplacementModeStem: return _stemTemplate;
+        case ArthroplastyTemplatingLayerReplacementModeDistalStem: return _distalStemTemplate;
+        default: return nil;
+    }
+}
+
+- (ROI *)layerForViewerContextualMenuMode:(ArthroplastyTemplatingLayerReplacementMode)mode {
+    switch (mode) {
+        case ArthroplastyTemplatingLayerReplacementModeCup: return _cupLayer;
+        case ArthroplastyTemplatingLayerReplacementModeStem: return _stemLayer;
+        case ArthroplastyTemplatingLayerReplacementModeDistalStem: return _distalStemLayer;
+        default: return nil;
+    }
+}
+
+- (ArthroplastyTemplatingLayerReplacementMode)modeForLayer:(ROI *)roi {
+    if (roi == _cupLayer) return ArthroplastyTemplatingLayerReplacementModeCup;
+    if (roi == _stemLayer) return ArthroplastyTemplatingLayerReplacementModeStem;
+    if (roi == _distalStemLayer) return ArthroplastyTemplatingLayerReplacementModeDistalStem;
+    return InvalidArthroplastyTemplatingLayerReplacementMode;
+}
+
+- (BOOL)populateOtherSizesMenu:(NSMenu *)menu mode:(ArthroplastyTemplatingLayerReplacementMode)mode {
+    menu.autoenablesItems = NO;
+    
+    ArthroplastyTemplate *item = [self itemForViewerContextualMenuMode:mode];
+    ArthroplastyTemplateFamily *family = [item family];
+    
+    for (ArthroplastyTemplate *t in family.templates) {
+        NSMenuItem *mi = [menu addItemWithTitle:t.size action:@selector(replaceTemplateContextualMenuAction:) keyEquivalent:@""];
+        mi.target = self;
+        mi.representedObject = @[ @(mode), t ];
+        if (t == item) {
+            mi.state = NSControlStateValueOn;
+            mi.enabled = NO;
+        }
+    }
+    
+    return YES;
+}
+
+- (ROI *)cupLayer {
+    return _cupLayer;
+}
+
+- (ROI *)stemLayer {
+    return _stemLayer;
+}
+
+- (ROI *)distalStemLayer {
+    return _distalStemLayer;
+}
+
+- (ROI *)femurLayer {
+    return _femurLayer;
+}
+
+- (void)replaceTemplateContextualMenuAction:(NSMenuItem *)mi {
+    ArthroplastyTemplatingLayerReplacementMode mode = [mi.representedObject[0] integerValue];
+    ArthroplastyTemplate *t = mi.representedObject[1];
+    [self replaceLayer:[self layerForViewerContextualMenuMode:mode] with:t];
+}
 
 - (void)removeRoiFromViewer:(ROI *)roi {
 	if (!roi) return;
@@ -437,7 +549,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 				[roi setDisplayTextualData:NO];
 			}
         }
-		if ([_steps currentStep] == _stepCup)
+		if ([_steps currentStep] == _stepCup || _replacingMode == ArthroplastyTemplatingLayerReplacementModeCup)
         {
 			if (!_cupLayer && [roi type] == tLayerROI) {
 				_cupLayer = roi;
@@ -445,21 +557,23 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 			}
         }
         
-		if ([_steps currentStep] == _stepStem) {
-			if (!_stemLayer && [roi type] == tLayerROI) {
-				_stemLayer = roi;
-				_stemTemplate = [[_plugin templatesWindowController] templateAtPath:[roi layerReferenceFilePath]];
-				NSArray<NSValue *> *points = [_stemTemplate headRotationPointsForProjection:ArthroplastyTemplateAnteriorPosteriorProjection];
-				for (int i = 0; i < 5; ++i) // S = 0 to XXL = 4
-					[[_neckSizePopUpButton itemAtIndex:i] setHidden:NSEqualPoints(points[i].pointValue, NSZeroPoint)];
-                if ([_stemTemplate isProximal] && !_distalStemLayer)
-                    [[_plugin templatesWindowController] setFilter:@"Distal Stem"];
-			}
-            if ([_stemTemplate isProximal] && !_distalStemLayer && [roi type] == tLayerROI) {
-                ArthroplastyTemplate *t = [[_plugin templatesWindowController] templateAtPath:[roi layerReferenceFilePath]];
-                if ([t isDistal]) {
-                    _distalStemLayer = roi;
-                    _distalStemTemplate = t;
+		if ([_steps currentStep] == _stepStem || (_replacingMode == ArthroplastyTemplatingLayerReplacementModeStem || _replacingMode == ArthroplastyTemplatingLayerReplacementModeDistalStem)) {
+            if ([roi type] == tLayerROI) {
+                if (!_stemLayer) {
+                    _stemLayer = roi;
+                    _stemTemplate = [[_plugin templatesWindowController] templateAtPath:[roi layerReferenceFilePath]];
+                    NSArray<NSValue *> *points = [_stemTemplate headRotationPointsForProjection:ArthroplastyTemplateAnteriorPosteriorProjection];
+                    for (int i = 0; i < 5; ++i) // S = 0 to XXL = 4
+                        [[_neckSizePopUpButton itemAtIndex:i] setHidden:NSEqualPoints(points[i].pointValue, NSZeroPoint)];
+                    if ([_stemTemplate isProximal] && !_distalStemLayer)
+                        [[_plugin templatesWindowController] setFilter:@"Distal Stem"];
+                }
+                if ([_stemTemplate isProximal] && !_distalStemLayer && [roi type] == tLayerROI) {
+                    ArthroplastyTemplate *t = [[_plugin templatesWindowController] templateAtPath:[roi layerReferenceFilePath]];
+                    if ([t isDistal]) {
+                        _distalStemLayer = roi;
+                        _distalStemTemplate = t;
+                    }
                 }
             }
         }
@@ -472,7 +586,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 		[self updateLegInequality];
 	}
 
-	if (roi == _cupLayer && [_cupLayer.points[0] point] != NSZeroPoint)
+	if (roi == _cupLayer && [_cupLayer.points[0] point] != NSZeroPoint && roi.points.count > 4)
 		if (!_cupRotated && _cupLayer.points.count >= 6) {
 			_cupRotated = YES;
 			if ([_cupLayer pointAtIndex:4].x < [[_viewerController.imageView curDCM] pwidth]/2)
@@ -615,27 +729,33 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	if (roi == _cupLayer) {
 		_cupLayer = nil;
 		_cupTemplate = nil;
-		[_stepCup setDone:NO];
-		[_steps setCurrentStep:_stepCup];
-		_cupRotated = NO;
+        if (_replacingMode != ArthroplastyTemplatingLayerReplacementModeCup) {
+            [_stepCup setDone:NO];
+            [_steps setCurrentStep:_stepCup];
+        }
+        _cupRotated = NO;
 	}
 	
 	if (roi == _stemLayer) {
 		_stemLayer = nil;
 		_stemTemplate = nil;
-        _distalStemLayer = nil;
-        _distalStemTemplate = nil;
-		[_stepStem setDone:NO];
-		[_steps setCurrentStep:_stepStem];
-		_stemRotated = NO;
-		[_neckSizePopUpButton setEnabled:NO];
+        if (_replacingMode != ArthroplastyTemplatingLayerReplacementModeStem) {
+            _distalStemLayer = nil;
+            _distalStemTemplate = nil;
+            [_stepStem setDone:NO];
+            [_steps setCurrentStep:_stepStem];
+            _stemRotated = NO;
+            [_neckSizePopUpButton setEnabled:NO];
+        }
 	}
-    
+        
     if (roi == _distalStemLayer) {
         _distalStemLayer = nil;
         _distalStemTemplate = nil;
-		[_stepStem setDone:NO];
-		[_steps setCurrentStep:_stepStem];
+        if (_replacingMode != ArthroplastyTemplatingLayerReplacementModeDistalStem) {
+            [_stepStem setDone:NO];
+            [_steps setCurrentStep:_stepStem];
+        }
     }
 	
 	if (roi == _infoBox)
@@ -1027,10 +1147,14 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 - (CGFloat)estimateRotationOfROI:(ROI *)roi {
-	return NSAngle(NSMakeVector([roi.points[4] point], [roi.points[5] point]));
+    if (roi.points.count > 5)
+        return NSAngle(NSMakeVector([roi.points[4] point], [roi.points[5] point]));
+    else return NSAngle(NSMakeVector([roi.points[0] point], [roi.points[1] point]));
 }
 
 - (void)replaceLayer:(ROI *)roi with:(ArthroplastyTemplate *)t {
+    _replacingMode = [self modeForLayer:roi];
+    
 	NSPoint center = [roi.points[4] point];
 	CGFloat angle = [self estimateRotationOfROI:roi];
 	NSTimeInterval group = [roi groupID];
@@ -1038,6 +1162,8 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 	roi = [[_plugin templatesWindowController] createROIFromTemplate:t inViewer:_viewerController centeredAt:center];
 	[roi rotate:(angle-[self estimateRotationOfROI:roi])/M_PI*180 :center];
 	[roi setGroupID:group];
+    
+    _replacingMode = InvalidArthroplastyTemplatingLayerReplacementMode;
 }
 
 - (void)rotateLayer:(ROI *)roi by:(float)degs {
@@ -1200,7 +1326,7 @@ NSString * const PlannersNameUserDefaultKey = @"Planner's Name";
 }
 
 - (void)adjustDistalToProximal {
-	if (!_stemLayer || !_distalStemLayer || [[_distalStemLayer points] count] < 12)
+	if (!_stemLayer || !_distalStemLayer || [[_distalStemLayer points] count] < 12 || _stemLayer.points.count < 12)
         return;
     
     // mating is done based on point A (and A2)... The purpose of points B and B2 is unknown (we only were able to check this on Revitan stems)

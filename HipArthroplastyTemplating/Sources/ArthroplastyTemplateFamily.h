@@ -9,12 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import "ArthroplastyTemplate.h"
 
-
 @interface ArthroplastyTemplateFamily : NSObject {
-	NSMutableArray *_templates;
+	NSMutableArray<ArthroplastyTemplate *> *_templates;
 }
 
-@property (readonly) NSArray *templates;
+@property (readonly) NSArray<ArthroplastyTemplate *> *templates;
 @property (readonly) NSString *fixation, *group, *manufacturer, *modularity, *name, *patientSide, *surgery, *type;
 
 - (id)initWithTemplate:(ArthroplastyTemplate *)templat;

@@ -15,6 +15,7 @@
 #import <OsiriXAPI/BrowserController.h>
 #import <OsiriXAPI/Notifications.h>
 #import <OsiriXAPI/O2ViewerThumbnailsMatrix.h>
+#import <OsiriXAPI/N2Debug.h>
 //#import <OsiriXAPI/NSPanel+N2.h>
 #pragma clang diagnostic pop
 
@@ -127,6 +128,8 @@ static HipArthroplastyTemplating *_Plugin = nil;
     method_exchangeImplementations(class_getInstanceMethod(DCMView.class, @selector(acceptsFirstMouse:)), class_getInstanceMethod(DCMView.class, @selector(HipArthroplastyTemplating_acceptsFirstMouse:)));
     
     method_exchangeImplementations(class_getInstanceMethod(ViewerController.class, @selector(changeImageData::::)), class_getInstanceMethod(ViewerController.class, @selector(HipArthroplastyTemplating_changeImageData::::)));
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeViewerContextualMenuNotification:) name:@"OsirixPopulatedContextualMenuNotification" object:nil];
     
     // we removed the HATROI class and OsiriX doesn't like it
     [NSUnarchiver decodeClassName:@"HATROI" asClassName:@"ROI"];
@@ -256,6 +259,65 @@ static HipArthroplastyTemplating *_Plugin = nil;
     else dispatch_sync(dispatch_get_main_queue(), block);
 }
 
+- (void)observeViewerContextualMenuNotification:(NSNotification *)note {
+    ViewerController *viewer = note.userInfo[ViewerController.className];
+    ROI *roi = note.userInfo[ROI.className];
+    NSMenu *menu = note.object;
+    
+    DCMView *view = nil;
+    if ([viewer isKindOfClass:DCMView.class]) {
+        view = (id)viewer;
+        viewer = [view viewer];
+    }
+    
+    if (!view)
+        view = [viewer imageView];
+    
+    if (![viewer isKindOfClass:ViewerController.class]) {
+        DLog(@"PopulatedContextualMenuNotification with unexpected non-viewer object of class %@", viewer.className);
+        return;
+    }
+    
+    if (![menu isKindOfClass:NSMenu.class]) {
+        DLog(@"PopulatedContextualMenuNotification with unexpected non-menu object of class %@", menu.className);
+        return;
+    }
+    
+    if (roi && ![roi isKindOfClass:ROI.class]) {
+        DLog(@"PopulatedContextualMenuNotification with unexpected non-roi object of class %@", roi.className);
+        return;
+    }
+
+    ArthroplastyTemplatingStepsController *controller = [self windowControllerForViewer:viewer];
+    if (!controller)
+        return;
+
+    if (roi && roi == controller.femurLayer)
+        roi = nil;
+        
+    NSMutableArray<ROI *> *rois = [NSMutableArray array];
+    
+    if (roi) {
+        [rois addObject:roi];
+    }
+    else if (!roi && view.selectedROIs.count == 1) {
+        [rois addObject:view.selectedROIs.firstObject];
+    }
+    else {
+        NSMutableArray<ROI *> *layers = [NSMutableArray array];
+        if (controller.distalStemLayer) [layers addObject:controller.distalStemLayer];
+        if (controller.stemLayer) [layers addObject:controller.stemLayer];
+        if (controller.cupLayer) [layers addObject:controller.cupLayer];
+        
+        for (ROI *layer in layers)
+            if ([view.selectedROIs containsObject:layer])
+                [rois addObject:layer];
+    }
+    
+    for (ROI *r in rois)
+        [controller populateViewerContextualMenu:menu forROI:r];
+}
+
 @end
 
 @implementation DCMView (HipArthroplastyTemplating)
@@ -302,7 +364,6 @@ static HipArthroplastyTemplating *_Plugin = nil;
             } break;
         }
     }];
-
 }
 
 @end

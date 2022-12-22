@@ -17,16 +17,59 @@
 	
 	IBOutlet N2Steps *_steps;
 	IBOutlet N2StepsView *_stepsView;
-	N2Step *_stepCalibration, *_stepAxes, *_stepLandmarks, *_stepCutting, *_stepCup, *_stepStem, *_stepPlacement, *_stepSave;
-	IBOutlet NSView *_viewCalibration, *_viewAxes, *_viewLandmarks, *_viewCutting, *_viewCup, *_viewStem, *_viewPlacement, *_viewSave;
-	IBOutlet NSButton *doneCalibration, *doneAxes, *doneLandmarks, *doneCutting, *doneCup, *doneStem, *donePlacement, *doneSave;
+    
+    N2Step *_stepCalibration;
+    N2Step *_stepAxes;
+    N2Step *_stepLandmarks;
+    N2Step *_stepCutting;
+    N2Step *_stepCup;
+    N2Step *_stepStem;
+    N2Step *_stepPlacement;
+    N2Step *_stepSave;
+    
+    IBOutlet NSView *_viewCalibration;
+    IBOutlet NSView *_viewAxes;
+    IBOutlet NSView *_viewLandmarks;
+    IBOutlet NSView *_viewCutting;
+    IBOutlet NSView *_viewCup;
+    IBOutlet NSView *_viewStem;
+    IBOutlet NSView *_viewPlacement;
+    IBOutlet NSView *_viewSave;
+    
+    IBOutlet NSButton *doneCalibration;
+    IBOutlet NSButton *doneAxes;
+    IBOutlet NSButton *doneLandmarks;
+    IBOutlet NSButton *doneCutting;
+    IBOutlet NSButton *doneCup;
+    IBOutlet NSButton *doneStem;
+    IBOutlet NSButton *donePlacement;
+    IBOutlet NSButton *doneSave;
 	
 	NSMutableSet *_knownRois;
-	ROI *_magnificationLine, *_horizontalAxis, *_femurAxis, *_landmark1, *_landmark2, *_femurRoi;
-	ROI *_landmark1Axis, *_landmark2Axis, *_legInequality, *_originalLegInequality, *_originalFemurOpacityLayer, *_femurLayer, *_cupLayer, *_stemLayer, *_distalStemLayer, *_infoBox;
-	ROI *_femurLandmark, *_femurLandmarkAxis, *_femurLandmarkOther, *_femurLandmarkOriginal;
+    ROI *_magnificationLine;
+    ROI *_horizontalAxis;
+    ROI *_femurAxis;
+    ROI *_landmark1;
+    ROI *_landmark2;
+    ROI *_femurRoi;
+	ROI *_landmark1Axis;
+    ROI *_landmark2Axis;
+    ROI *_legInequality;
+    ROI *_originalLegInequality;
+    ROI *_originalFemurOpacityLayer;
+    ROI *_femurLayer;
+    ROI *_cupLayer;
+    ROI *_stemLayer;
+    ROI *_distalStemLayer;
+    ROI *_infoBox;
+	ROI *_femurLandmark;
+    ROI *_femurLandmarkAxis;
+    ROI *_femurLandmarkOther;
+    ROI *_femurLandmarkOriginal;
 	
-	CGFloat _legInequalityLength, _originalLegInequalityLength, _lateralOffsetChange;
+    CGFloat _legInequalityLength;
+    CGFloat _originalLegInequalityLength;
+    CGFloat _lateralOffsetChange;
 	
 	// calibration
 	IBOutlet NSMatrix *_magnificationRadio;
@@ -67,11 +110,17 @@
     BOOL _computeValuesGuard;
 }
 
-
 @property(readonly) ViewerController *viewerController;
 //@property(readonly) CGFloat magnification;
 
 - (id)initWithPlugin:(HipArthroplastyTemplating *)plugin viewerController:(ViewerController *)viewerController;
+
+- (void)populateViewerContextualMenu:(NSMenu *)menu forROI:(ROI *)roi;
+
+- (ROI *)cupLayer;
+- (ROI *)stemLayer;
+- (ROI *)distalStemLayer;
+- (ROI *)femurLayer;
 
 #pragma mark Templates
 
