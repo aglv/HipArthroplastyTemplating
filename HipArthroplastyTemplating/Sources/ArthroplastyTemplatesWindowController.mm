@@ -211,17 +211,23 @@
     DLog(@"change in %@", keyPath);
     
     if (object == self.familiesArrayController && [keyPath isEqualToString:@"selection"]) {
-        self.family = [self.familiesArrayController.selectedObjects.firstObject isKindOfClass:NSNull.class]? nil : self.familiesArrayController.selectedObjects.firstObject;
+        id family = [self.familiesArrayController.selectedObjects.firstObject isKindOfClass:NSNull.class]? nil : self.familiesArrayController.selectedObjects.firstObject;
+        if (self.family != family)
+            self.family = family;
         return;
     }
     
     if (object == self.offsetsArrayController && [keyPath isEqualToString:@"selection"]) {
-        self.offset = [self.offsetsArrayController.selectedObjects.firstObject isKindOfClass:NSNull.class]? nil : self.offsetsArrayController.selectedObjects.firstObject;
+        id offset = [self.offsetsArrayController.selectedObjects.firstObject isKindOfClass:NSNull.class]? nil : self.offsetsArrayController.selectedObjects.firstObject;
+        if (self.offset != offset)
+            self.offset = offset;
         return;
     }
     
     if (object == self.sizesArrayController && [keyPath isEqualToString:@"selection"]) {
-        self.size = [self.sizesArrayController.selectedObjects.firstObject isKindOfClass:NSNull.class]? nil : self.sizesArrayController.selectedObjects.firstObject;
+        id size = [self.sizesArrayController.selectedObjects.firstObject isKindOfClass:NSNull.class]? nil : self.sizesArrayController.selectedObjects.firstObject;
+        if (self.size != size)
+            self.size = size;
         return;
     }
 
@@ -252,7 +258,9 @@
     }
     
     if ([keyPath isEqualToString:@"size"]) {
-        self.templat = [self.family templateMatchingOffset:self.offset size:self.size side:self.side];
+        auto templat = [self.family templateMatchingOffset:self.offset size:self.size side:self.side];
+        if (self.templat != templat)
+            self.templat = templat;
         return;
     }
     
@@ -280,7 +288,9 @@
     
     if ([@[ @"templat", @"projection" ] containsObject:keyPath]) {
         NSString *path = [self.templat pdfPathForProjection:self.projection];
-        [self.pdfView setDocument:(path? [[[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:path]] autorelease] : nil)];
+        NSURL *url = path? [NSURL fileURLWithPath:path] : nil;
+        if (![self.pdfView.document.documentURL isEqual:url])
+            [self.pdfView setDocument:(url? [[[PDFDocument alloc] initWithURL:url] autorelease] : nil)];
     }
     
     if ([keyPath isEqualToString:@"mustFlipHorizontally"]) {
