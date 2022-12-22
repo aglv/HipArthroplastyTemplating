@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5912DF3C118F24F1007F7D40 /* Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5912DF3B118F24F1007F7D40 /* Prefix.pch */; };
 		5912DF4C118F26B0007F7D40 /* HipArthroplastyTemplating.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 5912DF4B118F26B0007F7D40 /* HipArthroplastyTemplating.tiff */; };
 		592C9F3B0FDFAD0C00EB256B /* ArthroplastyTemplatingSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 592C9F390FDFAD0C00EB256B /* ArthroplastyTemplatingSplitView.h */; };
 		595252810FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5952527F0FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.mm */; };
@@ -65,7 +64,6 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		5912DF3B118F24F1007F7D40 /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prefix.pch; path = HipArthroplastyTemplating/Prefix.pch; sourceTree = "<group>"; };
 		5912DF4B118F26B0007F7D40 /* HipArthroplastyTemplating.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = HipArthroplastyTemplating.tiff; sourceTree = "<group>"; };
 		592C9F390FDFAD0C00EB256B /* ArthroplastyTemplatingSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArthroplastyTemplatingSplitView.h; sourceTree = "<group>"; };
 		5952527F0FDF9B06009A14DD /* ArthroplastyTemplatingUserDefaults.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ArthroplastyTemplatingUserDefaults.mm; sourceTree = "<group>"; };
@@ -131,7 +129,6 @@
 			children = (
 				7121CF681D0EFE2200D7D743 /* CHANGELOG.md */,
 				59D951DA0FCE826400509EEC /* Info.plist */,
-				5912DF3B118F24F1007F7D40 /* Prefix.pch */,
 				59D94E580FCE807D00509EEC /* Sources */,
 				59D94E910FCE81BD00509EEC /* Resources */,
 				71F4E7A41F04398A0098B24C /* Scripts */,
@@ -264,7 +261,6 @@
 				59F6A15F105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.h in Headers */,
 				59F6A17610564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.h in Headers */,
 				595B975811172AD30026B899 /* NSBitmapImageRep+ArthroplastyTemplating.h in Headers */,
-				5912DF3C118F24F1007F7D40 /* Prefix.pch in Headers */,
 				599A23CB138648C50086168F /* InfoTxtArthroplastyTemplate.h in Headers */,
 				718D0AEA159C8E9A00F27CE9 /* ArthroplastyTemplatingGeometry.h in Headers */,
 			);
@@ -304,7 +300,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1410;
+				LastUpgradeCheck = 1420;
 			};
 			buildConfigurationList = CE6A9A9408AC841300D0C1EE /* Build configuration list for PBXProject "HipArthroplastyTemplating" */;
 			compatibilityVersion = "Xcode 6.3";
@@ -503,8 +499,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = HipArthroplastyTemplating/Prefix.pch;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = HipArthroplastyTemplating/Info.plist;
@@ -573,8 +567,6 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_TRIGRAPHS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = HipArthroplastyTemplating/Prefix.pch;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = HipArthroplastyTemplating/Info.plist;
@@ -604,8 +596,6 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_TRIGRAPHS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = HipArthroplastyTemplating/Prefix.pch;
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = HipArthroplastyTemplating/Info.plist;
