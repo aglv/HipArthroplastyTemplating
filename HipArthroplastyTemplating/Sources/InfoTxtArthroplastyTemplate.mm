@@ -20,17 +20,17 @@ static id First(id a, id b) {
 	return a? a : b;
 }
 
-+ (NSArray *)templatesFromFileAtPath:(NSString *)path {
-    return @[ [[[[self class] alloc] initFromFileAtPath:path] autorelease] ];
++ (NSArray *)templatesFromFileURL:(NSURL *)fileURL {
+    return @[ [[[[self class] alloc] initWithFileURL:fileURL] autorelease] ];
 }
 
-+ (NSDictionary *)propertiesFromInfoFileAtPath:(NSString *)path {
++ (NSDictionary *)propertiesFromInfoFileAtURL:(NSURL *)fileURL {
 	NSError *error;
-	NSString *fileContent = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+	NSString *fileContent = [NSString stringWithContentsOfURL:fileURL encoding:NSUTF8StringEncoding error:&error];
 	if (!fileContent) {
-		fileContent = [NSString stringWithContentsOfFile:path encoding:NSISOLatin1StringEncoding error:&error];
+		fileContent = [NSString stringWithContentsOfURL:fileURL encoding:NSISOLatin1StringEncoding error:&error];
         if (!fileContent) {
-            NSLog(@"[InfoTxtArthroplastyTemplate propertiesFromFileInfoAtPath]: %@", error);
+            NSLog(@"[InfoTxtArthroplastyTemplate propertiesFromInfoFileAtURL]: %@", error);
 			return NULL;
 		}
 	}
@@ -63,12 +63,12 @@ static id First(id a, id b) {
 	return properties;
 }
 
-- (instancetype)initFromFileAtPath:(NSString *)path {
-    NSDictionary *properties = [[self class] propertiesFromInfoFileAtPath:path];
+- (instancetype)initWithFileURL:(NSURL *)fileURL {
+    NSDictionary *properties = [[self class] propertiesFromInfoFileAtURL:fileURL];
     if (!properties)
         return nil;
     
-    if (!(self = [super initWithPath:path]))
+    if (!(self = [super initWithFileURL:fileURL]))
         return nil;
     
     _properties = [properties retain];
@@ -81,12 +81,14 @@ static id First(id a, id b) {
 	[super dealloc];
 }
 
-- (NSString *)pdfPathForProjection:(ArthroplastyTemplateProjection)projection {
-	NSString *key = (projection == ArthroplastyTemplateAnteriorPosteriorProjection)? @"PDF_FILE_AP" : @"PDF_FILE_ML";
-	NSString *filename = [_properties objectForKey:key];
-    if (!filename)
+- (NSURL *)pdfURLForProjection:(ArthroplastyTemplateProjection)projection {
+    NSString *key = (projection == ArthroplastyTemplateAnteriorPosteriorProjection)? @"PDF_FILE_AP" : @"PDF_FILE_ML";
+    
+    NSString *path = [_properties objectForKey:key];
+    if (!path)
         return nil;
-	return [[_path stringByDeletingLastPathComponent] stringByAppendingPathComponent:filename];
+    
+    return [NSURL fileURLWithPath:path relativeToURL:_fileURL];
 }
 
 - (NSString *)prefixForProjection:(ArthroplastyTemplateProjection)projection {

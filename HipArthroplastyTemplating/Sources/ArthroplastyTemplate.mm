@@ -11,19 +11,19 @@
 @implementation ArthroplastyTemplate
 
 @synthesize family = _family;
-@synthesize path = _path;
+@synthesize fileURL = _fileURL;
 
-- (id)initWithPath:(NSString *)path {
+- (instancetype)initWithFileURL:(NSURL *)fileURL {
 	if (!(self = [super init]))
         return nil;
     
-	_path = [path retain];
+	_fileURL = [fileURL retain];
 	
     return self;
 }
 
 - (void)dealloc {
-	[_path release];
+	[_fileURL release];
     
 	[super dealloc];
 }

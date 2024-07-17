@@ -1,7 +1,7 @@
 ## v3.5
 - added Medacta M-Vizion modular stems (Straight and 4 degs)
 - added contextual menus to allow size changes
-- enhanced suppoort for modular stem templates (proximal+distal) 
+- enhanced support for modular stem templates (proximal+distal) 
 
 ## v3.0
 - macOS 10.13 required

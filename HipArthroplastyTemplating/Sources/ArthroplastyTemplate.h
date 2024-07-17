@@ -29,25 +29,25 @@ typedef NS_OPTIONS(NSUInteger, ArthroplastyTemplateSide) {
 //#define ATBothSidesMask 3
 
 @interface ArthroplastyTemplate : NSObject {
-	NSString *_path;
+	NSURL *_fileURL;
 	ArthroplastyTemplateFamily *_family;
 }
 
-@property (readonly) NSString *path;
+@property (readonly) NSURL *fileURL;
 @property (assign) ArthroplastyTemplateFamily *family;
 @property (readonly) NSString *fixation, *group, *manufacturer, *modularity, *name, *patientSide, *surgery, *type, *size, *offset, *referenceNumber, *innerDiameter;
 @property (readonly) CGFloat scale, rotation;
 @property (readonly) ArthroplastyTemplateSide side;
 
-- (id)initWithPath:(NSString *)path;
+- (instancetype)initWithFileURL:(NSURL *)fileURL;
 
 @end
 
 @interface ArthroplastyTemplate (Abstract)
 
-+ (NSArray *)templatesFromFileAtPath:(NSString *)path;
++ (NSArray *)templatesFromFileURL:(NSURL *)fileURL;
 
-- (NSString *)pdfPathForProjection:(ArthroplastyTemplateProjection)projection;
+- (NSURL *)pdfURLForProjection:(ArthroplastyTemplateProjection)projection;
 - (BOOL)origin:(NSPoint *)point forProjection:(ArthroplastyTemplateProjection)projection;
 - (BOOL)stemDistalToProximalComp:(NSPoint *)point forProjection:(ArthroplastyTemplateProjection)projection;
 - (NSArray *)textualData;

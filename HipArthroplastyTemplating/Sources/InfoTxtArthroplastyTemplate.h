@@ -13,6 +13,6 @@
 	NSDictionary *_properties;
 }
 
-- (instancetype)initFromFileAtPath:(NSString *)path;
+- (instancetype)initWithFileURL:(NSURL *)fileURL;
 
 @end

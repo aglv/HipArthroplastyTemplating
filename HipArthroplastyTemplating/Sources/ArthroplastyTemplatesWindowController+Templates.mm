@@ -89,7 +89,7 @@
             if (!isDirectory && [subpath rangeOfString:@".disabled/"].location == NSNotFound) {
                 for (NSString *ext in classes)
                     if ([[subpath pathExtension] isEqualToString:ext])
-                        [templates addObjectsFromArray:[[classes objectForKey:ext] templatesFromFileAtPath:subpath]];
+                        [templates addObjectsFromArray:[[classes objectForKey:ext] templatesFromFileURL:[NSURL fileURLWithPath:subpath isDirectory:NO]]];
             }
         }
     }
@@ -99,9 +99,9 @@
 
 - (ArthroplastyTemplate *)templateAtPath:(NSString *)path {
 	for (unsigned i = 0; i < [_templates count]; ++i)
-		if ([[[_templates objectAtIndex:i] path] isEqualToString:path])
-			return [_templates objectAtIndex:i];
-	return NULL;
+		if ([_templates[i].fileURL.path isEqualToString:path])
+			return _templates[i];
+	return nil;
 }
 
 //-(ArthroplastyTemplate *)templateAtIndex:(int)index {

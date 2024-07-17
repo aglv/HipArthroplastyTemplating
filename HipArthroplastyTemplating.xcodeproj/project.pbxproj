@@ -196,11 +196,11 @@
 			isa = PBXGroup;
 			children = (
 				71DCD7662923D60E00F0B654 /* ArthroplastyTemplatesWindow.xib */,
-				71B26E6022E7402300A7F8A9 /* ArthroplastyTemplatesWindowController+Private.h */,
 				59D94E710FCE807D00509EEC /* ArthroplastyTemplatesWindowController.h */,
+				71B26E6022E7402300A7F8A9 /* ArthroplastyTemplatesWindowController+Private.h */,
 				599572CB0FDD5170007C151F /* ArthroplastyTemplatesWindowController.mm */,
-				59F6A15D105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.h */,
 				59F6A15E105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.mm */,
+				59F6A15D105639F8008585F5 /* ArthroplastyTemplatesWindowController+Color.h */,
 				59F6A17410564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.h */,
 				59F6A17510564159008585F5 /* ArthroplastyTemplatesWindowController+Templates.mm */,
 				5995728E0FDD3E2B007C151F /* ArthroplastyTemplatingTemplateView.h */,
@@ -281,7 +281,6 @@
 				59A6368710428D88003F4069 /* Copy Frameworks */,
 				8D5B49B1048680CD000E48DA /* Sources */,
 				8D5B49B3048680CD000E48DA /* Frameworks */,
-				8D5B49B5048680CD000E48DA /* Rez */,
 				711481F31AC5676000DB7108 /* Version */,
 			);
 			buildRules = (
@@ -300,7 +299,8 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1420;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1540;
 			};
 			buildConfigurationList = CE6A9A9408AC841300D0C1EE /* Build configuration list for PBXProject "HipArthroplastyTemplating" */;
 			compatibilityVersion = "Xcode 6.3";
@@ -332,16 +332,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXRezBuildPhase section */
-		8D5B49B5048680CD000E48DA /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		597B7075111B0BC900933C30 /* Copy Templates from Home */ = {

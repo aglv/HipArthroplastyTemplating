@@ -270,7 +270,7 @@
         ArthroplastyTemplate *templat = self.templat;
         
         // available projections
-        BOOL hasML = ([templat pdfPathForProjection:ArthroplastyTemplateMedialLateralProjection] != nil);
+        BOOL hasML = ([templat pdfURLForProjection:ArthroplastyTemplateMedialLateralProjection] != nil);
         [self.projectionButtons setEnabled:hasML forSegment:1]; // segment 1 is ML
         if (!hasML)
             self.projection = ArthroplastyTemplateAnteriorPosteriorProjection;
@@ -287,8 +287,7 @@
     }
     
     if ([@[ @"templat", @"projection" ] containsObject:keyPath]) {
-        NSString *path = [self.templat pdfPathForProjection:self.projection];
-        NSURL *url = path? [NSURL fileURLWithPath:path] : nil;
+        NSURL *url = [self.templat pdfURLForProjection:self.projection];
         if (![self.pdfView.document.documentURL isEqual:url])
             [self.pdfView setDocument:(url? [[[PDFDocument alloc] initWithURL:url] autorelease] : nil)];
     }
@@ -446,7 +445,7 @@
 }
 
 - (N2Image *)templateImage:(ArthroplastyTemplate *)templat entirePageSizePixels:(NSSize)size color:(NSColor *)color {
-	N2Image *image = [[[N2Image alloc] initWithContentsOfFile:[templat pdfPathForProjection:_projection]] autorelease];
+	N2Image *image = [[[N2Image alloc] initWithContentsOfURL:[templat pdfURLForProjection:_projection]] autorelease];
 //    image.size *= templat.scale;
     
 	NSSize imageSize = [image size];
@@ -562,7 +561,7 @@
 //	if (!magnification) magnification = 1;
 	float pixSpacing = (1.0 / [image resolution] * 25.4); // image is in 72 dpi, we work in millimeters
 	
-	ROI *newLayer = [destination addLayerRoiToCurrentSliceWithImage:image referenceFilePath:[templat path] layerPixelSpacingX:pixSpacing layerPixelSpacingY:pixSpacing];
+	ROI *newLayer = [destination addLayerRoiToCurrentSliceWithImage:image referenceFilePath:templat.fileURL.path layerPixelSpacingX:pixSpacing layerPixelSpacingY:pixSpacing];
 	
 //	[[newLayer pix] setPixel ];
 	
