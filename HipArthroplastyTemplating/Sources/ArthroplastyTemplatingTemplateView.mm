@@ -109,7 +109,7 @@ NSString * const ArthroplastyTemplatingTemplateViewDocumentDidChangeNotification
 }
 
 - (void)enhanceSelection {
-	N2Image *image = [[[N2Image alloc] initWithContentsOfFile:[self.document.documentURL path]] autorelease];
+	N2Image *image = [[[N2Image alloc] initWithContentsOfFile:self.document.documentURL.path] autorelease];
 	
 	NSSize size = [image size];
 	NSRect sel = _selectedRect;

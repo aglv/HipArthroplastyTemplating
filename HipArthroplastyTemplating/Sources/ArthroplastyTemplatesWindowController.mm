@@ -445,7 +445,7 @@
 }
 
 - (N2Image *)templateImage:(ArthroplastyTemplate *)templat entirePageSizePixels:(NSSize)size color:(NSColor *)color {
-	N2Image *image = [[[N2Image alloc] initWithContentsOfURL:[templat pdfURLForProjection:_projection]] autorelease];
+	N2Image *image = [[[N2Image alloc] initWithContentsOfFile:[[templat pdfURLForProjection:_projection] path]] autorelease];
 //    image.size *= templat.scale;
     
 	NSSize imageSize = [image size];
