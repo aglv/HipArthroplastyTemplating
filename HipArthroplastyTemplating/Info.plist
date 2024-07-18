@@ -11,15 +11,15 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleVersion</key>
-	<string>3.5.0</string>
+	<string>3.6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.5.0</string>
+	<string>3.6.0</string>
 	<key>MenuTitles</key>
 	<array>
 		<string>Hip Templating</string>
 	</array>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2022 OsiriX Team &amp; volz.io</string>
+	<string>© 2007-2024 OsiriX Team &amp; volz.io</string>
 	<key>NSPrincipalClass</key>
 	<string>HipArthroplastyTemplating</string>
 	<key>ToolbarIcon</key>
