@@ -221,7 +221,7 @@
     if (context != ArthroplastyTemplatesWindowController.class)
         return [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     
-    DLog(@"change in %@", keyPath);
+//    DLog(@"change in %@", keyPath);
     
     if (object == self.familiesArrayController && [keyPath isEqualToString:@"selection"]) {
         id family = [self.familiesArrayController.selectedObjects.firstObject isKindOfClass:NSNull.class]? nil : self.familiesArrayController.selectedObjects.firstObject;
@@ -274,7 +274,7 @@
         auto templat = [self.family templateMatchingOffset:self.offset size:self.size side:self.side];
         if (self.templat != templat)
             self.templat = templat;
-        else NSLog(@"HipArthroplastyTemplating ArthroplastyTemplatesWindowController observeValueForKeyPath:size templat %@ (size %@)", templat, self.size);
+//        else NSLog(@"HipArthroplastyTemplating ArthroplastyTemplatesWindowController observeValueForKeyPath:size templat %@ (size %@)", templat, self.size);
         [self observeValueForKeyPath:@"templat" ofObject:self change:nil context:ArthroplastyTemplatesWindowController.class];
         return;
     }
