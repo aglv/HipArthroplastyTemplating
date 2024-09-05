@@ -28,6 +28,7 @@
 #import "ArthroplastyTemplatesWindowController+Color.h"
 #import "ArthroplastyTemplatesWindowController+Templates.h"
 #import "NSBitmapImageRep+ArthroplastyTemplating.h"
+#import "ArthroplastyTemplatingStepsController.h"
 
 #import "ArthroplastyTemplatingUserDefaults.h"
 
@@ -67,6 +68,7 @@
 
     [self initTemplates];
     
+    _side = ArthroplastyTemplateRightSide;
 	_projection = ArthroplastyTemplateAnteriorPosteriorProjection;
 	
 	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
@@ -138,17 +140,17 @@
     
     self.familiesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)] ];
     
-    NSCharacterSet *set = [NSCharacterSet characterSetWithCharactersInString:@"0123456789."];
+    NSCharacterSet *charset = [NSCharacterSet characterSetWithCharactersInString:@"0123456789."];
 //    NSArray<NSCharacterSet *> *sets = = @[ set, set.invertedSet ];
     
     self.offsetsArrayController.sortDescriptors = self.sizesArrayController.sortDescriptors = @[ [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES comparator:^NSComparisonResult(NSString *s1, NSString *s2) {
-        NSArray<NSString *> *a1 = [ArthroplastyTemplatesWindowController sizeComponents:s1 set:set];
-        NSArray<NSString *> *a2 = [ArthroplastyTemplatesWindowController sizeComponents:s2 set:set];
+        NSArray<NSString *> *a1 = [ArthroplastyTemplatesWindowController sizeComponents:s1 set:charset];
+        NSArray<NSString *> *a2 = [ArthroplastyTemplatesWindowController sizeComponents:s2 set:charset];
         
         for (NSUInteger i = 0; i < a1.count && i < a2.count; ++i) {
             if (a1[i].length && a2[i].length) {
                 unichar c0 = [a1[i] characterAtIndex:0];
-                if ([set characterIsMember:c0] && a1[i].floatValue == a2[i].floatValue) { // same numeric value, sort '00' before '0'
+                if ([charset characterIsMember:c0] && a1[i].floatValue == a2[i].floatValue) { // same numeric value, sort '00' before '0'
                     if (a1[i].length > a2[i].length)
                         return NSOrderedAscending;
                     if (s1.length < s2.length)
@@ -176,6 +178,17 @@
     [self.familiesArrayController addObserver:self forKeyPath:@"selection" options:NSKeyValueObservingOptionInitial context:ArthroplastyTemplatesWindowController.class];
     [self.offsetsArrayController addObserver:self forKeyPath:@"selection" options:NSKeyValueObservingOptionInitial context:ArthroplastyTemplatesWindowController.class];
     [self.sizesArrayController addObserver:self forKeyPath:@"selection" options:NSKeyValueObservingOptionInitial context:ArthroplastyTemplatesWindowController.class];
+    
+    [self observeValueForKeyPath:@"family" ofObject:self change:nil context:ArthroplastyTemplatesWindowController.class];
+    
+////    [self pdfViewDocumentDidChange:null];
+//    NSLog(@"HipArthroplastyTemplating ArthroplastyTemplatesWindowController awakeFromNib templat %@ (family %@ offset %@ size %@)", self.templat, self.family, self.offset, self.size);
+//    self.family = self.family;
+//    NSLog(@"HipArthroplastyTemplating ArthroplastyTemplatesWindowController awakeFromNib templat %@ (family %@ offset %@ size %@)", self.templat, self.family, self.offset, self.size);
+//    self.offset = self.offset;
+//    NSLog(@"HipArthroplastyTemplating ArthroplastyTemplatesWindowController awakeFromNib templat %@ (family %@ offset %@ size %@)", self.templat, self.family, self.offset, self.size);
+//    self.size = self.size;
+//    NSLog(@"HipArthroplastyTemplating ArthroplastyTemplatesWindowController awakeFromNib templat %@ (family %@ offset %@ size %@)", self.templat, self.family, self.offset, self.size);
 }
 
 - (void)dealloc {
@@ -261,6 +274,8 @@
         auto templat = [self.family templateMatchingOffset:self.offset size:self.size side:self.side];
         if (self.templat != templat)
             self.templat = templat;
+        else NSLog(@"HipArthroplastyTemplating ArthroplastyTemplatesWindowController observeValueForKeyPath:size templat %@ (size %@)", templat, self.size);
+        [self observeValueForKeyPath:@"templat" ofObject:self change:nil context:ArthroplastyTemplatesWindowController.class];
         return;
     }
     
@@ -374,73 +389,36 @@
     oimage.portion = image.portion;
     
     return oimage;
-    
-//    NSBitmapImageRep *irep = (id) [[image.representations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSImageRep *rep, NSDictionary *bindings) {
-//        return [rep isKindOfClass:NSBitmapImageRep.class];
-//    }]] firstObject];
-//
-//    if (!irep) {
-//        NSLog(@"Warning: unexpected input image format");
-//        return;
-//    }
-//
-////    NSBitmapImageRep *rep = [[rep copy] autorelease];
-//
-//	// flip
-//
-//    vImage_Buffer buff = { irep.bitmapData, (size_t) irep.pixelsHigh, (size_t) irep.pixelsWide, (size_t) irep.bytesPerRow };
-//    vImageHorizontalReflect_ARGB8888(&buff, &buff, 0L);
-//
-////	vImage_Buffer src, dest;
-////	src.height = dest.height = bitmap.pixelsHigh;
-////	src.width = dest.width = bitmap.pixelsWide;
-////	src.rowBytes = dest.rowBytes = [bitmap bytesPerRow];
-////	src.data = dest.data = [bitmap bitmapData];
-////	vImageHorizontalReflect_ARGB8888(&src, &dest, 0L);
-//
-////    [image removeRepresentation:irep];
-////    [image addRepresentation:rep];
 }
 
 + (void)rgbaCharsBitmap:(NSBitmapImageRep *)bitmap setColor:(NSColor *)color {
-//    size_t pixelsCount = bitmap.pixelsHigh*bitmap.pixelsWide;
-//    uint8_t *pixels = bitmap.bitmapData, *pixel = pixels;
-//
-//
-//
-//    for (size_t i = 0; i < pixelsCount; ++i) {
-//        if (pixel[0] != 0) { // RGBA
-//            uint8 val = ((uint16_t)pixel[0] + (uint16_t)pixel[1] + (uint16_t)pixel[2])/3;
-//            int pixel[1]
-//        }
-//
-//        pixel += 4;
-//    }
-    
-    NSColorSpace *colorSpace = [bitmap colorSpace];
     size_t spp = [bitmap samplesPerPixel];
-    NSUInteger samples[spp];
-    CGFloat fsamples[spp];
+    NSColorSpace *colorSpace = [bitmap colorSpace];
+    
+    color = [color colorUsingColorSpace:colorSpace]; // same colorspace as bitmap // assume rgba
+    
+    CGFloat csamples[spp];
+    [color getComponents:csamples];
+    
 	for (NSInteger y = bitmap.pixelsHigh-1; y >= 0; --y)
 		for (NSInteger x = bitmap.pixelsWide-1; x >= 0; --x) {
-			[bitmap getPixel:samples atX:x y:y];
-            for (int i = 0; i < spp; ++i)
-                fsamples[i] = samples[i]*1.0/255;
+            NSUInteger uisamples[spp];
+            [bitmap getPixel:uisamples atX:x y:y];
             
-            NSColor *xycolor = [NSColor colorWithColorSpace:colorSpace components:fsamples count:spp];
+            float alpha = uisamples[3]*1./255;
+//            if (uisamples[3] > 1)
+//                alpha = fmax(alpha, 0.5);
+//            alpha = 0.5;
             
-            CGFloat brightness, alpha;
-            [[xycolor colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getHue:NULL saturation:NULL brightness:&brightness alpha:&alpha];
-            NSColor *fixedColor = [NSColor colorWithDeviceHue:[color hueComponent] saturation:[color saturationComponent] brightness:std::max((CGFloat).75, brightness) alpha:alpha];
-
-            xycolor = [fixedColor colorUsingColorSpace:colorSpace];
-            [color getComponents:fsamples];
+            CGFloat fsamples[spp];
             fsamples[spp-1] = alpha;
-            
-            for (int i = 0; i < spp; ++i)
-                samples[i] = floor(fsamples[i]*255);
+            for (size_t i = 0; i < spp-1; ++i)
+                fsamples[i] = csamples[i] * alpha; //premultiplied alpha
 
-            [bitmap setPixel:samples atX:x y:y];
+            for (int i = 0; i < spp; ++i)
+                uisamples[i] = floor(fsamples[i]*255);
+
+            [bitmap setPixel:uisamples atX:x y:y];
 		}
 }
 
@@ -473,7 +451,7 @@
 //	NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[image TIFFRepresentation]];
     NSBitmapImageRep *bitmap = [[[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL pixelsWide:size.width pixelsHigh:size.height
                                                                      bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO
-                                                                    colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:4*size.width bitsPerPixel:32] autorelease];
+                                                                    colorSpaceName:NSDeviceRGBColorSpace bytesPerRow:4*size.width bitsPerPixel:32] autorelease];
     [NSGraphicsContext saveGraphicsState];
     [NSGraphicsContext setCurrentContext:[NSGraphicsContext graphicsContextWithBitmapImageRep:bitmap]];
     [image drawInRect:NSMakeRect(0, 0, size.width, size.height)];
@@ -514,8 +492,8 @@
 }
 
 - (BOOL)mustFlipHorizontally:(ArthroplastyTemplate *)t {
-	if ((t.allowedSides&ArthroplastyTemplateBothSides) != ArthroplastyTemplateBothSides)
-        return NO; // cant flip!
+//	if ((t.allowedSides&ArthroplastyTemplateBothSides) != ArthroplastyTemplateBothSides)
+//        return NO; // cant flip!
     
     return (self.side&ArthroplastyTemplateBothSides) != (t.side&ArthroplastyTemplateBothSides);
 }
@@ -712,9 +690,7 @@
 }
 
 - (BOOL)offsetsEnabled {
-    NSMutableSet *offsets = [NSMutableSet setWithArray:[self.family.templates valueForKeyPath:@"offset"]];
-    [offsets removeObject:NSNull.null];
-    return (offsets.count != 0);
+    return [ArthroplastyTemplatingStepsController offsetsDefinedForFamily:self.family];
 }
 
 - (void)keyDown:(NSEvent *)event {

@@ -1,3 +1,11 @@
+## v3.6.1
+- added Medacta B-Cage
+- misc enhancements and bug fixes
+
+## v3.6
+- added medacta Monocer, AMIS-J Long, AMIStem-P and -C
+- N2Image initWithContentsOfFile, not initWithContentsOfURL
+
 ## v3.5
 - added Medacta M-Vizion modular stems (Straight and 4 degs)
 - added contextual menus to allow size changes

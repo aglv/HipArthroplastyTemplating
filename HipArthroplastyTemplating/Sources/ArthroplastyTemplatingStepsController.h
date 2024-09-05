@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class N2Step, N2Steps, N2StepsView, ROI, ArthroplastyTemplate, ViewerController;
-@class HipArthroplastyTemplating;
+@class HipArthroplastyTemplating, ArthroplastyTemplateFamily;
 
 @interface ArthroplastyTemplatingStepsController : NSWindowController {
 	HipArthroplastyTemplating *_plugin;
@@ -115,6 +115,7 @@
 
 - (id)initWithPlugin:(HipArthroplastyTemplating *)plugin viewerController:(ViewerController *)viewerController;
 
++ (BOOL)offsetsDefinedForFamily:(ArthroplastyTemplateFamily *)fam;
 - (void)populateViewerContextualMenu:(NSMenu *)menu forROI:(ROI *)roi;
 
 - (ROI *)cupLayer;

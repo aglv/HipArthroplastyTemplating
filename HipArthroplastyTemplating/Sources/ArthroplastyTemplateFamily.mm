@@ -25,7 +25,7 @@
 	return self;
 }
 
-- (NSArray *)templates {
+- (NSArray<ArthroplastyTemplate *> *)templates {
     return [_templates sortedArrayUsingComparator:^NSComparisonResult(ArthroplastyTemplate *t1, ArthroplastyTemplate *t2) {
         NSString *o1 = t1.offset, *o2 = t2.offset;
         

@@ -300,13 +300,33 @@ static ArthroplastyTemplatingLayerReplacementMode const ArthroplastyTemplatingLa
     return InvalidArthroplastyTemplatingLayerReplacementMode;
 }
 
++ (BOOL)offsetsDefinedForFamily:(ArthroplastyTemplateFamily *)fam {
+    NSMutableSet *offsets = [NSMutableSet setWithArray:[fam.templates valueForKeyPath:@"offset"]];
+    [offsets removeObject:NSNull.null];
+    return (offsets.count != 0);
+}
+
 - (BOOL)populateOtherSizesMenu:(NSMenu *)menu mode:(ArthroplastyTemplatingLayerReplacementMode)mode {
     menu.autoenablesItems = NO;
     
     ArthroplastyTemplate *item = [self itemForViewerContextualMenuMode:mode];
     ArthroplastyTemplateFamily *family = [item family];
     
-    for (ArthroplastyTemplate *t in family.templates) {
+    NSArray<ArthroplastyTemplate *> *templates = family.templates;
+    
+    NSMutableArray<NSPredicate *> *filters = [NSMutableArray array];
+    
+    [filters addObject:[NSPredicate predicateWithBlock:^BOOL(ArthroplastyTemplate *t, NSDictionary* bindings) {
+        return (t.allowedSides&item.allowedSides) != 0;
+    }]];
+    
+    if ([ArthroplastyTemplatingStepsController offsetsDefinedForFamily:family])
+        [filters addObject:[NSPredicate predicateWithFormat:@"offset = %@", item.offset]];
+    
+//    if (filters.count)
+        templates = [templates filteredArrayUsingPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:filters]];
+    
+    for (ArthroplastyTemplate *t in templates) {
         NSMenuItem *mi = [menu addItemWithTitle:t.size action:@selector(replaceTemplateContextualMenuAction:) keyEquivalent:@""];
         mi.target = self;
         mi.representedObject = @[ @(mode), t ];
@@ -856,7 +876,7 @@ static ArthroplastyTemplatingLayerReplacementMode const ArthroplastyTemplatingLa
 			[[NSNotificationCenter defaultCenter] postNotificationName:OsirixROIChangeNotification object:_femurRoi userInfo:nil];
 		}
 	} else if (step == _stepCup) {
-		showTemplates = [[_plugin templatesWindowController] setFilter:@"Cup"];
+		showTemplates = [[_plugin templatesWindowController] setFilter:@"Cup | Cage"];
 		NSPoint pt = NSZeroPoint;
 		for (MyPoint *p in [_femurRoi points])
 			pt += [p point];

@@ -115,26 +115,40 @@
 }
 
 - (void)filterTemplates {
-    NSMutableArray *subpredicates = [NSMutableArray arrayWithObject:[NSPredicate predicateWithValue:YES]];
+    NSMutableArray *or_subs = [NSMutableArray array];
     
-    for (NSString *str in [_searchField.stringValue componentsSeparatedByString:@" "]) {
-        str = [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (str.length) {
+    for (NSString *orstr in [_searchField.stringValue componentsSeparatedByString:@"|"]) {
+        orstr = [orstr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        
+        NSMutableArray *and_subs = [NSMutableArray array];
+        
+        for (NSString *str in [orstr componentsSeparatedByString:@" "]) {
+            str = [str stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            
+            if (!str.length)
+                continue;
+            
             BOOL no = NO;
             if ([str characterAtIndex:0] == '!') {
                 no = YES;
                 str = [str substringFromIndex:1];
             }
-
+            
             NSPredicate *subpredicate = [NSPredicate predicateWithFormat:@"((fixation contains[c] %@) OR (group contains[c] %@) OR (manufacturer contains[c] %@) OR (modularity contains[c] %@) OR (name contains[c] %@) OR (patientSide contains[c] %@) OR (surgery contains[c] %@) OR (type contains[c] %@))", str, str, str, str, str, str, str, str];
             if (no)
                 subpredicate = [NSCompoundPredicate notPredicateWithSubpredicate:subpredicate];
             
-            [subpredicates addObject:subpredicate];
+            [and_subs addObject:subpredicate];
         }
+        
+        if (and_subs.count)
+            [or_subs addObject:[NSCompoundPredicate andPredicateWithSubpredicates:and_subs]];
     }
     
-    [_familiesArrayController setFilterPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:subpredicates]];
+    if (or_subs.count == 0)
+        [or_subs addObject:[NSPredicate predicateWithValue:YES]];
+        
+    [_familiesArrayController setFilterPredicate:[NSCompoundPredicate orPredicateWithSubpredicates:or_subs]];
 
 	//	[_familiesArrayController rearrangeObjects];
     [_familiesTableView noteNumberOfRowsChanged];

@@ -133,7 +133,16 @@ static HipArthroplastyTemplating *_Plugin = nil;
     
     // we removed the HATROI class and OsiriX doesn't like it
     [NSUnarchiver decodeClassName:@"HATROI" asClassName:@"ROI"];
+    
+//    [self debugInitialTemplateSelection];
 }
+
+//- (void)debugInitialTemplateSelection {
+//    [self initialize];
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [_templatesWindowController.window orderFront:nil];
+//    });
+//}
 
 - (long)filterImage:(NSString *)menuName {
 //	if ([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"] intValue] < 6894) {
