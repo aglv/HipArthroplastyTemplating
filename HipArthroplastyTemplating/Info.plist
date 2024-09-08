@@ -11,9 +11,9 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleVersion</key>
-	<string>3.6.1</string>
+	<string>3.6.2</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.6.1</string>
+	<string>3.6.2</string>
 	<key>MenuTitles</key>
 	<array>
 		<string>Hip Templating</string>
