@@ -1,3 +1,9 @@
+## v3.6.3
+- fixed Medacta AMIStem-P and -C coordinates
+
+## v3.6.2
+- fixed missing Medacta B-Cage bounds
+
 ## v3.6.1
 - added Medacta B-Cage
 - misc enhancements and bug fixes
