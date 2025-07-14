@@ -89,7 +89,7 @@
             if (!isDirectory && [subpath rangeOfString:@".disabled/"].location == NSNotFound) {
                 for (NSString *ext in classes)
                     if ([[subpath pathExtension] isEqualToString:ext])
-                        [templates addObjectsFromArray:[[classes objectForKey:ext] templatesFromFileURL:[NSURL fileURLWithPath:subpath isDirectory:NO]]];
+                        [templates addObjectsFromArray:[classes[ext] templatesFromFileURL:[NSURL fileURLWithPath:subpath isDirectory:NO]]];
             }
         }
     }
