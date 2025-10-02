@@ -4,5 +4,9 @@
 	branch = OsiriXAPI
 [submodule "HipArthroplastyTemplating/Resources/Mathys Templates"]
 	path = HipArthroplastyTemplating/Resources/Mathys Templates
-	url = git@gitlab.com:volz.io/Mathys-Hip.git
+	url = git@github.com:aglv/Mathys-HipTemplates.git
 	branch = distribution
+[submodule "HipArthroplastyTemplating/Resources/Medacta Templates"]
+	path = HipArthroplastyTemplating/Resources/Medacta Templates
+	url = git@github.com:aglv/Medacta-HipTemplates.git
+	branch = main
