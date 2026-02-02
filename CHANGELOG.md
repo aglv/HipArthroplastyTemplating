@@ -1,3 +1,6 @@
+## v3.6.5
+- Medacta templates are now stored on [a dedicated repository](https://github.com/aglv/Mathys-HipTemplates) and directly provided by Medacta
+
 ## v3.6.4
 - added Medacta Monolith cup
 
